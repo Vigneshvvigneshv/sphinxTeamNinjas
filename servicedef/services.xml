@@ -30,4 +30,10 @@ under the License.
         </description>
     </service> 
     
+    <service name="validateUserLoginService" engine="java" location="com.vastpro.sphinx.services.UserLoginService" 
+    invoke="validateUserLoginService"
+    >
+    	<attribute name="userName" mode="IN" type="String"></attribute>
+    	<attribute name="password" mode="IN" type="String"></attribute>
+    </service>
 </services>

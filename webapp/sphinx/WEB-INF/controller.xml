@@ -42,6 +42,11 @@ under the License.
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
     
+    
+    <request-map uri="validateUserLogin">
+    	<event type="java" path="com.vastpro.sphinx.events.UserLoginEvents" invoke="validateUserLoginEvents"></event>
+    	<response name="success" type="view" value="main"></response>
+    </request-map>
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://sphinx/widget/SphinxScreens.xml#main"/>
 </site-conf>
