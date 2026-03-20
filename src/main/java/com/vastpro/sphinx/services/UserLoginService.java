@@ -20,7 +20,7 @@ public class UserLoginService {
            }
 
 
-           if("ofbiz".equals(context.get("password"))) {
+           if(user.get("currentPassword").equals(context.get("password"))) {
         	   result.put("responseMessage", "login successfully");
         	   return result;
            }
