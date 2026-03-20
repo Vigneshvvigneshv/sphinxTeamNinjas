@@ -71,7 +71,7 @@ public class UserResource {
 
 			Map<String, Object> result = dispatcher.runSync("validateUserLoginService", userInput);
 		
-			return Response.ok(result.get("success")).build();
+			return Response.ok(result).build();
 
 		} catch (Exception e) {
 			e.printStackTrace();

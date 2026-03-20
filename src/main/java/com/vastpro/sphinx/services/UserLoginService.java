@@ -19,7 +19,7 @@ public class UserLoginService {
         	   return ServiceUtil.returnError("Unable to find the user");
            }
            if("ofbiz".equals(context.get("password"))) {
-        	   result.put("success", "login successfully");
+        	   result.put("responseMessage", "login successfully");
         	   return result;
            }
 
