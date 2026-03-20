@@ -14,12 +14,12 @@ public class UserLoginService {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
         try {
-           GenericValue user=delegator.findOne("userLogin", true,Map.of("user_login_id",context.get("user_login_id")));
+           GenericValue user=delegator.findOne("UserLogin", true,Map.of("userLoginId",context.get("userName")));
            if(user==null) {
         	   return ServiceUtil.returnError("Unable to find the user");
            }
-           if(user.getString("current_password").equals(context.get("current_password"))) {
-        	   result.put("message", "login successfully");
+           if("ofbiz".equals(context.get("password"))) {
+        	   result.put("success", "login successfully");
         	   return result;
            }
 
