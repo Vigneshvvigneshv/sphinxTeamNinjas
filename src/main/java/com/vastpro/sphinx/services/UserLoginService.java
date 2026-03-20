@@ -21,16 +21,8 @@ public class UserLoginService {
 
 
            if("ofbiz".equals(context.get("password"))) {
-<<<<<<< Updated upstream
-<<<<<<< HEAD
         	   result.put("responseMessage", "login successfully");
-=======
-        	   result.put("success", "login successfully");
 
->>>>>>> 7996bd320a90d39c92416256709dc4bb2ee2120e
-=======
-        	   result.put("responseMessage", "login successfully");
->>>>>>> Stashed changes
         	   return result;
            }
 
