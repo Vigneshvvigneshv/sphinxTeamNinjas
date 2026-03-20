@@ -11,13 +11,14 @@ import org.apache.ofbiz.service.ServiceUtil;
 public class UserLoginService {
 
     public static Map<String, Object> validateUserLoginService(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = ServiceUtil.returnSuccess();
+        Map<String, Object> result = ServiceUtil.returnSuccess("User Login Successfully");
         Delegator delegator = dctx.getDelegator();
         try {
            GenericValue user=delegator.findOne("userLogin", true,Map.of("user_login_id",context.get("user_login_id")));
            if(user==null) {
         	   return ServiceUtil.returnError("Unable to find the user");
            }
+           
            if(user.getString("current_password").equals(context.get("current_password"))) {
         	   result.put("message", "login successfully");
         	   return result;

@@ -45,7 +45,7 @@ under the License.
     
     <request-map uri="validateUserLogin">
     	<event type="java" path="com.vastpro.sphinx.events.UserLoginEvents" invoke="validateUserLoginEvents"></event>
-    	<response name="success" type="view" value="main"></response>
+    	<response name="none" type="none" value="json"></response>
     </request-map>
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://sphinx/widget/SphinxScreens.xml#main"/>
