@@ -1,5 +1,6 @@
 package com.vastpro.sphinx.rest.resource;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.DelegatorFactory;
+import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.LocalDispatcher;
@@ -52,6 +54,7 @@ public class UserResource {
 		}
 		return dispatcher;
 	}
+	
 
 	@POST
 	@Path("/login")
