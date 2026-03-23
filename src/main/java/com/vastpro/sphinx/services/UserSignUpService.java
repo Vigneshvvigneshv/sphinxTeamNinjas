@@ -12,6 +12,8 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
 
+import com.vastpro.sphinx.util.PasswordHashing;
+
 
 public class UserSignUpService {
 	public static Map<String,Object> signUpService(DispatchContext dctx, Map<String, Object> params){
@@ -57,7 +59,7 @@ public class UserSignUpService {
 	            // Step 3 — Create UserLogin with user's own password
 	            GenericValue userLogin = delegator.makeValue("UserLogin");
 	            userLogin.set("userLoginId",     username);
-//	            userLogin.set("currentPassword", PasswordUtil.hashPassword(getDelegator(), password));
+	            userLogin.set("currentPassword", PasswordHashing.encryptPassword(password));
 	            userLogin.set("enabled",         "N");       // disabled until admin approves
 	            userLogin.set("partyId",         partyId);
 	            delegator.create(userLogin);
