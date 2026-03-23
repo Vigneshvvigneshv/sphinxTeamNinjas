@@ -81,4 +81,22 @@ public class UserResource {
 			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
 		}
 	}
+	
+	
+	@POST
+	@Path("/signup")
+	public Response signupUser(Map<String, Object> userInput) {
+		
+		try {	
+			LocalDispatcher dispatcher = getDispatcher();
+			Map<String, Object> result = dispatcher.runSync("userSignUpService", userInput);
+			
+			return Response.ok(result).build();
+		}catch(Exception e) {
+			e.printStackTrace();
+			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
+		}
+		
+	
+	}
 }
