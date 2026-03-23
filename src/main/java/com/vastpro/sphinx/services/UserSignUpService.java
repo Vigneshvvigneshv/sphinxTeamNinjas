@@ -12,6 +12,8 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
 
+import com.vastpro.sphinx.util.PasswordHashing;
+
 
 public class UserSignUpService {
 	public static Map<String,Object> signUpService(DispatchContext dctx, Map<String, Object> params){
@@ -25,7 +27,7 @@ public class UserSignUpService {
 	            String password  = (String) params.get("password");
 	            String firstName = (String) params.get("firstName");
 	            String lastName  = (String) params.get("lastName");		           
-
+	            String email=(String) params.get("email");
 	            // Check if username already exists
 	            GenericValue existingUser = EntityQuery.use(delegator)
 	                .from("UserLogin")
@@ -39,6 +41,7 @@ public class UserSignUpService {
 
 	            // Step 1 — Create Party
 	            String partyId = delegator.getNextSeqId("Party");
+	            partyId="USR_"+partyId;
 	            GenericValue party = delegator.makeValue("Party");
 	            party.set("partyId",     partyId);
 	            party.set("partyTypeId", "PERSON");
@@ -51,13 +54,24 @@ public class UserSignUpService {
 	            person.set("partyId",   partyId);
 	            person.set("firstName", firstName);
 	            person.set("lastName",  lastName);
-//	            person.set("email",     email);
 	            delegator.create(person);
+	            
+	            //to Store the email of the user in the contectMech
+	            String contactMechId = delegator.getNextSeqId("ContactMech");
+	            GenericValue contactMech = delegator.makeValue("ContactMech");
+	            contactMech.set("infoString", email);
+	            contactMech.set("contectMechTypeId", "EMAIL_ADDRESS");
+	            delegator.create(contactMech);
+	            
+	            GenericValue partyContactMech = delegator.makeValue("PartyContactMech");
+	            partyContactMech.set("contactMechId",contactMechId);
+	            partyContactMech.set("partyId", partyId);
+	            delegator.create(partyContactMech);
 
 	            // Step 3 — Create UserLogin with user's own password
 	            GenericValue userLogin = delegator.makeValue("UserLogin");
 	            userLogin.set("userLoginId",     username);
-//	            userLogin.set("currentPassword", PasswordUtil.hashPassword(getDelegator(), password));
+	            userLogin.set("currentPassword", PasswordHashing.encryptPassword(password));
 	            userLogin.set("enabled",         "N");       // disabled until admin approves
 	            userLogin.set("partyId",         partyId);
 	            delegator.create(userLogin);
@@ -71,6 +85,8 @@ public class UserSignUpService {
 	            result.put("responseMessage","success");
 	            result.put("responseMessage", "Registration successful. Waiting for admin approval.");
 	            result.put("partyId", partyId);
+	            
+	            
 
 	        } catch (GenericEntityException e) {
 	            return  ServiceUtil.returnError(e.getMessage());
