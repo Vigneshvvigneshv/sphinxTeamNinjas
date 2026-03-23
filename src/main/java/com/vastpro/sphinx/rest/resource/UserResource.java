@@ -57,7 +57,7 @@ public class UserResource {
 	@Path("/login")
 	public Response validateUser(Map<String, Object> userInput) {
 		try {
-			Delegator delegator = getDelegator();
+			Delegator delegator=getDelegator();
 			LocalDispatcher dispatcher = getDispatcher();
 
 			if (dispatcher == null) {
