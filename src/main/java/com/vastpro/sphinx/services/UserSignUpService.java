@@ -15,7 +15,7 @@ import com.vastpro.sphinx.util.PasswordHashing;
 
 public class UserSignUpService {
 	public static Map<String, Object> signUpService(DispatchContext dctx, Map<String, Object> params) {
-		Map<String, Object> result = ServiceUtil.returnSuccess("Registration successful. Waiting for admin approval.");
+		Map<String, Object> result = ServiceUtil.returnSuccess();
 		try {
 
 			Delegator delegator = dctx.getDelegator();
@@ -35,7 +35,7 @@ public class UserSignUpService {
 
 			}
 
-			// Step 1 — Create Party
+			// Create Party
 			String partyId = delegator.getNextSeqId("Party");
 			partyId = "USR_" + partyId;
 			GenericValue party = delegator.makeValue("Party");
@@ -44,7 +44,7 @@ public class UserSignUpService {
 			party.set("statusId", "PARTY_DISABLED"); // pending approval
 			delegator.create(party);
 
-			// Step 2 — Create Person
+			// Create Person
 			GenericValue person = delegator.makeValue("Person");
 			person.set("partyId", partyId);
 			person.set("firstName", firstName);
@@ -66,7 +66,7 @@ public class UserSignUpService {
 			partyContactMech.set("fromDate", UtilDateTime.nowTimestamp());
 			delegator.create(partyContactMech);
 
-			// Step 3 — Create UserLogin with user's own password
+			// Create UserLogin with user's own password
 			GenericValue userLogin = delegator.makeValue("UserLogin");
 			userLogin.set("userLoginId", username);
 			userLogin.set("currentPassword", PasswordHashing.encryptPassword(password));
@@ -74,17 +74,18 @@ public class UserSignUpService {
 			userLogin.set("partyId", partyId);
 			delegator.create(userLogin);
 
-			// Step 4 — Assign Role
+			// Assign Role
 			GenericValue partyRole = delegator.makeValue("PartyRole");
 			partyRole.set("partyId", partyId);
 			partyRole.set("roleTypeId", "SPHINX_USER");
 			delegator.create(partyRole);
 
-//			result.put("responseMessage",);
+			result.put("responseMessage","Registration successful. Waiting for admin approval.");
 //			result.put("partyId", partyId);
 
 		} catch (GenericEntityException e) {
-			return ServiceUtil.returnError(e.getMessage());
+//			return ServiceUtil.returnError(e.getMessage());
+			return ServiceUtil.returnError("Try Again, Later");
 		}
 		return result;
 	}
