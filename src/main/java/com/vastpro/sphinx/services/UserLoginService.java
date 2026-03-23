@@ -19,6 +19,7 @@ public class UserLoginService {
 //        "successMessage": "User Login Successfully"}
     	
 //    	Map<String,Object> result=new HashMap<String, Object>();
+        
         Delegator delegator = dctx.getDelegator();
         try {
            GenericValue user=delegator.findOne("UserLogin", true,Map.of("userLoginId",context.get("userName")));
@@ -38,7 +39,7 @@ public class UserLoginService {
 
         } catch (GenericEntityException e) {
         	e.printStackTrace();
-        	return ServiceUtil.returnError("login failed" +e.getMessage());
+        	return ServiceUtil.returnError("login failed");
         }
         return ServiceUtil.returnError("login failed");
     }
