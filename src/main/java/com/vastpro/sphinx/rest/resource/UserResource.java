@@ -60,18 +60,14 @@ public class UserResource {
 	@Path("/login")
 	public Response validateUser(Map<String, Object> userInput) {
 		try {
-			Delegator delegator = getDelegator();
+			Delegator delegator=getDelegator();
 			LocalDispatcher dispatcher = getDispatcher();
 
 			if (dispatcher == null) {
 				return Response.status(500).entity(Map.of("error", "Dispatcher is still null")).build();
 			}
 
-			GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "admin")
-					.queryOne();
-
-			userInput.put("userLogin", userLogin);
-
+			
 			Map<String, Object> result = dispatcher.runSync("validateUserLoginService", userInput);
 		
 			return Response.ok(result).build();
