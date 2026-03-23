@@ -15,7 +15,7 @@ import com.vastpro.sphinx.util.PasswordHashing;
 
 public class UserSignUpService {
 	public static Map<String, Object> signUpService(DispatchContext dctx, Map<String, Object> params) {
-		Map<String, Object> result = ServiceUtil.returnSuccess();
+		Map<String, Object> result = ServiceUtil.returnSuccess("Registration successful. Waiting for admin approval.");
 		try {
 
 			Delegator delegator = dctx.getDelegator();
@@ -80,8 +80,8 @@ public class UserSignUpService {
 			partyRole.set("roleTypeId", "SPHINX_USER");
 			delegator.create(partyRole);
 
-			result.put("responseMessage", "Registration successful. Waiting for admin approval.");
-			result.put("partyId", partyId);
+//			result.put("responseMessage",);
+//			result.put("partyId", partyId);
 
 		} catch (GenericEntityException e) {
 			return ServiceUtil.returnError(e.getMessage());
