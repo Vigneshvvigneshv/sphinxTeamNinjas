@@ -20,6 +20,7 @@ public class UserLoginService {
            }
 
 
+
            if(user.get("currentPassword").equals(context.get("password"))) {
         	   result.put("responseMessage", "login successfully");
 

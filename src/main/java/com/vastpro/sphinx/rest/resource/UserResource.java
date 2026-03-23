@@ -1,5 +1,6 @@
 package com.vastpro.sphinx.rest.resource;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -14,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.DelegatorFactory;
+import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.LocalDispatcher;
@@ -52,6 +54,7 @@ public class UserResource {
 		}
 		return dispatcher;
 	}
+	
 
 	@POST
 	@Path("/login")
@@ -77,5 +80,23 @@ public class UserResource {
 			e.printStackTrace();
 			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
 		}
+	}
+	
+	
+	@POST
+	@Path("/signup")
+	public Response signupUser(Map<String, Object> userInput) {
+		
+		try {	
+			LocalDispatcher dispatcher = getDispatcher();
+			Map<String, Object> result = dispatcher.runSync("userSignUpService", userInput);
+			
+			return Response.ok(result).build();
+		}catch(Exception e) {
+			e.printStackTrace();
+			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
+		}
+		
+	
 	}
 }
