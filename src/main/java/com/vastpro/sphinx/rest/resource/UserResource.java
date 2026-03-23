@@ -67,11 +67,7 @@ public class UserResource {
 				return Response.status(500).entity(Map.of("error", "Dispatcher is still null")).build();
 			}
 
-			GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "admin")
-					.queryOne();
-
-			userInput.put("userLogin", userLogin);
-
+			
 			Map<String, Object> result = dispatcher.runSync("validateUserLoginService", userInput);
 		
 			return Response.ok(result).build();

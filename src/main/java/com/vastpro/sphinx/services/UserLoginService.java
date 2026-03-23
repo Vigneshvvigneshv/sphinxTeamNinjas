@@ -5,8 +5,11 @@ import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
+
+import com.vastpro.sphinx.util.PasswordHashing;
 
 public class UserLoginService {
 
@@ -19,11 +22,10 @@ public class UserLoginService {
         	   return ServiceUtil.returnError("Unable to find the user");
            }
 
-
-
-           if(user.get("currentPassword").equals(context.get("password"))) {
-        	   result.put("responseMessage", "login successfully");
-
+           if(PasswordHashing.checkPassword(String.valueOf(context.get("password")),user.getString("currentPassword"))) {
+        	   GenericValue roleType = EntityQuery.use(delegator).from("RoleType").where("roleTypeId",user.get("partyId"))
+        						.queryOne();
+        	   result.put("role", roleType);
         	   return result;
            }
 
