@@ -23,7 +23,7 @@ public class UserSignUpService {
 	        		Delegator delegator = dctx.getDelegator();
 	
 				
-	            String username  = (String) params.get("username");
+	            String username  = (String) params.get("userName");
 	            String password  = (String) params.get("password");
 	            String firstName = (String) params.get("firstName");
 	            String lastName  = (String) params.get("lastName");		           
@@ -60,7 +60,7 @@ public class UserSignUpService {
 	            String contactMechId = delegator.getNextSeqId("ContactMech");
 	            GenericValue contactMech = delegator.makeValue("ContactMech");
 	            contactMech.set("infoString", email);
-	            contactMech.set("contectMechTypeId", "EMAIL_ADDRESS");
+	            contactMech.set("contactMechTypeId", "EMAIL_ADDRESS");
 	            delegator.create(contactMech);
 	            
 	            GenericValue partyContactMech = delegator.makeValue("PartyContactMech");
