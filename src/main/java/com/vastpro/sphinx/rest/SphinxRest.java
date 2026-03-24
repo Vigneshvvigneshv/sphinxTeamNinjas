@@ -5,7 +5,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
  
 public class SphinxRest extends ResourceConfig {
     public SphinxRest() {
-        packages("com.vastpro.sphinx.rest.resource");
+        packages("com.vastpro.sphinx.rest.resource");//resource package
         register(JacksonFeature.class);
         System.out.println("Rest Class");
     }
