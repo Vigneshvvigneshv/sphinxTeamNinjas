@@ -35,7 +35,7 @@ public class CreateQuestionService {
 			
 			String questionId=delegator.getNextSeqId("questionMaster");
 			
-			GenericValue question =delegator.makeValue("QuestionMaster");
+			GenericValue question =delegator.makeValue("questionMaster");
 			question.set("questionId",       questionId);
             question.set("questionDetail",   questionDetail);
             question.set("optionA",          question.getOrDefault("optionA", ""));

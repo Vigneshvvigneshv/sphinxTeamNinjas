@@ -28,7 +28,7 @@
 		<prim-key field="topicId"/>
 	</entity>
 	
-	<entity entity-name="QuestionMaster">
+	<entity entity-name="questionMaster">
     <field name="questionId"       type="numeric"      /> 
     <field name="questionDetail"   type="very-long"    />
     <field name="optionA"          type="very-long"    />
@@ -44,7 +44,7 @@
     <field name="topicId"          type="id"           />  
     <field name="negativeMarkValue" type="fixed-point" />
     <prim-key field="questionId" />
-    <relation type="one" rel-entity-name="TopicMaster">
+    <relation type="one" rel-entity-name="topicMaster">
         <key-map field-name="topicId" />
     </relation>
    <!--  <relation type="one" rel-entity-name="Enumeration">
