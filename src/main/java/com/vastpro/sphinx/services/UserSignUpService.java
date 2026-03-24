@@ -11,6 +11,7 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
 
+import com.vastpro.sphinx.util.FormValidation;
 import com.vastpro.sphinx.util.PasswordHashing;
 
 public class UserSignUpService {
@@ -27,6 +28,27 @@ public class UserSignUpService {
 			String email = (String) params.get("email");
 			
 			
+			
+				if(!FormValidation.validateUsername(username)) {
+					return ServiceUtil.returnError("Username must be at least 5 characters");
+				}
+				
+				if(!FormValidation.validateEmail(email)) {
+					return ServiceUtil.returnError("Enter a valid email");
+				}
+				
+				if(!FormValidation.validatePassword(password)) {
+					return ServiceUtil.returnError("Password must be strong (8+ chars, upper, lower, number, special)");
+				}
+				
+				if(!FormValidation.validateFirstName(firstName)) {
+					return ServiceUtil.returnError("Firstname must be letters");
+				}
+				
+				if(!FormValidation.validateLastName(lastName)) {
+					return ServiceUtil.returnError("Lastname must be letters");
+				}
+				
 			
 			// Check if username already exists
 			GenericValue existingUser = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", username)
