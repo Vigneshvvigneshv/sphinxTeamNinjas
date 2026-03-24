@@ -1,71 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	you under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/services.xsd">
-    <description>Sphinx Services</description>
-    <vendor></vendor>
-    <version>1.0</version>
+	xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/services.xsd">
+	<description>Sphinx Services</description>
+	<vendor></vendor>
+	<version>1.0</version>
 
-    <service name="noSyntaxError" engine="interface">
-        <description>
+	<service name="noSyntaxError" engine="interface">
+		<description>
             Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
         </description>
-    </service> 
-    
-    <service name="validateUserLoginService" engine="java" location="com.vastpro.sphinx.services.UserLoginService" 
-    invoke="validateUserLoginService"
-    >
-    	<attribute name="userName" mode="IN" type="String"></attribute>
-    	<attribute name="password" mode="IN" type="String"></attribute>
-    	<attribute name="role" mode="OUT" type="String"></attribute>
-    	<attribute name="userName" mode ="OUT" type="String" optional="true"></attribute>
-    	<attribute name="password" mode ="OUT" type="String" optional="true"></attribute>
-    </service>
-    
-    <service name="userSignUpService" engine ="java" location="com.vastpro.sphinx.services.UserSignUpService"
-    invoke="signUpService">
-    		
-    		<attribute name="userName" mode="IN" type="String"></attribute>
-    		<attribute name="password" mode="IN" type="String"></attribute>
-    		<attribute name="firstName" mode="IN" type="String"></attribute>
-    		<attribute name="lastName" mode="IN" type="String"></attribute>
-    		<attribute name="email" mode="IN" type="String"></attribute>
-    </service>
-    
-    <service name="createQuestionService" engine="java" location="com.vastpro.sphinx.services.CreateQuestionService" invoke="createQuestionService">
-    	<attribute name="questionDetail"    mode="IN" type="String"></attribute>
-    	<attribute name="optionA"           mode="IN"    type="String"     optional="false"/>
-        <attribute name="optionB"           mode="IN"    type="String"      optional="false"/>
-        <attribute name="optionC"           mode="IN"    type="String"      optional="false"/>
-        <attribute name="optionD"           mode="IN"    type="String"     optional="false"/>
-        <attribute name="optionE"           mode="IN"    type="String"      optional="true"/>
-        <attribute name="answer"            mode="IN"    type="String"      optional="false"/>
-        <attribute name="numAnswers"        mode="IN"    type="Long"       optional="false"/>
-        <attribute name="questionTypeId"    mode="IN"   type="String"     optional="false"/>
-        <attribute name="difficultyLevel"   mode="IN"    type="Long"       optional="true"/>
-        <attribute name="answerValue"       mode="IN"   type="BigDecimal"  optional="true"/>
-        <attribute name="topicId"           mode="IN"   type="String"     optional="false"/>
-        <attribute name="negativeMarkValue" mode="IN"  type="BigDecimal"  optional="true"/>
-        
-        <attribute name="questionId"        mode="OUT" type="String" optional="false"></attribute>
-    </service>
-    
+	</service>
+	
+	<!-- UserLogin Service -->
+
+	<service name="validateUserLoginService" engine="java"
+		location="com.vastpro.sphinx.services.UserLoginService"
+		invoke="validateUserLoginService">
+		<attribute name="userName" mode="IN" type="String"></attribute>
+		<attribute name="password" mode="IN" type="String"></attribute>
+		<attribute name="role" mode="OUT" type="String"></attribute>
+		<attribute name="userName" mode="OUT" type="String"
+			optional="true"></attribute>
+		<attribute name="password" mode="OUT" type="String"
+			optional="true"></attribute>
+	</service>
+
+	<!-- UserSignUP Service -->
+
+	<service name="userSignUpService" engine="java"
+		location="com.vastpro.sphinx.services.UserSignUpService"
+		invoke="signUpService">
+
+		<attribute name="userName" mode="IN" type="String"></attribute>
+		<attribute name="password" mode="IN" type="String"></attribute>
+		<attribute name="firstName" mode="IN" type="String"></attribute>
+		<attribute name="lastName" mode="IN" type="String"></attribute>
+		<attribute name="email" mode="IN" type="String"></attribute>
+	</service>
+
+	<!-- topic Service start-->
+	
+	<!-- create topic -->
+	<service name="createService" engine="java"
+		location="com.vastpro.sphinx.services.TopicService"
+		invoke="createTopic">
+		<attribute name="topicName" mode="IN" type="String"></attribute>
+	</service>
+	
+	<!-- update topic -->
+	<service name="updateTopic" engine="java"
+		location="com.vastpro.sphinx.services.TopicService"
+		invoke="updateTopic">
+		<attribute name="topicId" mode="IN" type="String"></attribute>
+	</service>
+	
+	<!-- delete topic -->
+	<service name="deleteTopic" engine="java"
+		location="com.vastpro.sphinx.services.TopicService"
+		invoke="deleteTopic">
+		<attribute name="topicId" mode="IN" type="String"></attribute>
+	</service>
+	
+	<!-- get all topic list -->
+	<service name="getAllTopics" engine="java"
+		location="com.vastpro.sphinx.services.TopicService"
+		invoke="getAllTopics">
+		<attribute name="topicList" mode="OUT" type="List"></attribute>
+	</service>
+	
+	<!-- end of topic service -->
+
+
+
+<!--  -->
+	<service name="createQuestionService" engine="java"
+		location="com.vastpro.sphinx.services.CreateQuestionService"
+		invoke="createQuestionService">
+		<attribute name="questionDetail" mode="IN" type="String"></attribute>
+		<attribute name="optionA" mode="IN" type="String"
+			optional="false" />
+		<attribute name="optionB" mode="IN" type="String"
+			optional="false" />
+		<attribute name="optionC" mode="IN" type="String"
+			optional="false" />
+		<attribute name="optionD" mode="IN" type="String"
+			optional="false" />
+		<attribute name="optionE" mode="IN" type="String"
+			optional="true" />
+		<attribute name="answer" mode="IN" type="String"
+			optional="false" />
+		<attribute name="numAnswers" mode="IN" type="Long"
+			optional="false" />
+		<attribute name="questionTypeId" mode="IN" type="String"
+			optional="false" />
+		<attribute name="difficultyLevel" mode="IN" type="Long"
+			optional="true" />
+		<attribute name="answerValue" mode="IN" type="BigDecimal"
+			optional="true" />
+		<attribute name="topicId" mode="IN" type="String"
+			optional="false" />
+		<attribute name="negativeMarkValue" mode="IN"
+			type="BigDecimal" optional="true" />
+
+		<attribute name="questionId" mode="OUT" type="String"
+			optional="false"></attribute>
+	</service>
+
+
+
 </services>

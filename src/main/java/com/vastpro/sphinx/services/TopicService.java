@@ -32,7 +32,7 @@ public class TopicService {
 		Delegator delegator = dctx.getDelegator();
 		try {
 			String topicId = (String) params.get("topicId");
-			GenericValue topicMaster = EntityQuery.use(delegator).from("TopicMaster").where("topicId", topicId)
+			GenericValue topicMaster = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId)
 					.queryOne();
 
 			if (topicMaster == null) {
@@ -51,7 +51,7 @@ public class TopicService {
 		Delegator delegator = dctx.getDelegator();
 		try {
 			String topicId = (String) params.get("topicId");
-			GenericValue topicMaster = EntityQuery.use(delegator).from("TopicMaster").where("topicId", topicId)
+			GenericValue topicMaster = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId)
 					.queryOne();
 
 			if (topicMaster == null) {
@@ -71,7 +71,7 @@ public class TopicService {
 	    try {
 	        
 	        List<GenericValue> topicList = EntityQuery.use(delegator)
-	                                                  .from("TopicMaster")
+	                                                  .from("topicMaster")
 	                                                  .queryList();
 	        
 	        result.put("topicList", topicList);
