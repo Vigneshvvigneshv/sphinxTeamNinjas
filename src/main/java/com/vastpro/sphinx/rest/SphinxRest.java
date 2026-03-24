@@ -1,12 +1,12 @@
 package com.vastpro.sphinx.rest;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-
 import org.glassfish.jersey.server.ResourceConfig;
-
+import org.glassfish.jersey.jackson.JacksonFeature;
+ 
 public class SphinxRest extends ResourceConfig {
-	static {
-		System.out.println("Sphinx rest started");
-	}
+    public SphinxRest() {
+        packages("com.vastpro.sphinx.rest.resource");
+        register(JacksonFeature.class);
+        System.out.println("Rest Class");
+    }
 }
