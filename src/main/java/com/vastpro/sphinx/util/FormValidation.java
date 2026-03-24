@@ -4,7 +4,7 @@ package com.vastpro.sphinx.util;
 
 public class FormValidation {
 	  	 static final String USERNAME_REGEX = "^[a-zA-Z].{5,29}$";
-	  	 static final String EMAIL_REGEX = "^[A-Za-z0-9]+@[A-Za-z0-9-]+\\\\.[A-Za-z]{2}$";
+	  	 static final String EMAIL_REGEX = "^[A-Za-z0-9]+@[A-Za-z0-9-]+\\\\.[A-Za-z]{2,}$";
 	  	 static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
 
 	     static final String FIRSTNAME_REGEX = "^[A-Za-z]+$";

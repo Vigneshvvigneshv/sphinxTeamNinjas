@@ -15,6 +15,8 @@ public class UserLoginService {
 
     public static Map<String, Object> validateUserLoginService(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess("User Login Successfully");
+        
+        Map<String, Object> error=ServiceUtil.returnError("Login Failed");
 //    {	"responseMessage": "success",
 //        "successMessage": "User Login Successfully"}
     	
@@ -24,24 +26,25 @@ public class UserLoginService {
         try {
            GenericValue user=delegator.findOne("UserLogin", true,Map.of("userLoginId",context.get("userName")));
            if(user==null) {
-        	   		return ServiceUtil.returnError("Username is incorrect");
+        	   error.put("userName","Username is incorrect");
+        	   return error;
            }
 
            if(PasswordHashing.checkPassword(String.valueOf(context.get("password")),user.getString("currentPassword"))) {
         	   GenericValue roleType = EntityQuery.use(delegator).from("PartyRole").where("partyId",user.get("partyId"))
         						.queryOne();
-        	   
-//        	   
+        	           	   
         	   result.put("successMessage", "User Login Successfully");
         	   result.put("role",String.valueOf( roleType.getString("roleTypeId")));
         	   return result;
            }else {
-        	   		return ServiceUtil.returnError("Password is incorrect");
+        	   error.put("password","password is incorrect");
+        	   return error;
            }
 
         } catch (GenericEntityException e) {
         	e.printStackTrace();
-        	return ServiceUtil.returnError("login failed");
+        	return error;
         }
         
     }
