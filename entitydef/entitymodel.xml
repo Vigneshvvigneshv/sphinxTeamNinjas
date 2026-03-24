@@ -27,5 +27,32 @@
 		<field name="topicName" type="name"></field>
 		<prim-key field="topicId"/>
 	</entity>
+	
+	<entity entity-name="QuestionMaster">
+    <field name="questionId"       type="numeric"      /> 
+    <field name="questionDetail"   type="very-long"    />
+    <field name="optionA"          type="very-long"    />
+    <field name="optionB"          type="very-long"    />
+    <field name="optionC"          type="very-long"    />
+    <field name="optionD"          type="very-long"    />
+    <field name="optionE"          type="very-long"    />
+    <field name="answer"           type="short-varchar"/> 
+    <field name="numAnswers"       type="numeric"      />
+    <field name="questionTypeId"   type="short-varchar"/> 
+    <field name="difficultyLevel"  type="numeric"      />
+    <field name="answerValue"      type="fixed-point"  />
+    <field name="topicId"          type="id"           />  
+    <field name="negativeMarkValue" type="fixed-point" />
+    <prim-key field="questionId" />
+    <relation type="one" rel-entity-name="TopicMaster">
+        <key-map field-name="topicId" />
+    </relation>
+   <!--  <relation type="one" rel-entity-name="Enumeration">
+        <key-map field-name="questionTypeId" rel-field-name="enumId" />
+    </relation> -->
+</entity>
+ 
+	
+	
 
 </entitymodel>
