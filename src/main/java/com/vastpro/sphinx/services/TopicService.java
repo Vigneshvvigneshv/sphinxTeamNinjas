@@ -1,5 +1,6 @@
 package com.vastpro.sphinx.services;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ofbiz.entity.Delegator;
@@ -63,12 +64,21 @@ public class TopicService {
 		}
 	}
 	
-	public static Map<String, Object> getTopic(DispatchContext dctx, Map<String, Object> params) {
-		Delegator delegator = dctx.getDelegator();
-		try {
-			
-		} catch (GenericEntityException e) {
-			return ServiceUtil.returnError("Error occurred during updating the topic: ");
-		}
+	public static Map<String, Object> getAllTopics(DispatchContext dctx, Map<String, Object> params) {
+	    Delegator delegator = dctx.getDelegator();
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
+
+	    try {
+	        
+	        List<GenericValue> topicList = EntityQuery.use(delegator)
+	                                                  .from("TopicMaster")
+	                                                  .queryList();
+	        
+	        result.put("topicList", topicList);
+	        
+	    } catch (GenericEntityException e) {
+	        return ServiceUtil.returnError("Error retrieving topics");
+	    }
+	    return result;
 	}
 }
