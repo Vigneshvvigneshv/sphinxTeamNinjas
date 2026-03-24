@@ -24,23 +24,25 @@ public class UserLoginService {
         try {
            GenericValue user=delegator.findOne("UserLogin", true,Map.of("userLoginId",context.get("userName")));
            if(user==null) {
-        	   return ServiceUtil.returnError("Unable to find the user");
+        	   		return ServiceUtil.returnError("Username is incorrect");
            }
 
            if(PasswordHashing.checkPassword(String.valueOf(context.get("password")),user.getString("currentPassword"))) {
         	   GenericValue roleType = EntityQuery.use(delegator).from("PartyRole").where("partyId",user.get("partyId"))
         						.queryOne();
         	   
-//        	   result.put("responseMessage", "success");
+//        	   
         	   result.put("successMessage", "User Login Successfully");
         	   result.put("role",String.valueOf( roleType.getString("roleTypeId")));
         	   return result;
+           }else {
+        	   		return ServiceUtil.returnError("Password is incorrect");
            }
 
         } catch (GenericEntityException e) {
         	e.printStackTrace();
         	return ServiceUtil.returnError("login failed");
         }
-        return ServiceUtil.returnError("login failed");
+        
     }
 } 

@@ -26,18 +26,20 @@ public class UserSignUpService {
 			String lastName = (String) params.get("lastName");
 			String email = (String) params.get("email");
 			
+			
+			
 			// Check if username already exists
 			GenericValue existingUser = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", username)
 					.queryOne();
 
 			if (existingUser != null) {
 				return ServiceUtil.returnError("Username already exists");
-
 			}
 
 			// Create Party
 			String partyId = delegator.getNextSeqId("Party");
 			partyId = "USR_" + partyId;
+			
 			GenericValue party = delegator.makeValue("Party");
 			party.set("partyId", partyId);
 			party.set("partyTypeId", "PERSON");
