@@ -44,7 +44,7 @@ public class UserLoginService {
 
         } catch (GenericEntityException e) {
         	e.printStackTrace();
-        	return ServiceUtil.returnError("login failed");
+        	return error;
         }
         
     }
