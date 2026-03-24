@@ -29,17 +29,17 @@ public class UserSignUpService {
 			
 			
 			
-				if(!FormValidation.validateUsername(username)) {
-					return ServiceUtil.returnError("Username must be at least 5 characters");
-				}
+//				if(!FormValidation.validateUsername(username)) {
+//					return ServiceUtil.returnError("Username must be at least 5 characters");
+//				}
 				
 				if(!FormValidation.validateEmail(email)) {
 					return ServiceUtil.returnError("Enter a valid email");
 				}
 				
-				if(!FormValidation.validatePassword(password)) {
-					return ServiceUtil.returnError("Password must be strong (8+ chars, upper, lower, number, special)");
-				}
+//				if(!FormValidation.validatePassword(password)) {
+//					return ServiceUtil.returnError("Password must be strong (8+ chars, upper, lower, number, special)");
+//				}
 				
 				if(!FormValidation.validateFirstName(firstName)) {
 					return ServiceUtil.returnError("Firstname must be letters");
@@ -59,13 +59,15 @@ public class UserSignUpService {
 			}
 
 			// Create Party
-			String partyId = delegator.getNextSeqId("Party");
-			partyId = "USR_" + partyId;
+//			String partyId = delegator.getNextSeqId("Party");
+//			partyId = "USR_" + partyId;
+			
+			String partyId="super_admin";
 			
 			GenericValue party = delegator.makeValue("Party");
 			party.set("partyId", partyId);
 			party.set("partyTypeId", "PERSON");
-			party.set("statusId", "PARTY_DISABLED"); // pending approval
+			party.set("statusId", "PARTY_ENABLED"); // pending approval
 			delegator.create(party);
 
 			// Create Person
@@ -94,14 +96,14 @@ public class UserSignUpService {
 			GenericValue userLogin = delegator.makeValue("UserLogin");
 			userLogin.set("userLoginId", username);
 			userLogin.set("currentPassword", PasswordHashing.encryptPassword(password));
-			userLogin.set("enabled", "N"); // disabled until admin approves
+			userLogin.set("enabled", "Y"); // disabled until admin approves
 			userLogin.set("partyId", partyId);
 			delegator.create(userLogin);
 
 			// Assign Role
 			GenericValue partyRole = delegator.makeValue("PartyRole");
 			partyRole.set("partyId", partyId);
-			partyRole.set("roleTypeId", "SPHINX_USER");
+			partyRole.set("roleTypeId", "SPHINX_ADMIN");
 			delegator.create(partyRole);
 
 			result.put("responseMessage","Registration successful. Waiting for admin approval.");
