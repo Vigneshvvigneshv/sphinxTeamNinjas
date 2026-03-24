@@ -61,7 +61,7 @@ public class ExamResource {
 			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
 		}
 		
-		return null;
+		
 		
 	}
 }
