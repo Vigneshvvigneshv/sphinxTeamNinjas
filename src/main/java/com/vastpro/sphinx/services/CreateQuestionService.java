@@ -27,11 +27,11 @@ public class CreateQuestionService {
 			}
 			
 			//check topic exists
-			GenericValue topic =EntityQuery.use(delegator).from("TopicMaster").where("TopicId",topicId).queryOne();
-			
-			if(topic==null) {
-				return ServiceUtil.returnError("Topic not Found");
-			}
+//			GenericValue topic =EntityQuery.use(delegator).from("topicMaster").where("topicId",topicId).queryOne();
+//			
+//			if(topic==null) {
+//				return ServiceUtil.returnError("Topic not Found");
+//			}
 			
 			String questionId=delegator.getNextSeqId("questionMaster");
 			
