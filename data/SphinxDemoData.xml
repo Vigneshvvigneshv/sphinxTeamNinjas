@@ -19,5 +19,12 @@ under the License.
 -->
 
 <entity-engine-xml>
+			<EnumerationType enumTypeId="QUESTION_TYPE" description="Question Type" />
 
+    <!-- Question Types -->
+    <Enumeration enumId="SINGLE_CHOICE"   enumTypeId="QUESTION_TYPE" sequenceId="1" description="Single Choice"   />
+    <Enumeration enumId="MULTI_CHOICE"    enumTypeId="QUESTION_TYPE" sequenceId="2" description="Multiple Choice" />
+    <Enumeration enumId="TRUE_FALSE"      enumTypeId="QUESTION_TYPE" sequenceId="3" description="True or False"   />
+    <Enumeration enumId="FILL_BLANKS"     enumTypeId="QUESTION_TYPE" sequenceId="4" description="Fill in Blanks"  />
+    <Enumeration enumId="DETAILED_ANSWER" enumTypeId="QUESTION_TYPE" sequenceId="5" description="Detailed Answer" />
 </entity-engine-xml>

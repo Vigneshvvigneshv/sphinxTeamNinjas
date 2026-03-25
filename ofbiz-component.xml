@@ -50,4 +50,7 @@ under the License.
         location="webapp/sphinx"
         base-permission="OFBTOOLS,SPHINX"
         mount-point="/sphinx"/>
+        
+        
+        
 </ofbiz-component>

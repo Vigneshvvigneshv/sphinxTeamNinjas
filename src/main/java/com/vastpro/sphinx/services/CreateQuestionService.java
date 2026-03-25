@@ -22,6 +22,9 @@ public class CreateQuestionService {
 			String  answer = (String)questions.get("answer");
 			
 			
+			
+			
+			
 			if(topicId==null || questionDetail==null || answer==null  ) {
 				return ServiceUtil.returnError("topic Id and quetionDetail and answer are required");
 			}
@@ -38,18 +41,18 @@ public class CreateQuestionService {
 			GenericValue question =delegator.makeValue("questionMaster");
 			question.set("questionId",       questionId);
             question.set("questionDetail",   questionDetail);
-            question.set("optionA",          question.getOrDefault("optionA", ""));
-            question.set("optionB",          question.getOrDefault("optionB", ""));
-            question.set("optionC",          question.getOrDefault("optionC", ""));
-            question.set("optionD",          question.getOrDefault("optionD", ""));
-            question.set("optionE",          question.getOrDefault("optionE", ""));
+            question.set("optionA",          questions.getOrDefault("optionA", ""));
+            question.set("optionB",          questions.getOrDefault("optionB", ""));
+            question.set("optionC",          questions.getOrDefault("optionC", ""));
+            question.set("optionD",          questions.getOrDefault("optionD", ""));
+            question.set("optionE",          questions.getOrDefault("optionE", ""));
             question.set("answer",           answer);
-            question.set("numAnswers",       question.getOrDefault("numAnswers", 1L));
+            question.set("numAnswers",       questions.getOrDefault("numAnswers", 1L));
             question.set("questionTypeId",   questionTypeId);
-            question.set("difficultyLevel",  question.getOrDefault("difficultyLevel", 1L));
-            question.set("answerValue",      question.getOrDefault("answerValue", 1.0));
+            question.set("difficultyLevel",  questions.getOrDefault("difficultyLevel", 1L));
+            question.set("answerValue",      questions.getOrDefault("answerValue", 1.0));
             question.set("topicId",          topicId);
-            question.set("negativeMarkValue",question.getOrDefault("negativeMarkValue", 0.0));
+            question.set("negativeMarkValue",questions.getOrDefault("negativeMarkValue", 0.0));
             delegator.create(question);
 			
             
