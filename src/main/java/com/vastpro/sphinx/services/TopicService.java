@@ -28,12 +28,17 @@ public class TopicService {
 			if(topicAlreadyExits!=null) {
 				return ServiceUtil.returnError("Topic Already Exits");
 			}
-			dispatcher.runSync("createTopic", params);
+			Map<String,Object> record=dispatcher.runSync("createTopic", params);
+			
+			
+			if(ServiceUtil.isError(record)) {
+				return ServiceUtil.returnError("Error, occur during adding the topic");
+			}
 			
 			return result;
 
 		} catch (GenericServiceException | GenericEntityException e) {
-			return ServiceUtil.returnError("Error, occur during adding the topic");
+			return ServiceUtil.returnError("Error, occur during adding the topic"+ e.getMessage());
 		}
 	}
 

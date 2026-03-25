@@ -82,12 +82,14 @@ public class UserResource {
 
 	@POST
 	@Path("/signup")
-	public Response signupUser(Map<String, Object> userInput) {
+//	public static Map<String, Object> signupUser(HttpServletRequest request, HttpServletResponse response) {
+		public  Response signupUser(Map<String, Object> userInput) {
 		
 		try {	
 			LocalDispatcher dispatcher = getDispatcher();
 			Map<String, Object> result = dispatcher.runSync("userSignUpService", userInput);
 			
+//			return result;
 			return Response.ok(result).build();
 		}catch(Exception e) {
 			e.printStackTrace();

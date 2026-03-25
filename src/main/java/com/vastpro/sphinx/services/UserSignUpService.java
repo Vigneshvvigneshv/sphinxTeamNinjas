@@ -20,7 +20,7 @@ public class UserSignUpService {
 		try {
 
 			Delegator delegator = dctx.getDelegator();
-
+			
 			String username = (String) params.get("userName");
 			String password = (String) params.get("password");
 			String firstName = (String) params.get("firstName");
