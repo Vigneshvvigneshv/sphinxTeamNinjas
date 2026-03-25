@@ -119,7 +119,7 @@
 		<attribute name="negativeMarkValue" mode="IN"
 			type="BigDecimal" optional="true" />
 
-		<attribute name="questionId" mode="OUT" type="String"
+		<attribute name="questionId" mode="OUT" type="Long"
 			optional="false"></attribute>
 	</service>
 
@@ -131,7 +131,7 @@
     <description>Update an existing question in QuestionMaster</description>
 
     
-    <attribute name="questionId"        type="String"     mode="IN"  optional="false"/>
+    <attribute name="questionId"        type="Long"     mode="IN"  optional="false"/>
 
     
     <attribute name="questionDetail"    type="String"     mode="IN"  optional="true"/>
@@ -149,7 +149,7 @@
     <attribute name="negativeMarkValue" type="BigDecimal" mode="IN"  optional="true"/>
 
     
-    <attribute name="questionId"        type="String"     mode="OUT" optional="false"/>
+    <attribute name="questionId"        type="Long"     mode="OUT" optional="false"/>
 </service>
 
 </services>

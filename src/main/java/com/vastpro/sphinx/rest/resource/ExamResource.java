@@ -84,13 +84,14 @@ public class ExamResource {
 	        // questionId must be sent by frontend
 	        
 	        
-	        String questionId = (String) params.get("questionId");
-	        params.put("questionId", questionId);
-	        if (questionId == null) {
+	        String questionIdStr = (String) params.get("questionId");
+	        if (questionIdStr == null) {
 	        	responseError.put("status",  "ERROR");
 	        	responseError.put("message", "questionId is required");
-	            return Response.status(400).entity(responseError).build();
+	        	return Response.status(400).entity(responseError).build();
 	        }
+	        Long questionId = Long.valueOf(questionIdStr);
+	        params.put("questionId", questionId);
 
 	       
 	        // Call service

@@ -69,9 +69,9 @@ public class QuestionService {
 
 	    try {
 	        // Step 1 — Get questionId from context (sent by frontend)
-	        String questionId = (String) context.get("questionId");
+	    	Long questionId = (Long) context.get("questionId"); 
 
-	        if (questionId == null || questionId.trim().isEmpty()) {
+	        if (questionId == null) {
 	            return ServiceUtil.returnError("questionId is required for update");
 	        }
 
