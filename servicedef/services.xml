@@ -86,7 +86,7 @@
 
 <!--  -->
 	<service name="createQuestionService" engine="java"
-		location="com.vastpro.sphinx.services.CreateQuestionService"
+		location="com.vastpro.sphinx.services.QuestionService"
 		invoke="createQuestionService">
 		<attribute name="questionDetail" mode="IN" type="String"></attribute>
 		<attribute name="optionA" mode="IN" type="String"
@@ -119,5 +119,32 @@
 	</service>
 
 
+<!-- UpdateQuestions Service -->
+	<service name="updateQuestionMaster" engine="java"
+         location="com.vastpro.sphinx.services.QuestionService"
+         invoke="updateQuestion">
+    <description>Update an existing question in QuestionMaster</description>
+
+    
+    <attribute name="questionId"        type="String"     mode="IN"  optional="false"/>
+
+    
+    <attribute name="questionDetail"    type="String"     mode="IN"  optional="true"/>
+    <attribute name="optionA"           type="String"     mode="IN"  optional="true"/>
+    <attribute name="optionB"           type="String"     mode="IN"  optional="true"/>
+    <attribute name="optionC"           type="String"     mode="IN"  optional="true"/>
+    <attribute name="optionD"           type="String"     mode="IN"  optional="true"/>
+    <attribute name="optionE"           type="String"     mode="IN"  optional="true"/>
+    <attribute name="answer"            type="String"     mode="IN"  optional="true"/>
+    <attribute name="numAnswers"        type="Long"       mode="IN"  optional="true"/>
+    <attribute name="questionTypeId"    type="String"     mode="IN"  optional="true"/>
+    <attribute name="difficultyLevel"   type="Long"       mode="IN"  optional="true"/>
+    <attribute name="answerValue"       type="BigDecimal" mode="IN"  optional="true"/>
+    <attribute name="topicId"           type="String"     mode="IN"  optional="true"/>
+    <attribute name="negativeMarkValue" type="BigDecimal" mode="IN"  optional="true"/>
+
+    
+    <attribute name="questionId"        type="String"     mode="OUT" optional="false"/>
+</service>
 
 </services>
