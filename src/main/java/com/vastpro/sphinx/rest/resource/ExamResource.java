@@ -82,8 +82,10 @@ public class ExamResource {
 	        LocalDispatcher dispatcher = getDispatcher();
 
 	        // questionId must be sent by frontend
-	        String questionId = (String) params.get("questionId");
 	        
+	        
+	        String questionId = (String) params.get("questionId");
+	        params.put("questionId", questionId);
 	        if (questionId == null) {
 	        	responseError.put("status",  "ERROR");
 	        	responseError.put("message", "questionId is required");
