@@ -105,7 +105,7 @@ public class TopicResource {
 		LocalDispatcher dispatcher=getDispatcher();
 		Map<String, Object> input = new HashMap<>();
 		try {	
-			Map<String, Object> result = dispatcher.runSync("getAllTopic", input);
+			Map<String, Object> result = dispatcher.runSync("getAllTopics", input);
 			
 			return Response.ok(result).build();
 		}catch(Exception e) {
