@@ -73,7 +73,7 @@ public class TopicService {
 				return ServiceUtil.returnError("Topic with ID " + topicId + " not found.");
 			}
 			topicMaster.remove();
-			return ServiceUtil.returnSuccess("Topic updated successfully");
+			return ServiceUtil.returnSuccess("Topic deleted successfully");
 		} catch (GenericEntityException e) {
 			return ServiceUtil.returnError("Error occurred during updating the topic: ");
 		}
