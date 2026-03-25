@@ -52,7 +52,7 @@
 	<!-- topic Service start-->
 	
 	<!-- create topic -->
-	<service name="createTopic" engine="java"
+	<service name="createTopicOwn" engine="java"
 		location="com.vastpro.sphinx.services.TopicService"
 		invoke="createTopic">
 		<attribute name="topicName" mode="IN" type="String"></attribute>
@@ -80,6 +80,11 @@
 		<attribute name="topicList" mode="OUT" type="List"></attribute>
 	</service>
 	
+	
+	<service  name="createTopic" engine="entity-auto" invoke="create" default-entity-name="topicMaster">
+		<auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="false"/>
+	</service>
 	<!-- end of topic service -->
 
 

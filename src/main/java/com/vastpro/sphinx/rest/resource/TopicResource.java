@@ -59,7 +59,7 @@ public class TopicResource {
 		LocalDispatcher dispatcher=getDispatcher();
 		
 		try {	
-			Map<String, Object> result = dispatcher.runSync("createTopic", input);
+			Map<String, Object> result = dispatcher.runSync("createTopicOwn", input);
 			
 			return Response.ok(result).build();
 		}catch(Exception e) {
