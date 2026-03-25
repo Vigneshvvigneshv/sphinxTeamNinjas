@@ -114,8 +114,8 @@
 		<attribute name="negativeMarkValue" mode="IN"
 			type="BigDecimal" optional="true" />
 
-		<!-- <attribute name="questionId" mode="OUT" type="String"
-			optional="false"></attribute> -->
+		<attribute name="questionId" mode="OUT" type="String"
+			optional="false"></attribute>
 	</service>
 
 
