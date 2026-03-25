@@ -8,12 +8,15 @@ import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.DispatchContext;
+import org.apache.ofbiz.service.GenericServiceException;
+import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
 
 public class TopicService {
 
 	public static Map<String, Object> createTopic(DispatchContext dctx, Map<String, Object> params) {
 		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher=dctx.getDispatcher();
 		Map<String, Object> result = ServiceUtil.returnSuccess("Topic created successfully");
 		String topicName=(String)params.get("topicName");
 		try {
@@ -25,15 +28,11 @@ public class TopicService {
 			if(topicAlreadyExits!=null) {
 				return ServiceUtil.returnError("Topic Already Exits");
 			}
+			dispatcher.runSync("createTopic", params);
 			
-			String topicId = String.valueOf(delegator.getNextSeqId("topicMaster"));
-			GenericValue topicMaster = delegator.makeValue("topicMaster");
-			topicMaster.set("topicId", topicId);
-			topicMaster.set("topicName", params.get("topicName"));
-			delegator.create(topicMaster);
 			return result;
 
-		} catch (GenericEntityException e) {
+		} catch (GenericServiceException | GenericEntityException e) {
 			return ServiceUtil.returnError("Error, occur during adding the topic");
 		}
 	}
