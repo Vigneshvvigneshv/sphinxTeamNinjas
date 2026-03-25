@@ -124,6 +124,11 @@
 	</service>
 
 
+<service  name="createQuestion" engine="entity-auto" invoke="create" default-entity-name="questionMaster">
+		<auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="false"/>
+	</service>
+
 <!-- UpdateQuestions Service -->
 	<service name="updateQuestionMaster" engine="java"
          location="com.vastpro.sphinx.services.QuestionService"

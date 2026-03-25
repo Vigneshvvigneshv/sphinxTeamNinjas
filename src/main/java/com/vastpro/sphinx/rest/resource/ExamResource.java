@@ -55,10 +55,13 @@ public class ExamResource {
 	}
 	
 	@POST
-	@Path("/create-question")
+	@Path("/createquestion")
 	public Response createQuestion(Map<String,Object> question) {
 		try {	
 			LocalDispatcher dispatcher = getDispatcher();
+			
+			
+			
 			Map<String, Object> result = dispatcher.runSync("createQuestionService", question);
 			
 			return Response.ok(result).build();
