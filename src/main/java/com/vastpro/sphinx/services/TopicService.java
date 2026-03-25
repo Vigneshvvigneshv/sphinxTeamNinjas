@@ -15,7 +15,12 @@ public class TopicService {
 	public static Map<String, Object> createTopic(DispatchContext dctx, Map<String, Object> params) {
 		Delegator delegator = dctx.getDelegator();
 		Map<String, Object> result = ServiceUtil.returnSuccess("Topic created successfully");
+		String topicName=(String)params.get("topicName");
 		try {
+			
+			if(topicName==null||topicName.trim().isEmpty()) {
+				return ServiceUtil.returnError("Field cannot be empty");
+			}
 			GenericValue topicAlreadyExits=EntityQuery.use(delegator).from("topicMaster").where("topicName",params.get("topicName")).queryFirst();
 			if(topicAlreadyExits!=null) {
 				return ServiceUtil.returnError("Topic Already Exits");
@@ -35,15 +40,20 @@ public class TopicService {
 
 	public static Map<String, Object> updateTopic(DispatchContext dctx, Map<String, Object> params) {
 		Delegator delegator = dctx.getDelegator();
+		String topicId = (String) params.get("topicId");
+		String topicName=(String)params.get("topicName");
 		try {
-			String topicId = (String) params.get("topicId");
+			
+			if(topicName==null||topicName.trim().isEmpty()) {
+				return ServiceUtil.returnError("Field cannot be empty");
+			}
 			GenericValue topicMaster = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId)
 					.queryOne();
 
 			if (topicMaster == null) {
 				return ServiceUtil.returnError("Topic with ID " + topicId + " not found.");
 			}
-			topicMaster.set("topicName", params.get("topicName"));
+			topicMaster.set("topicName", topicName);
 			topicMaster.store();
 
 			return ServiceUtil.returnSuccess("Topic updated successfully");
