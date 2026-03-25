@@ -16,6 +16,11 @@ public class TopicService {
 		Delegator delegator = dctx.getDelegator();
 		Map<String, Object> result = ServiceUtil.returnSuccess("Topic created successfully");
 		try {
+			GenericValue topicAlreadyExits=EntityQuery.use(delegator).from("topicMaster").where("topicName",params.get("topicName")).queryFirst();
+			if(topicAlreadyExits!=null) {
+				return ServiceUtil.returnError("Topic Already Exits");
+			}
+			
 			String topicId = String.valueOf(delegator.getNextSeqId("topicMaster"));
 			GenericValue topicMaster = delegator.makeValue("topicMaster");
 			topicMaster.set("topicId", topicId);
@@ -73,6 +78,10 @@ public class TopicService {
 	        List<GenericValue> topicList = EntityQuery.use(delegator)
 	                                                  .from("topicMaster")
 	                                                  .queryList();
+	        
+	        if(topicList.size()==0) {
+	        	return ServiceUtil.returnSuccess("No topic found");
+	        }
 	        
 	        result.put("topicList", topicList);
 	        

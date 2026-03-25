@@ -52,7 +52,7 @@
 	<!-- topic Service start-->
 	
 	<!-- create topic -->
-	<service name="createService" engine="java"
+	<service name="createTopic" engine="java"
 		location="com.vastpro.sphinx.services.TopicService"
 		invoke="createTopic">
 		<attribute name="topicName" mode="IN" type="String"></attribute>
