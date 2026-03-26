@@ -82,7 +82,7 @@ public class TopicResource {
 			
 			Map<String, Object> input=new HashMap<String, Object>();
 			input.put("topicId",request.getParameter("topicId"));
-			Map<String, Object> result = dispatcher.runSync("deleteTopic", input);
+			Map<String, Object> result = dispatcher.runSync("deleteTopicOwn", input);
 			
 			return Response.ok(result).build();
 		}catch(Exception e) {
