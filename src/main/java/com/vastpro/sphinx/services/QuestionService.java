@@ -14,7 +14,6 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 public class QuestionService {
 	public static Map<String,Object>createQuestionService(DispatchContext dctx, Map<String, Object> questions){
-		Map<String, Object> result = ServiceUtil.returnSuccess();
 		LocalDispatcher dispatcher=dctx.getDispatcher();
 		try {
 			Delegator delegator = dctx.getDelegator();
@@ -56,8 +55,9 @@ public class QuestionService {
 //            question.set("negativeMarkValue",questions.getOrDefault("negativeMarkValue", 0.0));
 //            delegator.create(question);
 			
-			dispatcher.runAsync("createQuestion", questions);
+			dispatcher.runSync("createQuestion", questions);
             
+			Map<String, Object> result = ServiceUtil.returnSuccess("Question created Successfully");
             result.put("responseMessage", "Question created Successfully");
             result.put("questionId", questionId);
 			return result;
@@ -89,19 +89,19 @@ public class QuestionService {
 	        }
 
 	        // Step 3 — Get all fields from context
-	        String     questionDetail  = (String)     context.get("questionDetail");
-	        String     optionA         = (String)     context.get("optionA");
-	        String     optionB         = (String)     context.get("optionB");
-	        String     optionC         = (String)     context.get("optionC");
-	        String     optionD         = (String)     context.get("optionD");
-	        String     optionE         = (String)     context.get("optionE");
-	        String     answer          = (String)     context.get("answer");
-	        Long       numAnswers      = (Long)        context.get("numAnswers");
-	        String     questionTypeId  = (String)     context.get("questionTypeId");
-	        Long       difficultyLevel = (Long)        context.get("difficultyLevel");
-	        BigDecimal answerValue     = (BigDecimal) context.get("answerValue");
-	        String     topicId         = (String)     context.get("topicId");
-	        BigDecimal negMarkValue    = (BigDecimal) context.get("negativeMarkValue");
+	        String     questionDetail  = (String)context.get("questionDetail");
+	        String     optionA         = (String)context.get("optionA");
+	        String     optionB         = (String)context.get("optionB");
+	        String     optionC         = (String)context.get("optionC");
+	        String     optionD         = (String)context.get("optionD");
+	        String     optionE         = (String)context.get("optionE");
+	        String     answer          = (String)context.get("answer");
+	        Long       numAnswers      = (Long)context.get("numAnswers");
+	        String     questionTypeId  = (String)context.get("questionTypeId");
+	        Long       difficultyLevel = (Long)context.get("difficultyLevel");
+	        BigDecimal answerValue     = (BigDecimal)context.get("answerValue");
+	        String     topicId         = (String)context.get("topicId");
+	        BigDecimal negMarkValue    = (BigDecimal)context.get("negativeMarkValue");
 
 	        // Step 4 — Update only fields that are passed
 	        //          if null → keep existing value in DB
@@ -129,16 +129,16 @@ public class QuestionService {
 	        	question.set("answer",answer);
 	        }
 	        if (numAnswers != null) {
-	        	question.set("numAnswers",        numAnswers);
+	        	question.set("numAnswers",numAnswers);
 	        }
 	        if (difficultyLevel!= null) {
-	        	question.set("difficultyLevel",   difficultyLevel);
+	        	question.set("difficultyLevel",difficultyLevel);
 	        }
 	        if (answerValue != null) {
-	        	question.set("answerValue",       answerValue);
+	        	question.set("answerValue",answerValue);
 	        }
 	        if (negMarkValue != null) {
-	        	question.set("negativeMarkValue", negMarkValue);
+	        	question.set("negativeMarkValue",negMarkValue);
 	        }
 
 	       
@@ -180,5 +180,36 @@ public class QuestionService {
 	}
 	
 	
+	//DeleteQuestionservice
+	public static Map<String,Object> deleteQuestion(DispatchContext dctx, Map<String, Object> context){
+		LocalDispatcher dispatcher=dctx.getDispatcher();
+		Delegator delegator = dctx.getDelegator();
+		try {
+			 Long questionId = (Long) context.get("questionId");
+			 
+			 if (questionId == null) {
+		            return ServiceUtil.returnError("questionId is required");
+		        }
+			 
+			 GenericValue question = EntityQuery.use(delegator)
+					            .from("questionMaster")
+					            .where("questionId", questionId)
+					            .queryOne();
+			 
+			 if (question == null) {
+		            return ServiceUtil.returnError("Question not found for questionId: ");	      
+		        }
+			 
+			 dispatcher.runSync("deleteQuestion", context);
+			 Map<String, Object> result = ServiceUtil.returnSuccess("Question deleted Successfully");
+
+		     result.put("message","Question  deleted successfully");
+		     return result;
+			 
+		}catch(GenericEntityException | GenericServiceException e) {
+			return ServiceUtil.returnError("Error deleting question: " + e.getMessage());
+		}
+	}
 	
+
 }

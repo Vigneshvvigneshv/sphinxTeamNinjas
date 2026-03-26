@@ -129,16 +129,14 @@
         <auto-attributes include="nonpk" mode="IN" optional="false"/>
 	</service>
 
+
+
 <!-- UpdateQuestions Service -->
 	<service name="updateQuestionMaster" engine="java"
          location="com.vastpro.sphinx.services.QuestionService"
          invoke="updateQuestion">
     <description>Update an existing question in QuestionMaster</description>
-
-    
-    <attribute name="questionId"        type="Long"     mode="IN"  optional="false"/>
-
-    
+    <attribute name="questionId"        type="Long"     mode="IN"  optional="false"/> 
     <attribute name="questionDetail"    type="String"     mode="IN"  optional="true"/>
     <attribute name="optionA"           type="String"     mode="IN"  optional="true"/>
     <attribute name="optionB"           type="String"     mode="IN"  optional="true"/>
@@ -152,9 +150,29 @@
     <attribute name="answerValue"       type="BigDecimal" mode="IN"  optional="true"/>
     <attribute name="topicId"           type="String"     mode="IN"  optional="true"/>
     <attribute name="negativeMarkValue" type="BigDecimal" mode="IN"  optional="true"/>
-
-    
+   
     <attribute name="questionId"        type="Long"     mode="OUT" optional="false"/>
 </service>
 
+<!-- DeleteQuestion Service -->
+	<service name="deleteQuestionMaster" engine="java" location="com.vastpro.sphinx.services.QuestionService" invoke="deleteQuestion">
+		<attribute name="questionId" type="Long" mode="IN" optional="false"/>
+    	<attribute name="message"    type="String" mode="OUT" optional="false"/>
+	</service>
+	
+	<service name="deleteQuestion" engine="entity-auto" invoke="delete" default-entity-name="questionMaster">
+		
+		<auto-attributes include="pk" mode="IN" optional="false"/>
+	</service>
+	
+	
+	<!-- GetQuestionsBY Topic -->
+	
+	<service name="getQuestionsByTopic" engine="java" location="com.vastpro.sphinx.services.QuestionService" invoke="getQuestionsByTopic">
+		<attribute name="topicId" mode="IN" type="String" optional="false"/>
+		<attribute name="topicName" type="String" mode="OUT" optional="false"/>
+		<attribute name="totalCount" type="Integer" mode="OUT" optional="false"/>
+		<attribute name="questionList" mode="OUT" type="List"/>
+	</service>
+	
 </services>
