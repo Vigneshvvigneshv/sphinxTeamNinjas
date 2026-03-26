@@ -1,5 +1,6 @@
 package com.vastpro.sphinx.services;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,7 @@ public class TopicService {
 
 	public static Map<String, Object> updateTopic(DispatchContext dctx, Map<String, Object> params) {
 		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher=dctx.getDispatcher();
 		String topicId = (String) params.get("topicId");
 		String topicName=(String)params.get("topicName");
 		try {
@@ -51,23 +53,30 @@ public class TopicService {
 			if(topicName==null||topicName.trim().isEmpty()) {
 				return ServiceUtil.returnError("Field cannot be empty");
 			}
-			GenericValue topicMaster = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId)
+			GenericValue updateTopicId = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId)
 					.queryOne();
 
-			if (topicMaster == null) {
+			if (updateTopicId == null) {
 				return ServiceUtil.returnError("Topic with ID " + topicId + " not found.");
 			}
-			topicMaster.set("topicName", topicName);
-			topicMaster.store();
+			Map<String, Object> updateMap=new HashMap<String, Object>();
+			updateMap.put("topicId", topicId);
+			updateMap.put("topicName", topicName);
+			Map<String, Object> result=dispatcher.runSync("updateTopic", updateMap);
+			
+			if(ServiceUtil.isError(result)) {
+				return ServiceUtil.returnError("Error, occur during update the topic");
+			}
 
 			return ServiceUtil.returnSuccess("Topic updated successfully");
-		} catch (GenericEntityException e) {
-			return ServiceUtil.returnError("Error occurred during updating the topic: ");
+		}  catch (GenericServiceException | GenericEntityException e) {
+			return ServiceUtil.returnError("Error, occur during update the topic"+ e.getMessage());
 		}
 	}
 
 	public static Map<String, Object> deleteTopic(DispatchContext dctx, Map<String, Object> params) {
 		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher=dctx.getDispatcher();
 		try {
 			String topicId = (String) params.get("topicId");
 			GenericValue topicMaster = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId)
@@ -76,10 +85,18 @@ public class TopicService {
 			if (topicMaster == null) {
 				return ServiceUtil.returnError("Topic with ID " + topicId + " not found.");
 			}
-			topicMaster.remove();
+			 Map<String, Object> deleteMap=new HashMap<String, Object>();
+			 deleteMap.put("topicId", topicId);
+			 Map<String, Object> result=dispatcher.runSync("deleteTopic", deleteMap);
+			 
+			 if(ServiceUtil.isError(result)) {
+				 return ServiceUtil.returnError("Error, occur during delete the topic");
+			 }
+			 
 			return ServiceUtil.returnSuccess("Topic deleted successfully");
-		} catch (GenericEntityException e) {
-			return ServiceUtil.returnError("Error occurred during updating the topic: ");
+			
+		}  catch (GenericServiceException | GenericEntityException e) {
+			return ServiceUtil.returnError("Error, occur during delete the topic"+ e.getMessage());
 		}
 	}
 	
