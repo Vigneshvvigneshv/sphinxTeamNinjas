@@ -102,13 +102,12 @@
 	</service>
 	
 	<service  name="updateTopic" engine="entity-auto" invoke="update" default-entity-name="topicMaster">
-		<auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="false"/>
+		<attribute name="topicId" mode="IN" type="String"></attribute>
+		<attribute name="topicName" mode="IN" type="String"></attribute>
 	</service>
 	
 	<service  name="deleteTopic" engine="entity-auto" invoke="delete" default-entity-name="topicMaster">
-		<auto-attributes include="pk" mode="IN" optional="false"/>
-
+		<attribute name="topicId" mode="IN" type="String"></attribute>
 	</service>
 	<!-- end of topic service -->
 
@@ -186,7 +185,6 @@
 	</service>
 	
 	<service name="deleteQuestion" engine="entity-auto" invoke="delete" default-entity-name="questionMaster">
-		
 		<auto-attributes include="pk" mode="IN" optional="false"/>
 	</service>
 	
