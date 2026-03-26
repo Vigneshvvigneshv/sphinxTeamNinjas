@@ -3,13 +3,13 @@ package com.vastpro.sphinx.rest.resource;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -17,48 +17,26 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.ofbiz.entity.Delegator;
-import org.apache.ofbiz.entity.DelegatorFactory;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceContainer;
 
 
 @Path("/topic")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 public class TopicResource {
-	
-	@Context
-	private HttpServletRequest request;
-
-	@Context
-	private ServletContext servletContext;
-
-	// Helper method to get Delegator
-	private Delegator getDelegator() {
-		Delegator delegator = (Delegator) servletContext.getAttribute("delegator");
-		if (delegator == null) {
-			// Fallback — get directly from factory
-			delegator = DelegatorFactory.getDelegator("default");
-		}
-		return delegator;
-	}
-	
-	
-	private LocalDispatcher getDispatcher() {
-		LocalDispatcher dispatcher = (LocalDispatcher) servletContext.getAttribute("dispatcher");
-		if (dispatcher == null) {
-			// Fallback — get directly from ServiceContainer
-			dispatcher = ServiceContainer.getLocalDispatcher("sphinx", // must match localDispatcherName in web.xml
-					getDelegator());
-		}
-		return dispatcher;
-	}
 	@POST
 	@Path("/createtopic")
-	public  Response createTopic(Map<String,Object> input) {
-		LocalDispatcher dispatcher=getDispatcher();
+	public  Response createTopic(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		if (dispatcher == null) {
+			dispatcher = ServiceContainer.getLocalDispatcher("sphinx",
+					(Delegator) request.getAttribute("delegator"));
+		}
 		
-		try {	
+		try {
+			Map<String, Object> input=new HashMap<String, Object>();
+			input.put("topicName",request.getParameter("topicName"));
 			Map<String, Object> result = dispatcher.runSync("createTopicOwn", input);
 			
 			return Response.ok(result).build();
@@ -68,12 +46,20 @@ public class TopicResource {
 		}
 	}
 	
-	@PATCH
+	@PUT
 	@Path("/updatetopic")
-	public  Response updateTopic(Map<String,Object> input) {
-		LocalDispatcher dispatcher=getDispatcher();
+	public  Response updateTopic(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		if (dispatcher == null) {
+			dispatcher = ServiceContainer.getLocalDispatcher("sphinx",
+					(Delegator) request.getAttribute("delegator"));
+		}
 		
 		try {	
+			
+			Map<String, Object> input=new HashMap<String, Object>();
+			input.put("topicId",request.getParameter("topicId"));
+			input.put("topicName",request.getParameter("topicName"));
 			Map<String, Object> result = dispatcher.runSync("updateTopic", input);
 			
 			return Response.ok(result).build();
@@ -85,10 +71,17 @@ public class TopicResource {
 	
 	@DELETE
 	@Path("/deletetopic")
-	public  Response deleteTopic(Map<String,Object> input) {
-		LocalDispatcher dispatcher=getDispatcher();
+	public  Response deleteTopic(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		if (dispatcher == null) {
+			dispatcher = ServiceContainer.getLocalDispatcher("sphinx",
+					(Delegator) request.getAttribute("delegator"));
+		}
 		
 		try {	
+			
+			Map<String, Object> input=new HashMap<String, Object>();
+			input.put("topicId",request.getParameter("topicId"));
 			Map<String, Object> result = dispatcher.runSync("deleteTopic", input);
 			
 			return Response.ok(result).build();
@@ -101,8 +94,12 @@ public class TopicResource {
 	
 	@GET
 	@Path("/getalltopic")
-	public  Response getTopic() {
-		LocalDispatcher dispatcher=getDispatcher();
+	public  Response getTopic(@Context HttpServletRequest request,@Context HttpServletResponse response) {
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		if (dispatcher == null) {
+			dispatcher = ServiceContainer.getLocalDispatcher("sphinx",
+					(Delegator) request.getAttribute("delegator"));
+		}
 		Map<String, Object> input = new HashMap<>();
 		try {	
 			Map<String, Object> result = dispatcher.runSync("getAllTopics", input);
