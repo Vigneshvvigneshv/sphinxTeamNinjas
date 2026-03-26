@@ -27,33 +27,6 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
-	@Context
-	private HttpServletRequest request;
-
-	@Context
-	private ServletContext servletContext;
-
-	// Helper method to get Delegator
-	private Delegator getDelegator() {
-		Delegator delegator = (Delegator) servletContext.getAttribute("delegator");
-		if (delegator == null) {
-			// Fallback — get directly from factory
-			delegator = DelegatorFactory.getDelegator("default");
-		}
-		return delegator;
-	}
-
-	// Helper method to get Dispatcher
-	private LocalDispatcher getDispatcher() {
-		LocalDispatcher dispatcher = (LocalDispatcher) servletContext.getAttribute("dispatcher");
-		if (dispatcher == null) {
-			// Fallback — get directly from ServiceContainer
-			dispatcher = ServiceContainer.getLocalDispatcher("sphinx", // must match localDispatcherName in web.xml
-					getDelegator());
-		}
-		return dispatcher;
-	}
-
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
