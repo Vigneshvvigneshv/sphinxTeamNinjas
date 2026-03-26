@@ -35,7 +35,6 @@
     <field name="optionB"          type="very-long"    />
     <field name="optionC"          type="very-long"    />
     <field name="optionD"          type="very-long"    />
-    <field name="optionE"          type="very-long"    />
     <field name="answer"           type="short-varchar"/> 
     <field name="numAnswers"       type="numeric"      />
     <field name="questionTypeId"   type="short-varchar"/> 
