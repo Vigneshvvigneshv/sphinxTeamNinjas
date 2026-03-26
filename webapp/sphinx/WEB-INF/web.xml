@@ -99,7 +99,6 @@
 		<url-pattern>/control/*</url-pattern>
 	</servlet-mapping>
 
-
 	<servlet>
     <servlet-name>RestServlet</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>

@@ -112,6 +112,13 @@
 	<!-- end of topic service -->
 
 
+<!-- Start of Exam Service -->
+
+	<!-- Create Exam -->
+	<service engine="java" name="createExamOwn"></service>
+
+<!-- End of Exam Service  -->
+
 
 <!--  -->
 	<service name="createQuestionService" engine="java"
