@@ -43,10 +43,10 @@ import com.vastpro.sphinx.util.QuestionColumnConfigUtil;
 import com.vastpro.sphinx.util.QuestionColumnConfigUtil.ColumnConfig;
 
 
-@Path("/exam")
+@Path("/question")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class ExamResource {
+public class QuestionResource {
 	
 	
 	@Context
