@@ -1,6 +1,10 @@
 package com.vastpro.sphinx.rest.resource;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -21,9 +25,23 @@ import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.DelegatorFactory;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
+import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceContainer;
 import org.apache.ofbiz.service.ServiceUtil;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+
+import com.vastpro.sphinx.util.QuestionColumnConfigUtil;
+import com.vastpro.sphinx.util.QuestionColumnConfigUtil.ColumnConfig;
+
 
 @Path("/exam")
 @Produces(MediaType.APPLICATION_JSON)
@@ -126,7 +144,7 @@ public class ExamResource {
 	@DELETE
 	@Path("/delete")
 	public Response deleteQuestion(Map<String,Object>param) {
-	    Map<String, Object> result = new HashMap<>();
+	    Map<String, Object> result = ServiceUtil.returnSuccess("Question successfully Deleted");
 	    
 	    LocalDispatcher dispatcher = getDispatcher();
 	    try {
@@ -191,7 +209,7 @@ public class ExamResource {
 			result.put("topicId", serviceResult.get("topicId"));
 			result.put("topicName", serviceResult.get("topicName"));
 			result.put("totalCount", serviceResult.get("totalCount"));
-			result.put("questionsList", serviceResult.get("questionsList"));
+			result.put("questionList", serviceResult.get("questionList"));
 			return Response.ok(result).build();
 			
 			
@@ -200,5 +218,109 @@ public class ExamResource {
 			result.put("message", e.getMessage());
 			return Response.status(500).entity(result).build();
 		}
+	}
+	
+	
+	@POST
+	@Path("/upload")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response uploadQuestions(@FormDataParam("file") InputStream file,@FormDataParam("file") FormDataContentDisposition fileDetail) {
+		
+		 if (file == null || fileDetail == null) {
+		        return Response.status(400)
+		                .entity(ServiceUtil.returnError("File not received. Check Postman key name."))
+		                .build();
+		    }
+		String fileName=fileDetail.getFileName();
+		
+		if(!fileName.toLowerCase().endsWith(".xlsx")) {
+			return Response.status(400).entity(ServiceUtil.returnError("only files with .xlsx are allowed")).build();
+		}
+		
+		try {
+			Workbook workbook = WorkbookFactory.create(file);
+			Sheet sheet = workbook.getSheetAt(0);
+			
+			List<Map<String, Object>> questions = new ArrayList<>();
+			
+			for(int i=1;i<=sheet.getLastRowNum();i++) {
+				Row row = sheet.getRow(i);
+				if (row == null)
+					continue;
+				
+				Map<String, Object> question = new HashMap<>();
+				
+				List<ColumnConfig> columns=QuestionColumnConfigUtil.getColumnConfigs();
+				
+				for (ColumnConfig col : columns) {
+					Cell cell = row.getCell(col.index);
+
+
+					if (col.required && (cell == null || cell.getCellType() == CellType.BLANK)) {
+						return Response.status(400)
+										.entity(ServiceUtil.returnError(
+														"Row " + i + ", Column " + col.index + " " + col.label + " is required", null))
+										.build();
+					}
+
+					if (cell == null) {
+						question.put(col.field, null);
+						continue;
+					}
+
+
+					switch (cell.getCellType()) {
+
+						case NUMERIC:
+							double numVal = cell.getNumericCellValue();
+
+						    if ("Number".equalsIgnoreCase(col.type)) {
+
+						        if ("answerValue".equals(col.field) || "negativeMarkValue".equals(col.field)) {
+						            question.put(col.field, numVal); // Double
+						        } else {
+						            question.put(col.field, (long) numVal); // Long
+						        }
+
+						    } else {
+						        question.put(col.field, String.valueOf((long) numVal));
+						    }
+						    break;
+
+						case STRING:
+							String strVal = cell.getStringCellValue();
+							question.put(col.field, strVal != null ? strVal.trim() : null);
+							break;
+
+						case BOOLEAN:
+							question.put(col.field, cell.getBooleanCellValue());
+							break;
+
+						case BLANK:
+							question.put(col.field, null);
+							break;
+						default:
+							question.put(col.field, null);
+							break;
+					}
+				}
+				questions.add(question);
+			}
+			
+			for (Map<String, ? extends Object> question : questions) {
+				getDispatcher().runSync("createQuestion", question);
+			}
+			
+			return Response.status(201).entity(ServiceUtil.returnSuccess("Question uploaded successfully")).build();
+			
+		}catch(EncryptedDocumentException  e) {
+			return Response.status(500).entity(ServiceUtil.returnError(e.getMessage())).build();
+		}catch(IOException e) {
+			return Response.status(500).entity(ServiceUtil.returnError(e.getMessage())).build();
+		}catch(GenericServiceException e) {
+			return Response.status(500).entity(ServiceUtil.returnError(e.getMessage())).build();
+		}
+		
 	}
 }

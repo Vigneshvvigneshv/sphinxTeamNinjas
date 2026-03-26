@@ -173,6 +173,7 @@
 		<attribute name="topicName" type="String" mode="OUT" optional="false"/>
 		<attribute name="totalCount" type="Integer" mode="OUT" optional="false"/>
 		<attribute name="questionList" mode="OUT" type="List"/>
+		<attribute name="topicId" mode="OUT" type="String" optional="false"/>
 	</service>
 	
 </services>

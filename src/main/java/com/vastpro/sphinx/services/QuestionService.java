@@ -1,6 +1,9 @@
 package com.vastpro.sphinx.services;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ofbiz.entity.Delegator;
@@ -211,5 +214,55 @@ public class QuestionService {
 		}
 	}
 	
-
+	public static Map<String,Object> getQuestionsByTopic(DispatchContext dctx,Map<String,Object> context){
+		Delegator delegator=dctx.getDelegator();
+		
+		try {
+			String topicId=(String)context.get("topicId");
+			
+			if(topicId==null || topicId.trim().isEmpty()) {
+				return ServiceUtil.returnError("topicId is Required");
+			}
+			
+			GenericValue topic=EntityQuery.use(delegator).from("topicMaster").where("topicId",topicId).queryOne();
+			
+			if(topic == null) {
+				return ServiceUtil.returnError("Topic not Found");
+			}
+			
+			List<GenericValue> questions=EntityQuery.use(delegator).from("questionMaster").where("topicId",topicId).queryList();
+			
+			List<Map<String,Object>> questionList=new ArrayList<>();
+			
+			for(GenericValue q:questions) {
+				Map<String,Object> qMap=new HashMap<>();
+				
+				qMap.put("questionId", q.getLong("questionId"));
+				qMap.put("questionDetail", q.getString("questionDetail"));
+				qMap.put("optionA", q.getString("optionA"));
+				qMap.put("optionB", q.getString("optionB"));
+				qMap.put("optionC", q.getString("optionC"));
+				qMap.put("optionD", q.getString("optionD"));
+				qMap.put("numAnswers", q.getLong("numAnswers"));
+				qMap.put("questionTypeId", q.getString("questionTypeId"));
+				qMap.put("difficultyLevel", q.getString("difficultyLevel"));
+				qMap.put("topicId", q.getString("topicId"));
+				qMap.put("negativeMarkValue", q.getBigDecimal("negativeMarkValue"));
+				
+				
+				questionList.add(qMap);
+			}
+			
+			Map<String,Object> result=ServiceUtil.returnSuccess();
+			
+			result.put("topicId", topic.getString("topicId"));
+			result.put("topicName", topic.getString("topicName"));
+			result.put("totalCount", questionList.size());
+			result.put("questionList", questionList);
+			
+			return result;
+		}catch(GenericEntityException e) {
+			return ServiceUtil.returnError("Error fetching questions By topic: "+e.getMessage());
+		}
+	}
 }
