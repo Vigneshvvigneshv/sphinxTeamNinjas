@@ -44,8 +44,7 @@ import com.vastpro.sphinx.util.QuestionColumnConfigUtil.ColumnConfig;
 
 
 @Path("/question")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+
 public class QuestionResource {
 	
 	
@@ -99,6 +98,8 @@ public class QuestionResource {
 	
 	@PUT
 	@Path("/update")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateQuestion(Map<String, Object> params) {
 	    
 		Map<String, Object> result = new HashMap<>();
@@ -143,6 +144,8 @@ public class QuestionResource {
 	
 	@DELETE
 	@Path("/delete")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteQuestion(Map<String,Object>param) {
 	    Map<String, Object> result = ServiceUtil.returnSuccess("Question successfully Deleted");
 	    
@@ -184,6 +187,8 @@ public class QuestionResource {
 	
 	@GET
 	@Path("/getQuestionsbytopic")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getQuestionsByTopic(Map<String,Object> params) {
 		LocalDispatcher dispatcher = getDispatcher();
 		Map<String,Object>result=new HashMap<>();
@@ -309,7 +314,7 @@ public class QuestionResource {
 			}
 			
 			for (Map<String, ? extends Object> question : questions) {
-				getDispatcher().runSync("createQuestion", question);
+				getDispatcher().runSync("createQuestionService", question);
 			}
 			
 			return Response.status(201).entity(ServiceUtil.returnSuccess("Question uploaded successfully")).build();
