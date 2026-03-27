@@ -85,7 +85,7 @@ public class UserResource {
 //			userInput.put("lastName", lastName);
 //			userInput.put("email", email);
 
-			Map<String, Object> result = dispatcher.runSync("userSignUpService", userInput);
+			Map<String, Object> result = dispatcher.runSync("userSignUpServiceOwn", userInput);
 
 //			return result;
 			return Response.ok(result).build();
