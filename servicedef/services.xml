@@ -92,7 +92,7 @@
 	<service name="getAllTopics" engine="java"
 		location="com.vastpro.sphinx.services.TopicService"
 		invoke="getAllTopics">
-		<attribute name="topicList" mode="OUT" type="List"></attribute>
+		<attribute name="topicList" mode="OUT" type="List" optional="true"></attribute>
 	</service>
 	
 	
