@@ -111,7 +111,7 @@ public class TopicService {
 	                                                  .queryList();
 	        
 	        if(topicList.size()==0) {
-	        	return ServiceUtil.returnSuccess("No topic found");
+	        	return ServiceUtil.returnError("No topic available");
 	        }
 	        
 	        result.put("topicList", topicList);
