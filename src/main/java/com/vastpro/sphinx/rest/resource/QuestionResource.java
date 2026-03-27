@@ -104,8 +104,7 @@ public class QuestionResource {
 	    try {
 	        LocalDispatcher dispatcher = getDispatcher();
 
-	        
-	        
+	   
 	        // questionId must be sent by frontend
 	           
 	        String questionIdStr = (String) params.get("questionId");
@@ -179,14 +178,13 @@ public class QuestionResource {
 	}
 	
 	@GET
-	@Path("/getQuestionsbytopic")
+	@Path("/getQuestionsBytopic")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getQuestionsByTopic(@QueryParam("topicId") String topicId) {
 		LocalDispatcher dispatcher = getDispatcher();
 		Map<String,Object>result=new HashMap<>();
 		try {
-			
 			
 			
 			if(topicId==null || topicId.trim().isEmpty()) {
@@ -208,6 +206,15 @@ public class QuestionResource {
 			result.put("topicName", serviceResult.get("topicName"));
 			result.put("totalCount", serviceResult.get("totalCount"));
 			result.put("questionList", serviceResult.get("questionList"));
+
+
+			result.put("pageNo",serviceResult.get("pageNo"));
+			result.put("pageSize",serviceResult.get("pageSize"));
+			result.put("totalPages", serviceResult.get("totalPages"));
+			result.put("hasNext", serviceResult.get("hasNext"));
+			result.put("hasPrevious",serviceResult.get("hasPrevious"));
+			
+			
 			return Response.ok(result).build();
 			
 			
@@ -226,6 +233,7 @@ public class QuestionResource {
 	public Response uploadQuestions(@FormDataParam("file") InputStream file,@FormDataParam("file") FormDataContentDisposition fileDetail) {
 		
 		 if (file == null || fileDetail == null) {
+			 
 		        return Response.status(400)
 		                .entity(ServiceUtil.returnError("File not received. Check Postman key name."))
 		                .build();
