@@ -16,6 +16,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -44,7 +45,6 @@ import com.vastpro.sphinx.util.QuestionColumnConfigUtil.ColumnConfig;
 
 
 @Path("/question")
-
 public class QuestionResource {
 	
 	
@@ -52,13 +52,12 @@ public class QuestionResource {
 	private HttpServletRequest request;
 
 	@Context
-	private ServletContext servletContext; // ← ADD THIS
+	private ServletContext servletContext; 
 
 	// Helper method to get Delegator
 	private Delegator getDelegator() {
 		Delegator delegator = (Delegator) servletContext.getAttribute("delegator");
 		if (delegator == null) {
-			// Fallback — get directly from factory
 			delegator = DelegatorFactory.getDelegator("default");
 		}
 		return delegator;
@@ -81,8 +80,7 @@ public class QuestionResource {
 		try {	
 			LocalDispatcher dispatcher = getDispatcher();
 			
-			
-			
+	
 			Map<String, Object> result = dispatcher.runSync("createQuestionService", question);
 			
 			return Response.ok(result).build();
@@ -104,7 +102,6 @@ public class QuestionResource {
 	    
 		Map<String, Object> result = new HashMap<>();
 	    try {
-	        Delegator delegator = getDelegator();
 	        LocalDispatcher dispatcher = getDispatcher();
 
 	        
@@ -159,11 +156,7 @@ public class QuestionResource {
 	        	return Response.status(400).entity(result).build();
 	        }
 	        
-	        Long questionId=Long.valueOf(questionIdStr);
-	        
-	        // Validate
-
-	       
+	        Long questionId=Long.valueOf(questionIdStr);   
 
 	        // Call service
 	        Map<String, Object> serviceResult = dispatcher.runSync("deleteQuestionMaster", UtilMisc.toMap("questionId", questionId));
@@ -189,12 +182,12 @@ public class QuestionResource {
 	@Path("/getQuestionsbytopic")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response getQuestionsByTopic(Map<String,Object> params) {
+	public Response getQuestionsByTopic(@QueryParam("topicId") String topicId) {
 		LocalDispatcher dispatcher = getDispatcher();
 		Map<String,Object>result=new HashMap<>();
 		try {
 			
-			String topicId=(String)params.get("topicId");
+			
 			
 			if(topicId==null || topicId.trim().isEmpty()) {
 				result.put("status","ERROR");
@@ -325,7 +318,6 @@ public class QuestionResource {
 			return Response.status(500).entity(ServiceUtil.returnError(e.getMessage())).build();
 		}catch(GenericServiceException e) {
 			return Response.status(500).entity(ServiceUtil.returnError(e.getMessage())).build();
-		}
-		
+		}	
 	}
 }
