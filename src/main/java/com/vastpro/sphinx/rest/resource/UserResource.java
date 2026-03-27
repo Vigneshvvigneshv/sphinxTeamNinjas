@@ -24,11 +24,12 @@ import org.apache.ofbiz.service.ServiceContainer;
 import javax.ws.rs.core.Response;
 
 @Path("/user")
-@Produces(MediaType.APPLICATION_JSON)
+
 public class UserResource {
 
 	@POST
 	@Path("/login")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response validateUser(Map<String,Object> userInput, @Context HttpServletRequest request, @Context HttpServletResponse response) {
 		try {
@@ -59,6 +60,7 @@ public class UserResource {
 
 	@POST
 	@Path("/signup")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response signupUser(Map<String,Object> userInput,@Context HttpServletRequest request, @Context HttpServletResponse response) {
 //		public  Response signupUser(Map<String, Object> userInput) {
