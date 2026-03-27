@@ -218,10 +218,22 @@ public class QuestionService {
 		Delegator delegator=dctx.getDelegator();
 		
 		try {
+			
 			String topicId=(String)context.get("topicId");
+			Integer pageNo=(Integer)context.get("pageNo");
+			Integer pageSize=(Integer)context.get("pageSize");
+			
+			
 			
 			if(topicId==null || topicId.trim().isEmpty()) {
 				return ServiceUtil.returnError("topicId is Required");
+			}
+			
+			if(pageNo==null || pageNo<1) {
+				pageNo=1;
+			}
+			if(pageSize==null || pageSize<1) {
+				pageSize=10;
 			}
 			
 			GenericValue topic=EntityQuery.use(delegator).from("topicMaster").where("topicId",topicId).queryOne();
@@ -230,7 +242,27 @@ public class QuestionService {
 				return ServiceUtil.returnError("Topic not Found");
 			}
 			
-			List<GenericValue> questions=EntityQuery.use(delegator).from("questionMaster").where("topicId",topicId).queryList();
+			
+			long totalCount=EntityQuery.use(delegator).from("questionMaster").where("topicId",topicId).queryCount();
+			
+			int totalPages=(int) Math.ceil((double)totalCount/pageSize);
+			int offset=(pageNo-1)*pageSize;
+			
+			
+			List<GenericValue> questions=EntityQuery.use(delegator)
+							.from("questionMaster")
+							.where("topicId",topicId)
+							.orderBy("questionId")
+							.cursorScrollInsensitive()
+							.maxRows(pageSize)
+							.queryList();
+			
+			if(offset>questions.size()) {
+				questions=new ArrayList<>();
+			}else {
+				questions=questions.subList(offset,
+								Math.min(offset+pageSize,questions.size()));
+			}
 			
 			List<Map<String,Object>> questionList=new ArrayList<>();
 			
@@ -257,8 +289,16 @@ public class QuestionService {
 			
 			result.put("topicId", topic.getString("topicId"));
 			result.put("topicName", topic.getString("topicName"));
-			result.put("totalCount", questionList.size());
+			result.put("totalCount", totalCount);
 			result.put("questionList", questionList);
+			
+			
+			result.put("pageNo",pageNo);
+			result.put("pageSize",pageSize);
+			result.put("totalPages", totalPages);
+			result.put("hasNext", pageNo<totalPages);
+			result.put("hasPrevious",pageNo>1);
+			
 			
 			return result;
 		}catch(GenericEntityException e) {
