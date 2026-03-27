@@ -77,6 +77,8 @@ public class QuestionResource {
 	
 	@POST
 	@Path("/createquestion")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createQuestion(Map<String,Object> question) {
 		try {	
 			LocalDispatcher dispatcher = getDispatcher();
