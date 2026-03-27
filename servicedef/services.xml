@@ -123,6 +123,11 @@
 		<attribute name="passPercentage" mode="IN" type="String"></attribute>
 	</service>
 
+
+<service engine="entity-outo" name="createExam" invoke="create" default-entity-name="examMaster">
+	<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+	<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+</service>
 <!-- End of Exam Service  -->
 
 
