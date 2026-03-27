@@ -189,7 +189,6 @@ public class QuestionResource {
 		Map<String,Object>result=new HashMap<>();
 		try {
 			
-			
 			if(topicId==null || topicId.trim().isEmpty()) {
 				result.put("status","ERROR");
 				result.put("message","TopicId is Required");

@@ -74,6 +74,7 @@ public class QuestionService {
 	public static Map<String, Object> updateQuestion(DispatchContext dctx, Map<String, Object> context) {
 
 	    Delegator delegator = dctx.getDelegator();
+	    LocalDispatcher dispatcher=dctx.getDispatcher();
 
 	    try {
 	        // Step 1 — Get questionId from context (sent by frontend)
@@ -92,58 +93,36 @@ public class QuestionService {
 	        }
 
 	        // Step 3 — Get all fields from context
-	        String     questionDetail  = (String)context.get("questionDetail");
-	        String     optionA         = (String)context.get("optionA");
-	        String     optionB         = (String)context.get("optionB");
-	        String     optionC         = (String)context.get("optionC");
-	        String     optionD         = (String)context.get("optionD");
-	        String     optionE         = (String)context.get("optionE");
-	        String     answer          = (String)context.get("answer");
-	        Long       numAnswers      = (Long)context.get("numAnswers");
-	        String     questionTypeId  = (String)context.get("questionTypeId");
-	        Long       difficultyLevel = (Long)context.get("difficultyLevel");
-	        BigDecimal answerValue     = (BigDecimal)context.get("answerValue");
-	        String     topicId         = (String)context.get("topicId");
-	        BigDecimal negMarkValue    = (BigDecimal)context.get("negativeMarkValue");
+	        String questionDetail = (String)context.get("questionDetail");
+	        String optionA = (String)context.get("optionA");
+	        String optionB = (String)context.get("optionB");
+	        String optionC = (String)context.get("optionC");
+	        String optionD = (String)context.get("optionD");
+	        String answer = (String)context.get("answer");
+	        Long numAnswers = (Long)context.get("numAnswers");
+	        String questionTypeId = (String)context.get("questionTypeId");
+	        Long difficultyLevel = (Long)context.get("difficultyLevel");
+	        BigDecimal answerValue = (BigDecimal)context.get("answerValue");
+	        String topicId = (String)context.get("topicId");
+	        BigDecimal negMarkValue = (BigDecimal)context.get("negativeMarkValue");
 
-	        // Step 4 — Update only fields that are passed
-	        //          if null → keep existing value in DB
-	        if (questionDetail != null) {
-	        	question.set("questionDetail",questionDetail);
-	        }
+	       
+	       
+	        Map<String,Object> updateQuestion=new HashMap<>();
 	        
-	        if (optionA != null) {
-	        	question.set("optionA",optionA);
-	        }
+	        updateQuestion.put("questionDetail", questionDetail);
+	        updateQuestion.put("optionA", optionA);
+	        updateQuestion.put("optionB", optionB);
+	        updateQuestion.put("optionC", optionC);
+	        updateQuestion.put("optionD", optionD);
+	        updateQuestion.put("answer", answer);
+	        updateQuestion.put("numAnswers", numAnswers);
+	        updateQuestion.put("difficultyLevel", difficultyLevel);
+	        updateQuestion.put("answerValue", answerValue);
+	        updateQuestion.put("topicId", topicId);
+	        updateQuestion.put("negMarkValue", negMarkValue);
 	        
-	        if (optionB != null) {
-	        	question.set("optionB",optionB);
-	        }
-	        if (optionC != null) {
-	        	question.set("optionC",optionC);
-	        }
-	        if (optionD != null) {
-	        	question.set("optionD",optionD);
-	        }
-	        if (optionE != null) {
-	        	question.set("optionE",optionE);
-	        }
-	        if (answer != null) {
-	        	question.set("answer",answer);
-	        }
-	        if (numAnswers != null) {
-	        	question.set("numAnswers",numAnswers);
-	        }
-	        if (difficultyLevel!= null) {
-	        	question.set("difficultyLevel",difficultyLevel);
-	        }
-	        if (answerValue != null) {
-	        	question.set("answerValue",answerValue);
-	        }
-	        if (negMarkValue != null) {
-	        	question.set("negativeMarkValue",negMarkValue);
-	        }
-
+	        
 	       
 	        if (topicId != null) {
 	            GenericValue topic = EntityQuery.use(delegator)
@@ -154,11 +133,10 @@ public class QuestionService {
 	            if (topic == null) {
 	                return ServiceUtil.returnError("Topic not found for topicId: " + topicId);
 	            }
-	            question.set("topicId", topicId);
+	            
 	        }
 
-	       
-	        if (questionTypeId != null) {
+	        if (questionTypeId!= null) {
 	            GenericValue questionType = EntityQuery.use(delegator)
 	                .from("Enumeration")
 	                .where("enumId", questionTypeId, "enumTypeId", "QUESTION_TYPE")
@@ -170,14 +148,15 @@ public class QuestionService {
 	            question.set("questionTypeId", questionTypeId);
 	        }
 
-	        // Step 7 — Save to DB
-	        question.store();
-
+	      
+	        Map<String,Object>serviceResult=dispatcher.runSync("updateQuestion", updateQuestion);
+	        
+	        
 	        Map<String, Object> result = ServiceUtil.returnSuccess("Question updated successfully");
 	        result.put("questionId", questionId);
 	        return result;
 
-	    } catch (GenericEntityException e) {
+	    } catch (GenericEntityException | GenericServiceException e) {
 	        return ServiceUtil.returnError("Error updating question: " + e.getMessage());
 	    }
 	}
@@ -233,7 +212,7 @@ public class QuestionService {
 				pageNo=1;
 			}
 			if(pageSize==null || pageSize<1) {
-				pageSize=10;
+				pageSize=1;
 			}
 			
 			GenericValue topic=EntityQuery.use(delegator).from("topicMaster").where("topicId",topicId).queryOne();
