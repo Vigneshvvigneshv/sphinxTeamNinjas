@@ -72,6 +72,11 @@
 		<filter-name>ContextFilter</filter-name>
 		<url-pattern>/control/*</url-pattern>
 	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>ControlFilter</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
 	<filter-mapping>
 		<filter-name>SameSiteFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
@@ -102,7 +107,6 @@
 	<servlet>
     <servlet-name>RestServlet</servlet-name>
     <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-    <!-- ADD THIS -->
     <init-param>
         <param-name>javax.ws.rs.Application</param-name><!-- location package Application -->
         <param-value>com.vastpro.sphinx.rest.SphinxRest</param-value><!-- restClass fully qualified name of the class  -->
