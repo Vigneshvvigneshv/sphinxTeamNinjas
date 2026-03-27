@@ -115,7 +115,13 @@
 <!-- Start of Exam Service -->
 
 	<!-- Create Exam -->
-	<service engine="java" name="createExamOwn"></service>
+	<service engine="java" name="createExamOwn" location="com.vastpro.sphinx.service.ExamService" invoke="createExam">
+		<attribute name="examName" mode="IN" type="String"></attribute>
+		<attribute name="description" mode="IN" type="String"></attribute>
+		<attribute name="noOfQuestions" mode="IN" type="String"></attribute>
+		<attribute name="duration" mode="IN" type="String"></attribute>
+		<attribute name="passPercentage" mode="IN" type="String"></attribute>
+	</service>
 
 <!-- End of Exam Service  -->
 
