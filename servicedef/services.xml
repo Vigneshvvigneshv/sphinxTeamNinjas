@@ -213,8 +213,19 @@
 		<attribute name="topicId" mode="IN" type="String" optional="false"/>
 		<attribute name="topicName" type="String" mode="OUT" optional="false"/>
 		<attribute name="totalCount" type="Integer" mode="OUT" optional="false"/>
-		<attribute name="questionList" mode="OUT" type="List"/>
+		
+		
+		<attribute name="pageNo" mode ="IN" type="Integer" optional="true"/>
+		<attribute name="pageSize" mode ="IN" type="Integer" optional="true"/>
+		
+		
+		<attribute name="questionList" mode="OUT" type="List" optional="false"/>
 		<attribute name="topicId" mode="OUT" type="String" optional="false"/>
+		<attribute name="pageNo" mode="OUT" type="Integer" optional="false"/>
+		<attribute name="pageSize" mode="OUT" type="Integer" optional="false"/>
+		<attribute name="totalPages" mode="OUT" type="Integer" optional="false"/>
+		<attribute name="hasNext" mode="OUT" type="Boolean" optional="false"/>
+		<attribute name="hasPrevious" mode="OUT" type="Boolean" optional="false"/>
 	</service>
 	
 </services>

@@ -40,6 +40,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
+import com.vastpro.sphinx.util.ConvertValue;
 import com.vastpro.sphinx.util.QuestionColumnConfigUtil;
 import com.vastpro.sphinx.util.QuestionColumnConfigUtil.ColumnConfig;
 
@@ -180,8 +181,10 @@ public class QuestionResource {
 	@GET
 	@Path("/getQuestionsBytopic")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response getQuestionsByTopic(@QueryParam("topicId") String topicId) {
+	
+	public Response getQuestionsByTopic(@QueryParam("topicId") String topicId, @QueryParam("pageNo") String pageNoStr,@QueryParam("pageSize") String pageSizeStr ){
+		
+		
 		LocalDispatcher dispatcher = getDispatcher();
 		Map<String,Object>result=new HashMap<>();
 		try {
@@ -192,9 +195,21 @@ public class QuestionResource {
 				result.put("message","TopicId is Required");
 				return Response.status(400).entity(result).build();
 			}
-			Map<String,Object>serviceResult=dispatcher.runSync("getQuestionsByTopic", UtilMisc.toMap("topicId",topicId));
+			
+			Integer pageNo=ConvertValue.toInteger(pageNoStr) ;
+			Integer pageSize=ConvertValue.toInteger(pageSizeStr);
 			
 			
+			Map<String,Object>serviceCtx=new HashMap<>();
+			
+			serviceCtx.put("topicId", topicId);
+			serviceCtx.put("pageNo", pageNo);
+			serviceCtx.put("pageSize",pageSize);	
+			
+			
+			Map<String,Object>serviceResult=dispatcher.runSync("getQuestionsByTopic",serviceCtx);
+			
+		
 			if(ServiceUtil.isError(serviceResult)) {
 				result.put("status", "ERROR");
 				result.put("message", ServiceUtil.getErrorMessage(serviceResult));
@@ -221,6 +236,7 @@ public class QuestionResource {
 		}catch(Exception e) {
 			result.put("status", "ERROR");
 			result.put("message", e.getMessage());
+			e.printStackTrace();
 			return Response.status(500).entity(result).build();
 		}
 	}
