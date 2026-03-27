@@ -149,7 +149,7 @@ public class QuestionService {
 	        }
 
 	      
-	        Map<String,Object>serviceResult=dispatcher.runSync("updateQuestion", updateQuestion);
+	     dispatcher.runSync("updateQuestion", updateQuestion);
 	        
 	        
 	        Map<String, Object> result = ServiceUtil.returnSuccess("Question updated successfully");
