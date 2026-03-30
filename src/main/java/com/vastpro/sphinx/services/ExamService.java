@@ -52,6 +52,7 @@ public class ExamService {
 		}
 	}
 
+	
 	public static Map<String, Object> deleteExam(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
 		Delegator delegator = context.getDelegator();
@@ -76,6 +77,7 @@ public class ExamService {
 			return ServiceUtil.returnError("Error, occur during delete exam" + e.getMessage());
 		}
 	}
+	
 	
 	public static Map<String, Object> updateExam(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
@@ -109,6 +111,7 @@ public class ExamService {
 			return ServiceUtil.returnError("Error, occur during update exam" + e.getMessage());
 		}
 	}
+	
 
 	public static Map<String, Object> getAllExam(DispatchContext context, Map<String, Object> input) {
 		Delegator delegator = context.getDelegator();
@@ -124,6 +127,7 @@ public class ExamService {
 			return ServiceUtil.returnError("Error, occur during getting list of exam" + e.getMessage());
 		}
 	}
+	
 	
 	public static Map<String,Object> getExamById(DispatchContext context,Map<String,Object> input){
 		Delegator delegator=context.getDelegator();

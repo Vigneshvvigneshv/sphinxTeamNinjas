@@ -49,9 +49,11 @@ public class TopicService {
 		String topicId = (String) params.get("topicId");
 		String topicName=(String)params.get("topicName");
 		try {
-			
+			if(topicId==null||topicId.trim().isEmpty()) {
+				return ServiceUtil.returnError("Topic Id cannot be empty");
+			}
 			if(topicName==null||topicName.trim().isEmpty()) {
-				return ServiceUtil.returnError("Field cannot be empty");
+				return ServiceUtil.returnError("Topic name cannot be empty");
 			}
 			GenericValue updateTopicId = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId)
 					.queryOne();
@@ -79,6 +81,10 @@ public class TopicService {
 		LocalDispatcher dispatcher=dctx.getDispatcher();
 		try {
 			String topicId = (String) params.get("topicId");
+			
+			if(topicId==null||topicId.trim().isEmpty()) {
+				return ServiceUtil.returnError("Topic Id cannot be empty");
+			}
 			GenericValue topicMaster = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId)
 					.queryOne();
 
@@ -126,7 +132,13 @@ public class TopicService {
 		Delegator delegator=context.getDelegator();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		try {
-			GenericValue topicData=EntityQuery.use(delegator).from("topicMaster").where("topicId",input.get("topicId")).queryOne();
+			
+			String topicId=(String)input.get("topicId");
+			if(topicId==null||topicId.trim().isEmpty()) {
+				return ServiceUtil.returnError("Topic Id cannot be empty");
+			}
+			
+			GenericValue topicData=EntityQuery.use(delegator).from("topicMaster").where("topicId",topicId).queryOne();
 			if(topicData==null) {
 				return ServiceUtil.returnError("topic not found");
 			}
