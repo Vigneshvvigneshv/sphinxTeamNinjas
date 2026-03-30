@@ -64,7 +64,7 @@ public class TopicService {
 			
 			GenericValue topicNameAlreadyExits = EntityQuery.use(delegator).from("topicMaster").where("topicName", topicName)
 					.queryOne();
-			if (topicNameAlreadyExits == null) {
+			if (topicNameAlreadyExits != null) {
 				return ServiceUtil.returnError("Topic already exits");
 			}
 			
