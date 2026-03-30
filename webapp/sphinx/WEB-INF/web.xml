@@ -80,10 +80,11 @@
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 	
-	<filter-mapping>
+<!-- 	<filter-mapping>
 		<filter-name>ControlFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping> -->
+	
 	<filter-mapping>
 		<filter-name>SameSiteFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
@@ -118,6 +119,11 @@
         <param-name>javax.ws.rs.Application</param-name><!-- location package Application -->
         <param-value>com.vastpro.sphinx.rest.SphinxRest</param-value><!-- restClass fully qualified name of the class  -->
     </init-param>
+    
+        <init-param>
+        <param-name>jersey.config.server.provider.classnames</param-name>
+        <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
+    </init-param>
     <load-on-startup>1</load-on-startup>
     
      <multipart-config>
@@ -127,6 +133,9 @@
             <file-size-threshold>524288</file-size-threshold>
         </multipart-config>
 </servlet>
+
+
+
 	<servlet-mapping>
 		<servlet-name>RestServlet</servlet-name>
 		<url-pattern>/api/*</url-pattern>

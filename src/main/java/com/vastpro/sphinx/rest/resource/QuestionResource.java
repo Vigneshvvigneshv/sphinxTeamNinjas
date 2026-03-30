@@ -2,6 +2,7 @@ package com.vastpro.sphinx.rest.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -55,73 +57,95 @@ public class QuestionResource {
 	@Context
 	private ServletContext servletContext; 
 
-	// Helper method to get Delegator
-	private Delegator getDelegator() {
-		Delegator delegator = (Delegator) servletContext.getAttribute("delegator");
-		if (delegator == null) {
-			delegator = DelegatorFactory.getDelegator("default");
-		}
-		return delegator;
-	}
-	
-	
-	private LocalDispatcher getDispatcher() {
-		LocalDispatcher dispatcher = (LocalDispatcher) servletContext.getAttribute("dispatcher");
-		if (dispatcher == null) {
-			// Fallback — get directly from ServiceContainer
-			dispatcher = ServiceContainer.getLocalDispatcher("sphinx", // must match localDispatcherName in web.xml
-					getDelegator());
-		}
-		return dispatcher;
-	}
 	
 	@POST
 	@Path("/createquestion")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createQuestion(Map<String,Object> question) {
+	public Response createQuestion(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+		
+		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
+		if(dispatcher==null) {
+			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
+		}
+		
 		try {	
-			LocalDispatcher dispatcher = getDispatcher();
 			
-	
-			Map<String, Object> result = dispatcher.runSync("createQuestionService", question);
+			Map<String,Object> input= new HashMap<String, Object>();
 			
+			input.put("questionDetail", request.getAttribute("questionDetail"));
+			input.put("optionA", request.getAttribute("optionA"));
+			input.put("optionB", request.getAttribute("optionB"));
+			input.put("optionC", request.getAttribute("optionC"));
+			input.put("optionD", request.getAttribute("optionD"));
+			input.put("answer", request.getAttribute("answer"));
+			input.put("numAnswers", request.getAttribute("numAnswers"));
+			input.put("questionTypeId", request.getAttribute("questionTypeId"));
+			input.put("difficultyLevel", request.getAttribute("difficultyLevel"));
+			input.put("answerValue", request.getAttribute("answerValue"));
+			input.put("topicId", request.getAttribute("topicId"));
+			input.put("negativeMarkValue", request.getAttribute("negativeMarkValue"));
+		
+			
+			Map<String, Object> result = dispatcher.runSync("createQuestionService", input);
 			return Response.ok(result).build();
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
 		}
 		
-		
-		
 	}
 	
 	
 	@PUT
-	@Path("/update")
+	@Path("/updatequestion")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response updateQuestion(Map<String, Object> params) {
+	public Response updateQuestion(@Context HttpServletRequest request,@Context HttpServletResponse response) {
 	    
+		//getting dispatcher from request
+		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
+		if(dispatcher==null) {
+			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
+		}
+		
 		Map<String, Object> result = new HashMap<>();
 	    try {
-	        LocalDispatcher dispatcher = getDispatcher();
-
-	   
-	        // questionId must be sent by frontend
-	           
-	        String questionIdStr = (String) params.get("questionId");
+	    	
+	        // questionId must be sent by frontend  
+	        String questionIdStr = (String) request.getAttribute("questionId");
 	        if (questionIdStr == null) {
 	        	result.put("status",  "ERROR");
 	        	result.put("message", "questionId is required");
 	        	return Response.status(400).entity(result).build();
 	        }
+	        
+	        
 	        Long questionId = Long.valueOf(questionIdStr);
-	        params.put("questionId", questionId);
+	        
+	        Map<String,Object>input=new HashMap<String, Object>();
+	        
+	        input.put("questionId", questionId);
+	        input.put("questionDetail", request.getAttribute("questionDetail"));
+			input.put("optionA", request.getAttribute("optionA"));
+			input.put("optionB", request.getAttribute("optionB"));
+			input.put("optionC", request.getAttribute("optionC"));
+			input.put("optionD", request.getAttribute("optionD"));
+			input.put("answer", request.getAttribute("answer"));
+			input.put("numAnswers", request.getAttribute("numAnswers"));
+			input.put("questionTypeId", request.getAttribute("questionTypeId"));
+			input.put("difficultyLevel", request.getAttribute("difficultyLevel"));
+			input.put("answerValue", request.getAttribute("answerValue"));
+			input.put("topicId", request.getAttribute("topicId"));
+			input.put("negativeMarkValue", request.getAttribute("negativeMarkValue"));
 
+			
+			System.out.println("negativeMarkValue"+request.getAttribute("negativeMarkValue"));
+			System.out.println("questionTypeId"+request.getAttribute("questionTypeId"));
 	       
 	        // Call service
-	        Map<String, Object> serviceResult  = dispatcher.runSync("updateQuestionMaster", params);
+	        Map<String, Object> serviceResult  = dispatcher.runSync("updateQuestionMaster", input);
 
 	        if (ServiceUtil.isError(serviceResult)) {
 	        	result.put("status",  "ERROR");
@@ -129,9 +153,8 @@ public class QuestionResource {
 	            return Response.status(500).entity(result ).build();
 	        }
 
-	        result.put("status",     "SUCCESS");
-	        result.put("message",    "Question updated successfully");
-	        result.put("questionId", serviceResult.get("questionId"));
+	        result.put("status","SUCCESS");
+	        result.put("message","Question updated successfully");
 	        return Response.ok(result).build();
 
 	    } catch (Exception e) {
@@ -142,15 +165,20 @@ public class QuestionResource {
 	}
 	
 	@DELETE
-	@Path("/delete")
+	@Path("/deletequestion")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response deleteQuestion(Map<String,Object>param) {
-	    Map<String, Object> result = ServiceUtil.returnSuccess("Question successfully Deleted");
+	public Response deleteQuestion(@Context HttpServletRequest request,@Context HttpServletResponse response) {
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
 	    
-	    LocalDispatcher dispatcher = getDispatcher();
+	  //getting dispatcher from request
+	  		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
+	  		if(dispatcher==null) {
+	  			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
+	  		}
+	    
 	    try {
-	        String questionIdStr=(String)param.get("questionId");
+	        String questionIdStr=(String)request.getAttribute("questionId");
 	        
 	        if (questionIdStr == null || questionIdStr.trim().isEmpty()) {
 	        	result.put("status",  "ERROR");
@@ -159,18 +187,20 @@ public class QuestionResource {
 	        }
 	        
 	        Long questionId=Long.valueOf(questionIdStr);   
+	        
+	        Map<String,Object>input=new HashMap<String, Object>();
+	        input.put("questionId", questionId);
 
 	        // Call service
-	        Map<String, Object> serviceResult = dispatcher.runSync("deleteQuestionMaster", UtilMisc.toMap("questionId", questionId));
+	        Map<String, Object> serviceResult = dispatcher.runSync("deleteQuestionMaster",input);
 
 	        if (ServiceUtil.isError(serviceResult)) {
 	            result.put("status",  "ERROR");
-	            result.put("message", ServiceUtil.getErrorMessage(serviceResult));
+	            
 	            return Response.status(500).entity(result).build();
 	        }
 
-	        result.put("status","SUCCESS");
-	        result.put("message","Question deleted successfully");      
+	        result.put("status","SUCCESS");      
 	        return Response.ok(result).build();
 
 	    } catch (Exception e) {
@@ -181,13 +211,17 @@ public class QuestionResource {
 	}
 	
 	@GET
-	@Path("/getQuestionsBytopic")
+	@Path("/getquestionsbytopic")
 	@Produces(MediaType.APPLICATION_JSON)
 	
-	public Response getQuestionsByTopic(@QueryParam("topicId") String topicId, @QueryParam("pageNo") String pageNoStr,@QueryParam("pageSize") String pageSizeStr ){
+	public Response getQuestionsByTopic(@Context HttpServletRequest request,@QueryParam("topicId") String topicId, @QueryParam("pageNo") String pageNoStr,@QueryParam("pageSize") String pageSizeStr ){
 		
+		 //getting dispatcher from request
+  		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
+  		if(dispatcher==null) {
+  			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
+  		}
 		
-		LocalDispatcher dispatcher = getDispatcher();
 		Map<String,Object>result=new HashMap<>();
 		try {
 			
@@ -247,7 +281,7 @@ public class QuestionResource {
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadQuestions(@FormDataParam("file") InputStream file,@FormDataParam("file") FormDataContentDisposition fileDetail) {
+	public Response uploadQuestions(@Context HttpServletRequest request, @FormDataParam("file") InputStream file,@FormDataParam("file") FormDataContentDisposition fileDetail) {
 		
 		 if (file == null || fileDetail == null) {
 			 
@@ -260,6 +294,12 @@ public class QuestionResource {
 		if(!fileName.toLowerCase().endsWith(".xlsx")) {
 			return Response.status(400).entity(ServiceUtil.returnError("only files with .xlsx are allowed")).build();
 		}
+		
+		 //getting dispatcher from request
+  		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
+  		if(dispatcher==null) {
+  			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
+  		}
 		
 		try {
 			Workbook workbook = WorkbookFactory.create(file);
@@ -332,7 +372,9 @@ public class QuestionResource {
 			}
 			
 			for (Map<String, ? extends Object> question : questions) {
-				getDispatcher().runSync("createQuestionService", question);
+			Map<String,Object>result=dispatcher.runSync("createQuestionService", question);
+			
+			
 			}
 			
 			return Response.status(201).entity(ServiceUtil.returnSuccess("Question uploaded successfully")).build();
