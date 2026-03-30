@@ -31,7 +31,7 @@ public class UserResource {
 	@Path("/login")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response validateUser(Map<String,Object> userInput, @Context HttpServletRequest request, @Context HttpServletResponse response) {
+	public Response validateUser(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 		try {
 //			LocalDispatcher dispatcher = getDispatcher();
 			LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -39,12 +39,10 @@ public class UserResource {
 				dispatcher = ServiceContainer.getLocalDispatcher("sphinx",
 						(Delegator) request.getAttribute("delegator"));
 			}
-//			String username = request.getParameter("userName");
-//			String password = request.getParameter("password");
-//
-//			Map<String, Object> userInput = new HashMap<>();
-//			userInput.put("userName", username);
-//			userInput.put("password", password);
+			
+		 	Map<String, Object> userInput = new HashMap<>();
+			userInput.put("userName", request.getAttribute("userName"));
+			userInput.put("password", request.getAttribute("password"));
 
 			Map<String, Object> result = dispatcher.runSync("validateUserLoginService", userInput);
 
@@ -62,7 +60,7 @@ public class UserResource {
 	@Path("/signup")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response signupUser(Map<String,Object> userInput,@Context HttpServletRequest request, @Context HttpServletResponse response) {
+	public Response signupUser(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 //		public  Response signupUser(Map<String, Object> userInput) {
 
 		try {
@@ -78,12 +76,12 @@ public class UserResource {
 //			String lastName = request.getParameter("lastName");
 //			String email = request.getParameter("email");
 //
-//			Map<String, Object> userInput = new HashMap<>();
-//			userInput.put("userName", username);
-//			userInput.put("password", password);
-//			userInput.put("firstName", firstName);
-//			userInput.put("lastName", lastName);
-//			userInput.put("email", email);
+			Map<String, Object> userInput = new HashMap<>();
+			userInput.put("userName", request.getAttribute("userName"));
+			userInput.put("password", request.getAttribute("password"));
+			userInput.put("firstName", request.getAttribute("firstName"));
+			userInput.put("lastName", request.getAttribute("lastName"));
+			userInput.put("email", request.getAttribute("email"));
 
 			Map<String, Object> result = dispatcher.runSync("userSignUpServiceOwn", userInput);
 

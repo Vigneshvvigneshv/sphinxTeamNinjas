@@ -69,8 +69,15 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
+	
 		<filter-name>ContextFilter</filter-name>
 		<url-pattern>/control/*</url-pattern>
+	</filter-mapping>
+	
+	
+	<filter-mapping>
+		<filter-name>ContextFilter</filter-name>
+		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 	
 	<filter-mapping>

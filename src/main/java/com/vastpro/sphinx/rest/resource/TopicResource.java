@@ -28,7 +28,7 @@ import com.vastpro.sphinx.dto.TopicDTO;
 public class TopicResource {
 	@POST
 	@Path("/createtopic")
-	public  Response createTopic(TopicDTO topicInput,@Context HttpServletRequest request) {
+	public  Response createTopic(@Context HttpServletRequest request) {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		if (dispatcher == null) {
 			dispatcher = ServiceContainer.getLocalDispatcher("sphinx",
@@ -37,7 +37,7 @@ public class TopicResource {
 		
 		try {
 			Map<String, Object> input=new HashMap<String, Object>();
-			input.put("topicName",topicInput.getTopicName());
+			input.put("topicName",request.getAttribute("topicName"));
 			request.getParameterMap();
 			Map<String, Object> result = dispatcher.runSync("createTopicOwn", input);
 			
@@ -50,7 +50,7 @@ public class TopicResource {
 	
 	@PUT
 	@Path("/updatetopic")
-	public  Response updateTopic(TopicDTO topicInput,@Context HttpServletRequest request) {
+	public  Response updateTopic(@Context HttpServletRequest request) {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		if (dispatcher == null) {
 			dispatcher = ServiceContainer.getLocalDispatcher("sphinx",
@@ -60,8 +60,8 @@ public class TopicResource {
 		try {	
 			
 			Map<String, Object> input=new HashMap<String, Object>();
-			input.put("topicId",topicInput.getTopicId());
-			input.put("topicName",topicInput.getTopicName());
+			input.put("topicId",request.getAttribute("topicId"));
+			input.put("topicName",request.getAttribute("topicName"));
 			Map<String, Object> result = dispatcher.runSync("updateTopicOwn", input);
 			
 			return Response.ok(result).build();
@@ -73,7 +73,7 @@ public class TopicResource {
 	
 	@DELETE
 	@Path("/deletetopic")
-	public  Response deleteTopic(TopicDTO topicInput,@Context HttpServletRequest request) {
+	public  Response deleteTopic(@Context HttpServletRequest request) {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		if (dispatcher == null) {
 			dispatcher = ServiceContainer.getLocalDispatcher("sphinx",
@@ -83,7 +83,7 @@ public class TopicResource {
 		try {	
 			
 			Map<String, Object> input=new HashMap<String, Object>();
-			input.put("topicId",topicInput.getTopicId());
+			input.put("topicId",request.getAttribute("topicId"));
 			Map<String, Object> result = dispatcher.runSync("deleteTopicOwn", input);
 			
 			return Response.ok(result).build();
