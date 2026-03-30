@@ -12,9 +12,18 @@ import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
-
+/**
+ * This class is used to perform operation in the exam for to create, delete, update, and find the exam
+ * ExamMaster table is used to store and get the data
+ */
 public class ExamService {
 
+	/**
+	 * 
+	 * @param context
+	 * @param input
+	 * @return
+	 */
 	public static Map<String, Object> createExam(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
 		Delegator delegator = context.getDelegator();

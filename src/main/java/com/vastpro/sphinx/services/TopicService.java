@@ -61,6 +61,13 @@ public class TopicService {
 			if (updateTopicId == null) {
 				return ServiceUtil.returnError("Topic with ID " + topicId + " not found.");
 			}
+			
+			GenericValue topicNameAlreadyExits = EntityQuery.use(delegator).from("topicMaster").where("topicName", topicName)
+					.queryOne();
+			if (topicNameAlreadyExits == null) {
+				return ServiceUtil.returnError("Topic already exits");
+			}
+			
 			Map<String, Object> updateMap=new HashMap<String, Object>();
 			updateMap.put("topicId", topicId);
 			updateMap.put("topicName", topicName);
