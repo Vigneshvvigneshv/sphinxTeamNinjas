@@ -121,4 +121,20 @@ public class TopicService {
 	    }
 	    return result;
 	}
+	
+	public static Map<String,Object> getTopicById(DispatchContext context,Map<String,Object> input){
+		Delegator delegator=context.getDelegator();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		try {
+			GenericValue topicData=EntityQuery.use(delegator).from("topicMaster").where("topicId",input.get("topicId")).queryOne();
+			if(topicData==null) {
+				return ServiceUtil.returnError("topic not found");
+			}
+			result.put("topicList",topicData);
+			return result;
+		}catch(GenericEntityException e) {
+			return ServiceUtil.returnError("Error, occur during get topic by id" + e.getMessage());
+		}
+	}
+	
 }
