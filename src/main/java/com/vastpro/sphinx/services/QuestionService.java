@@ -149,13 +149,15 @@ public class QuestionService {
 	        }
 
 	      
-	     dispatcher.runSync("updateQuestion", updateQuestion);
+	   Map<String,Object>result=  dispatcher.runSync("updateQuestion", updateQuestion);
 	        
 	        
-	        Map<String, Object> result = ServiceUtil.returnSuccess("Question updated successfully");
-	        result.put("questionId", questionId);
-	        return result;
-
+	   if(ServiceUtil.isError(result)) {
+			return ServiceUtil.returnError((String)result.get("errorMessage"));
+		}
+	   return ServiceUtil.returnSuccess("Question updated successfully");
+	        
+	        
 	    } catch (GenericEntityException | GenericServiceException e) {
 	        return ServiceUtil.returnError("Error updating question: " + e.getMessage());
 	    }
@@ -182,11 +184,14 @@ public class QuestionService {
 		            return ServiceUtil.returnError("Question not found for questionId: ");	      
 		        }
 			 
-			 dispatcher.runSync("deleteQuestion", context);
-			 Map<String, Object> result = ServiceUtil.returnSuccess("Question deleted Successfully");
-
-		     result.put("message","Question  deleted successfully");
-		     return result;
+			Map<String,Object>result= dispatcher.runSync("deleteQuestion", context);
+			
+			if(ServiceUtil.isError(result)) {
+				return ServiceUtil.returnError((String)result.get("errorMessage"));
+			}
+			
+			return ServiceUtil.returnSuccess("Question deleted successfully");
+		  
 			 
 		}catch(GenericEntityException | GenericServiceException e) {
 			return ServiceUtil.returnError("Error deleting question: " + e.getMessage());
