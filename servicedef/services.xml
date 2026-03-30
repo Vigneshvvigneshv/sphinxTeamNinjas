@@ -185,24 +185,15 @@
 		location="com.vastpro.sphinx.services.QuestionService"
 		invoke="createQuestionService">
 		<attribute name="questionDetail" mode="IN" type="String"></attribute>
-		<attribute name="optionA" mode="IN" type="String"
-			optional="false" />
-		<attribute name="optionB" mode="IN" type="String"
-			optional="false" />
-		<attribute name="optionC" mode="IN" type="String"
-			optional="false" />
-		<attribute name="optionD" mode="IN" type="String"
-			optional="false" />
-		<attribute name="optionE" mode="IN" type="String"
-			optional="true" />
-		<attribute name="answer" mode="IN" type="String"
-			optional="false" />
-		<attribute name="numAnswers" mode="IN" type="Long"
-			optional="false" />
-		<attribute name="questionTypeId" mode="IN" type="String"
-			optional="false" />
-		<attribute name="difficultyLevel" mode="IN" type="Long"
-			optional="true" />
+		<attribute name="optionA" mode="IN" type="String" optional="false" />
+		<attribute name="optionB" mode="IN" type="String" optional="false" />
+		<attribute name="optionC" mode="IN" type="String" optional="false" />
+		<attribute name="optionD" mode="IN" type="String" optional="false" />
+		<attribute name="optionE" mode="IN" type="String" optional="true" />
+		<attribute name="answer" mode="IN" type="String" optional="false" />
+		<attribute name="numAnswers" mode="IN" type="Long" optional="false" />
+		<attribute name="questionTypeId" mode="IN" type="String" optional="false" />
+		<attribute name="difficultyLevel" mode="IN" type="Long" optional="true" />
 		<attribute name="answerValue" mode="IN" type="BigDecimal"
 			optional="true" />
 		<attribute name="topicId" mode="IN" type="String"
@@ -278,6 +269,11 @@
 		<attribute name="totalPages" mode="OUT" type="Integer" optional="false"/>
 		<attribute name="hasNext" mode="OUT" type="Boolean" optional="false"/>
 		<attribute name="hasPrevious" mode="OUT" type="Boolean" optional="false"/>
+	</service>
+	
+	<service  name="createExamTopic" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="createExamTopicService">
+		<attribute name="examId" mode="IN" type="String" optional="false"></attribute>
+		<attribute name="topicId" mode="IN"/>
 	</service>
 	
 </services>

@@ -45,8 +45,9 @@ public class ExamTopicResource {
 			
 			
 			
-		}catch() {
-			
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
+		return null;
 	}
 }
