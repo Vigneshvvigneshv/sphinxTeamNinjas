@@ -10,6 +10,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -77,6 +78,28 @@ public class ExamResource {
 			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
 		}
 	}
+	
+	@PUT
+	@Path("/updateexam")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateExam(@Context HttpServletRequest request,@Context HttpServletResponse response){
+		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
+		try {
+			Map<String,Object> input=new HashMap<String, Object>();
+			input.put("examName",request.getAttribute("examName"));
+			input.put("description",request.getAttribute("description"));
+			input.put("noOfQuestions",request.getAttribute("noOfQuestions"));
+			input.put("duration",request.getAttribute("duration"));
+			input.put("passPercentage",request.getAttribute("passPercentage"));
+			Map<String,Object> result=dispatcher.runSync("updateExamOwn", input);
+			return Response.ok(result).build();
+		}catch(Exception e) {
+			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
+		}
+	}
+	
+	
 	
 	@GET
 	@Path("/getallexam")
