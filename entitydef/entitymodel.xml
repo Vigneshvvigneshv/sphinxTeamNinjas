@@ -25,42 +25,42 @@
 		<description>Entity for to Store the topic</description>
 		<field name="topicId" type="id"></field>
 		<field name="topicName" type="name"></field>
-		<prim-key field="topicId"/>
+		<prim-key field="topicId" />
 	</entity>
-	
+
 	<entity entity-name="questionMaster">
-    <field name="questionId"       type="numeric"      /> 
-    <field name="questionDetail"   type="very-long"    />
-    <field name="optionA"          type="very-long"    />
-    <field name="optionB"          type="very-long"    />
-    <field name="optionC"          type="very-long"    />
-    <field name="optionD"          type="very-long"    />
-    <field name="answer"           type="short-varchar"/> 
-    <field name="numAnswers"       type="numeric"      />
-    <field name="questionTypeId"   type="short-varchar"/> 
-    <field name="difficultyLevel"  type="numeric"      />
-    <field name="answerValue"      type="fixed-point"  />
-    <field name="topicId"          type="id"           />  
-    <field name="negativeMarkValue" type="fixed-point" />
-    <prim-key field="questionId" />
-    <relation type="one" rel-entity-name="topicMaster">
-        <key-map field-name="topicId" />
-    </relation> 
-   <relation type="one" rel-entity-name="Enumeration">
-        <key-map field-name="questionTypeId" rel-field-name="enumId" />
-    </relation> 
-</entity>
- 
+		<field name="questionId" type="numeric" />
+		<field name="questionDetail" type="very-long" />
+		<field name="optionA" type="very-long" />
+		<field name="optionB" type="very-long" />
+		<field name="optionC" type="very-long" />
+		<field name="optionD" type="very-long" />
+		<field name="answer" type="short-varchar" />
+		<field name="numAnswers" type="numeric" />
+		<field name="questionTypeId" type="short-varchar" />
+		<field name="difficultyLevel" type="numeric" />
+		<field name="answerValue" type="fixed-point" />
+		<field name="topicId" type="id" />
+		<field name="negativeMarkValue" type="fixed-point" />
+		<prim-key field="questionId" />
+		<relation type="one" rel-entity-name="topicMaster">
+			<key-map field-name="topicId" />
+		</relation>
+		<relation type="one" rel-entity-name="Enumeration">
+			<key-map field-name="questionTypeId" rel-field-name="enumId" />
+		</relation>
+	</entity>
+
 	<entity entity-name="ExamMaster">
 		<field name="examId" type="id"></field>
-		<field name="examName" type="id"></field>		
+		<field name="examName" type="id"></field>
 		<field name="description" type="description"></field>
 		<field name="noOfQuestions" type="numeric" not-null="true"></field>
 		<field name="duration" type="numeric" not-null="true"></field>
-		<field name="passPercentage" type="numeric" not-null="true"/>
+		<field name="passPercentage" type="numeric" not-null="true" />
 		<field name="questionsRandomized" type="numeric"></field>
 		<field name="answersMust" type="numeric"></field>
-		<field name="allowNegativeMarks" type="numeric"/>
+		<field name="allowNegativeMarks" type="numeric" />
 		<field name="examSetupProper" type="numeric"></field>
 		<field name="negativeMarkValue" type="currency-amount"></field>
 		<field name="fromDate" type="date-time"></field>
@@ -68,9 +68,28 @@
 		<!--field to store the adminId who created this exam -->
 		<field name="createdByUserLogin" type="id-vlong"></field>
 		<!--field to store the adminId who last modified this exam -->
-		 <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+		<field name="lastModifiedByUserLogin" type="id-vlong"></field>
 		<prim-key field="examId" />
-    </entity>
-	
+	</entity>
+
+
+<!-- ExamTopicMaster -->
+	<entity entity-name="ExamTopicMapping">
+		<field name="examId" type="id" not-null="true"></field>
+		<field name="topicId" type="id" not-null="true"></field>
+		<field name="percentage " type="floating-point" not-null="true"></field>
+		<field name="topicPassPercentage" type="floating-point" not-null="true"></field>
+		
+		<prim-key field="topicId"/>
+		<prim-key field="examId"/>
+		
+		<relation type="one" rel-entity-name="ExamMaster">
+			<key-map field-name="examId"></key-map>
+		</relation>
+		
+		<relation type="one" rel-entity-name="topicMaster">
+			<key-map field-name="topicId" />
+		</relation>
+	</entity>
 
 </entitymodel>

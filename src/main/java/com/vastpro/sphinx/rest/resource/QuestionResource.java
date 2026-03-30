@@ -372,7 +372,9 @@ public class QuestionResource {
 			}
 			
 			for (Map<String, ? extends Object> question : questions) {
-				dispatcher.runSync("createQuestionService", question);
+			Map<String,Object>result=dispatcher.runSync("createQuestionService", question);
+			
+			
 			}
 			
 			return Response.status(201).entity(ServiceUtil.returnSuccess("Question uploaded successfully")).build();
