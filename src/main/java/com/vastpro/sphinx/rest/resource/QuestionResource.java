@@ -95,8 +95,6 @@ public class QuestionResource {
 			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
 		}
 		
-		
-		
 	}
 	
 	
@@ -142,6 +140,9 @@ public class QuestionResource {
 			input.put("topicId", request.getAttribute("topicId"));
 			input.put("negativeMarkValue", request.getAttribute("negativeMarkValue"));
 
+			
+			System.out.println("negativeMarkValue"+request.getAttribute("negativeMarkValue"));
+			System.out.println("questionTypeId"+request.getAttribute("questionTypeId"));
 	       
 	        // Call service
 	        Map<String, Object> serviceResult  = dispatcher.runSync("updateQuestionMaster", input);
@@ -168,7 +169,7 @@ public class QuestionResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteQuestion(@Context HttpServletRequest request,@Context HttpServletResponse response) {
-	    Map<String, Object> result = ServiceUtil.returnSuccess("Question successfully Deleted");
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
 	    
 	  //getting dispatcher from request
 	  		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
@@ -186,6 +187,7 @@ public class QuestionResource {
 	        }
 	        
 	        Long questionId=Long.valueOf(questionIdStr);   
+	        
 	        Map<String,Object>input=new HashMap<String, Object>();
 	        input.put("questionId", questionId);
 
@@ -194,12 +196,11 @@ public class QuestionResource {
 
 	        if (ServiceUtil.isError(serviceResult)) {
 	            result.put("status",  "ERROR");
-	            result.put("message", ServiceUtil.getErrorMessage(serviceResult));
+	            
 	            return Response.status(500).entity(result).build();
 	        }
 
-	        result.put("status","SUCCESS");
-	        result.put("message","Question deleted successfully");      
+	        result.put("status","SUCCESS");      
 	        return Response.ok(result).build();
 
 	    } catch (Exception e) {
@@ -280,7 +281,7 @@ public class QuestionResource {
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadQuestions(@FormDataParam("file") InputStream file,@FormDataParam("file") FormDataContentDisposition fileDetail) {
+	public Response uploadQuestions(@Context HttpServletRequest request, @FormDataParam("file") InputStream file,@FormDataParam("file") FormDataContentDisposition fileDetail) {
 		
 		 if (file == null || fileDetail == null) {
 			 
@@ -293,6 +294,12 @@ public class QuestionResource {
 		if(!fileName.toLowerCase().endsWith(".xlsx")) {
 			return Response.status(400).entity(ServiceUtil.returnError("only files with .xlsx are allowed")).build();
 		}
+		
+		 //getting dispatcher from request
+  		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
+  		if(dispatcher==null) {
+  			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
+  		}
 		
 		try {
 			Workbook workbook = WorkbookFactory.create(file);
@@ -365,7 +372,7 @@ public class QuestionResource {
 			}
 			
 			for (Map<String, ? extends Object> question : questions) {
-				getDispatcher().runSync("createQuestionService", question);
+				dispatcher.runSync("createQuestionService", question);
 			}
 			
 			return Response.status(201).entity(ServiceUtil.returnSuccess("Question uploaded successfully")).build();

@@ -236,7 +236,7 @@
 <!-- DeleteQuestion Service -->
 	<service name="deleteQuestionMaster" engine="java" location="com.vastpro.sphinx.services.QuestionService" invoke="deleteQuestion">
 		<attribute name="questionId" type="Long" mode="IN" optional="false"/>
-    	<attribute name="message"    type="String" mode="OUT" optional="false"/>
+    	
 	</service>
 	
 	<service name="deleteQuestion" engine="entity-auto" invoke="delete" default-entity-name="questionMaster">

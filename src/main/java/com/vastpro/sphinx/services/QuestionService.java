@@ -77,14 +77,14 @@ public class QuestionService {
 	    LocalDispatcher dispatcher=dctx.getDispatcher();
 
 	    try {
-	        // Step 1 — Get questionId from context (sent by frontend)
+	        // get questionId from context (sent by frontend)
 	    	Long questionId = (Long) context.get("questionId"); 
 
 	        if (questionId == null) {
 	            return ServiceUtil.returnError("questionId is required for update");
 	        }
 
-	        // Step 2 — Check question exists in DB
+	        // check question exists in DB
 	        GenericValue question = EntityQuery.use(delegator).from("questionMaster")
 	        				.where("questionId", questionId).queryOne();
 
@@ -92,7 +92,7 @@ public class QuestionService {
 	            return ServiceUtil.returnError("Question not found for questionId: " + questionId);
 	        }
 
-	        // Step 3 — Get all fields from context
+	        // get all fields from context
 	        String questionDetail = (String)context.get("questionDetail");
 	        String optionA = (String)context.get("optionA");
 	        String optionB = (String)context.get("optionB");
@@ -104,12 +104,16 @@ public class QuestionService {
 	        Long difficultyLevel = (Long)context.get("difficultyLevel");
 	        BigDecimal answerValue = (BigDecimal)context.get("answerValue");
 	        String topicId = (String)context.get("topicId");
-	        BigDecimal negMarkValue = (BigDecimal)context.get("negativeMarkValue");
+	        BigDecimal negativeMarkValue = (BigDecimal)context.get("negativeMarkValue");
 
 	       
 	       
 	        Map<String,Object> updateQuestion=new HashMap<>();
 	        
+	        
+	        
+	        updateQuestion.put("questionId", questionId);
+	        updateQuestion.put("questionTypeId", questionTypeId);
 	        updateQuestion.put("questionDetail", questionDetail);
 	        updateQuestion.put("optionA", optionA);
 	        updateQuestion.put("optionB", optionB);
@@ -120,7 +124,7 @@ public class QuestionService {
 	        updateQuestion.put("difficultyLevel", difficultyLevel);
 	        updateQuestion.put("answerValue", answerValue);
 	        updateQuestion.put("topicId", topicId);
-	        updateQuestion.put("negMarkValue", negMarkValue);
+	        updateQuestion.put("negativeMarkValue", negativeMarkValue);
 	        
 	        
 	       
