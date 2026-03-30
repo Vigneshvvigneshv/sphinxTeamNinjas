@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -109,6 +110,23 @@ public class TopicResource {
 			return Response.ok(result).build();
 		}catch(Exception e) {
 			e.printStackTrace();
+			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
+		}
+	}
+	
+	@GET
+	@Path("/gettopic/{topicId}")
+	@Produces(MediaType.APPLICATION_JSON)
+//	@Consumes(MediaType.APPLICATION_JSON)
+	public Response getTopicById(@PathParam("topicId") String topicId,@Context HttpServletRequest request){
+		
+		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
+		try {
+			Map<String,Object> input=new HashMap<String, Object>();
+			input.put("topicId", topicId);
+			Map<String,Object> result=dispatcher.runSync("getTopicById",input );
+			return Response.ok(result).build();
+		}catch(Exception e) {
 			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
 		}
 	}

@@ -94,6 +94,12 @@
 		invoke="getAllTopics">
 		<attribute name="topicList" mode="OUT" type="List" optional="true"></attribute>
 	</service>
+	
+	<!-- get topic by id -->
+	<service engine="java" name="getTopicById" location="com.vastpro.sphinx.services.TopicService" invoke="getTopicById">
+		<attribute name="topicId" mode="IN" type="String"></attribute>
+		<attribute name="topicList" mode="OUT" type="GenericValue"></attribute>
+	</service>
 <!-- ======================================================================= -->
 	<!-- create topic by entity auto -->
 	<service  name="createTopic" engine="entity-auto" invoke="create" default-entity-name="topicMaster">
@@ -145,12 +151,21 @@
 		<attribute name="examList" mode="OUT" type="List"></attribute>
 	</service>
 	
+	<!-- get Exam by id -->
+	<service engine="java" name="getExamById" location="com.vastpro.sphinx.services.ExamService" invoke="getExamById">
+		<attribute name="examId" mode="IN" type="String"></attribute>
+		<attribute name="examList" mode="OUT" type="GenericValue"></attribute>
+	</service>
+	
+	
+	
 <!-- ======================================================================= -->
 <!-- Create Exam by entity-auto -->
 <service name="createExam" engine="entity-auto" invoke="create" default-entity-name="ExamMaster" >
 	<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
 	<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
 </service>
+
 <!-- delete Exam by entity-auto -->
 <service name="deleteExam" engine="entity-auto" invoke="delete" default-entity-name="ExamMaster" >
 	<attribute name="examId" mode="IN" type="String"></attribute>

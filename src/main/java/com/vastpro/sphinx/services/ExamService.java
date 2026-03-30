@@ -84,8 +84,8 @@ public class ExamService {
 			
 				GenericValue examIdExits = EntityQuery.use(delegator).from("ExamMaster")
 						.where("examId", input.get("examId")).queryFirst();
-				if (examIdExits!=null) {
-					return ServiceUtil.returnError("Exam Already Exits");
+				if (examIdExits==null) {
+					return ServiceUtil.returnError("Exam not found");
 				}
 			
 			Map<String, Object> createMap = new HashMap<String, Object>();
@@ -124,5 +124,19 @@ public class ExamService {
 			return ServiceUtil.returnError("Error, occur during getting list of exam" + e.getMessage());
 		}
 	}
-
+	
+	public static Map<String,Object> getExamById(DispatchContext context,Map<String,Object> input){
+		Delegator delegator=context.getDelegator();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		try {
+			GenericValue examData=EntityQuery.use(delegator).from("ExamMaster").where("examId",input.get("examId")).queryOne();
+			if(examData==null) {
+				return ServiceUtil.returnError("Exam not found");
+			}
+			result.put("examList",examData);
+			return result;
+		}catch(GenericEntityException e) {
+			return ServiceUtil.returnError("Error, occur during get exam by id" + e.getMessage());
+		}
+	}
 }

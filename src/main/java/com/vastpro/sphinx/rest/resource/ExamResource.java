@@ -16,11 +16,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.PathParam;
 
 import org.apache.ofbiz.entity.Delegator;
-import org.apache.ofbiz.entity.GenericValue;
-import org.apache.ofbiz.entity.util.EntityQuery;
-import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceContainer;
 
@@ -34,9 +32,9 @@ public class ExamResource {
 		public Response createExam(@Context HttpServletRequest request,@Context HttpServletResponse response) {
 
 		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
-		if(dispatcher==null) {
-			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
-		}
+//		if(dispatcher==null) {
+//			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
+//		}
 		
 		try {
 			Map<String,Object> input= new HashMap<String, Object>();
@@ -79,6 +77,7 @@ public class ExamResource {
 		}
 	}
 	
+	
 	@PUT
 	@Path("/updateexam")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -87,6 +86,7 @@ public class ExamResource {
 		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
 		try {
 			Map<String,Object> input=new HashMap<String, Object>();
+			input.put("examId",request.getAttribute("examId"));
 			input.put("examName",request.getAttribute("examName"));
 			input.put("description",request.getAttribute("description"));
 			input.put("noOfQuestions",request.getAttribute("noOfQuestions"));
@@ -109,6 +109,23 @@ public class ExamResource {
 		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
 		try {
 			Map<String,Object> result=dispatcher.runSync("getAllExam", new HashMap<String, Object>());
+			return Response.ok(result).build();
+		}catch(Exception e) {
+			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
+		}
+	}
+	
+	@GET
+	@Path("/getexam/{examId}")
+	@Produces(MediaType.APPLICATION_JSON)
+//	@Consumes(MediaType.APPLICATION_JSON)
+	public Response getExamById(@PathParam("examId") String examId,@Context HttpServletRequest request){
+		
+		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
+		try {
+			Map<String,Object> input=new HashMap<String, Object>();
+			input.put("examId", examId);
+			Map<String,Object> result=dispatcher.runSync("getExamById",input );
 			return Response.ok(result).build();
 		}catch(Exception e) {
 			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
