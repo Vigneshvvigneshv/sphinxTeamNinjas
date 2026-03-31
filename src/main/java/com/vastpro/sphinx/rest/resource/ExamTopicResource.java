@@ -8,9 +8,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -73,5 +75,48 @@ public class ExamTopicResource {
 			return Response.status(500).entity(result).build();
 		}
 		
+	}
+	
+	@GET
+	@Path("/gettopicbyexamid")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response createExamTopic(@Context HttpServletRequest request,@QueryParam("examId") String examId ) {
+		
+		 //getting dispatcher from request
+  		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
+  		if(dispatcher==null) {
+  			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
+  		}
+  		
+  		Map<String,Object>result=new HashMap<>();
+  		
+  		try {
+  			if(examId==null || examId.trim().isEmpty()) {
+				result.put("status","ERROR");
+				result.put("message","ExamId is Required");
+				return Response.status(400).entity(result).build();
+			}
+  			
+  			Map<String,Object>input=new HashMap<>();
+  			
+  			input.put("examId", examId);
+  			
+  			Map<String,Object>serviceResult=dispatcher.runSync("getTopicByExamId",input);
+  			
+  			if(ServiceUtil.isError(serviceResult)) {
+				result.put("status", "ERROR");
+				result.put("message", ServiceUtil.getErrorMessage(serviceResult));
+				return Response.status(500).entity(result).build();
+			}
+  			
+  			result.put("status", "SUCCESS");
+  			
+  			return Response.ok().entity(result).build();
+  		}catch(GenericServiceException e) {
+  			e.printStackTrace();
+  			result.put("message", e.getMessage());
+  			return Response.status(500).entity(result).build();
+  		}
 	}
 }
