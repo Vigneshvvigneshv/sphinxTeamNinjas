@@ -221,7 +221,7 @@ public class QuestionService {
 				pageNo=1;
 			}
 			if(pageSize==null || pageSize<1) {
-				pageSize=1;
+				pageSize=10;
 			}
 			
 			GenericValue topic=EntityQuery.use(delegator).from("topicMaster").where("topicId",topicId).queryOne();
