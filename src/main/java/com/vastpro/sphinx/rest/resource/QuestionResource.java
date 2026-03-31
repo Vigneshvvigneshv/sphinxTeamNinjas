@@ -213,7 +213,7 @@ public class QuestionResource {
 	@GET
 	@Path("/getquestionsbytopic")
 	@Produces(MediaType.APPLICATION_JSON)
-	
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getQuestionsByTopic(@Context HttpServletRequest request,@QueryParam("topicId") String topicId, @QueryParam("pageNo") String pageNoStr,@QueryParam("pageSize") String pageSizeStr ){
 		
 		 //getting dispatcher from request

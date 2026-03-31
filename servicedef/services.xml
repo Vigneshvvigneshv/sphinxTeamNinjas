@@ -279,4 +279,11 @@
 		<auto-attributes include ="nonpk" mode="IN" optional="false"/>
 	</service>
 	
+	
+	<service name="getTopicByExamId" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="">
+		<attribute name="examId" mode="IN" type="String" optional="false"/>
+		
+		<attribute name="message" mode="OUT" type="String" optional="true"/>
+	</service>
+	
 </services>

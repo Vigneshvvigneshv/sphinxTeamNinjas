@@ -1,6 +1,8 @@
 package com.vastpro.sphinx.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ofbiz.base.util.UtilMisc;
@@ -66,6 +68,51 @@ public class ExamTopicService {
 			
 		}catch(GenericServiceException | GenericEntityException e) {
 			return ServiceUtil.returnError(e.getMessage());
+		}
+	}
+	
+	
+	public static Map<String,Object> getTopicByExamIdService(DispatchContext dctx,Map<String,Object>context){
+		
+		
+		Delegator delegator=dctx.getDelegator();	
+		LocalDispatcher dispatcher=dctx.getDispatcher();
+		
+		try {
+			
+			String examId=(String)context.get("examId");
+			
+			if(examId==null || examId.trim().isEmpty()) {
+				return ServiceUtil.returnError("examId is Required");
+			}
+			
+			List<GenericValue> exam=EntityQuery.use(delegator).from("ExamTopicMapping").where("examId",examId).queryList();
+			
+			
+			if(exam == null) {
+				return ServiceUtil.returnError("Exam not Found");
+			}
+			
+			List<Map<String,Object>> topicList=new ArrayList<>();
+			
+			for(GenericValue e:exam) {
+				
+				Map<String,Object> tMap=new HashMap<>();
+				String topicId=e.getString("topicId");
+				GenericValue topic =EntityQuery.use(delegator).from("topicMaster").where("topicId",topicId).queryOne();
+				
+				String topicName=topic.getString("topicName");
+				tMap.put("topicId",topicId);
+				tMap.put("topicName",topicName);
+				
+				topicList.add(tMap);
+				
+			}
+			
+			
+			
+		}catch(Exception e) {
+			
 		}
 	}
 }
