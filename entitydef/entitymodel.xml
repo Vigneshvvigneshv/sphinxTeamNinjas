@@ -91,5 +91,24 @@
 			<key-map field-name="topicId" />
 		</relation>
 	</entity>
+	
+	
+<!-- Exam Assignment Master -->
+<!-- This is entity is used to store the how many exam assign to the user -->
+<entity entity-name="ExamAssignMaster" package-name="">
+	<field name="partyId" type="id"></field>
+	<field name="examId" type="id"></field>
+	<field name="examAssignId" type="id"></field>
+
+	<prim-key field="examAssignId" />
+
+	<relation type="one" rel-entity-name="ExamMaster">
+		<key-map field-name="examId"></key-map>
+	</relation>
+
+	<relation type="one" rel-entity-name="UserLogin">
+		<key-map field-name="partyId" />
+	</relation>
+</entity>
 
 </entitymodel>
