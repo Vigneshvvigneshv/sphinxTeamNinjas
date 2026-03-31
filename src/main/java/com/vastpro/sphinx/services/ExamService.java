@@ -185,7 +185,7 @@ public class ExamService {
 		try {
 			//before update we check the examId is present or not
 			GenericValue examData = EntityQuery.use(delegator).from("ExamMaster").where("examId", input.get("examId"))
-					.queryOne();
+					.queryFirst();
 			if (examData == null) {
 				return ServiceUtil.returnError("Exam not found");
 			}
