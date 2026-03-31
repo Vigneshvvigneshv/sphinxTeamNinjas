@@ -109,10 +109,10 @@ public class ExamTopicService {
 				
 			}
 			
-			
+			return null;
 			
 		}catch(Exception e) {
-			
+			return null;
 		}
 	}
 }
