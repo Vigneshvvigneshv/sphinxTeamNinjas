@@ -178,7 +178,7 @@ public class QuestionResource {
 	  		}
 	    
 	    try {
-	        String questionIdStr=(String)request.getAttribute("questionId");
+	        String questionIdStr=String.valueOf(request.getAttribute("questionId"));
 	        
 	        if (questionIdStr == null || questionIdStr.trim().isEmpty()) {
 	        	result.put("status",  "ERROR");
@@ -200,7 +200,8 @@ public class QuestionResource {
 	            return Response.status(500).entity(result).build();
 	        }
 
-	        result.put("status","SUCCESS");      
+	        result.put("status","SUCCESS");
+	        result.put("message", "question deleted Successfully");
 	        return Response.ok(result).build();
 
 	    } catch (Exception e) {
