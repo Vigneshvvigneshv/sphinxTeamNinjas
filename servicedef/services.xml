@@ -270,7 +270,7 @@
 <!-- DeleteQuestion Service -->
 	<service name="deleteQuestionMaster" engine="java" location="com.vastpro.sphinx.services.QuestionService" invoke="deleteQuestion">
 		<attribute name="questionId" type="Long" mode="IN" optional="false"/>
-    	
+    	<attribute name="message" type="String" mode="OUT" optional="true"/>
 	</service>
 	
 	<service name="deleteQuestion" engine="entity-auto" invoke="delete" default-entity-name="questionMaster">
@@ -332,10 +332,12 @@
 	
 	<service name="deleteTopicInExamTopic" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="deleteTopicInExamTopic">
 		<attribute name="topicId" mode="IN" type="String" optional="false"/>
-		<attribute name="message" mode="OUT" type="String" optional="false"/>	
+		<attribute name="examId" mode="IN" type="String" optional="false"/>
+		<attribute name="message" mode="OUT" type="String" optional="true"/>	
 	</service>
 	
 	<service name="deleteTopicInExamTopicDB" engine="entity-auto" invoke="delete" default-entity-name="ExamTopicMapping">
 		<auto-attributes include="pk" mode="IN"/>
+		
 	</service>
 </services>

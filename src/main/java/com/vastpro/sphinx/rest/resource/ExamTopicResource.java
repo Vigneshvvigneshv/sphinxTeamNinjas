@@ -145,8 +145,13 @@ public class ExamTopicResource {
   		try {
   			
   			String topicId=(String)request.getAttribute("topicId");
+  			String examId=(String)request.getAttribute("examId");
   			
-  			Map<String,Object>serviceResult=dispatcher.runSync("deleteTopicInExamTopic",UtilMisc.toMap("topicId",topicId));
+  			Map<String,Object>input=new HashMap<>();
+  			input.put("examId", examId);
+  			input.put("topicId", topicId);
+  			
+  			Map<String,Object>serviceResult=dispatcher.runSync("deleteTopicInExamTopic",input);
   			
   			if(ServiceUtil.isError(serviceResult)) {
   				result.put("status", "ERROR");

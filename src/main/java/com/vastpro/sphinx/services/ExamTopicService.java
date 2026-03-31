@@ -128,12 +128,14 @@ public class ExamTopicService {
 	
 	public static Map<String,Object> deleteTopicInExamTopic(DispatchContext dctx,Map<String,Object> context){
 		
-		String topicId=(String)context.get("topicId");
+	
 		LocalDispatcher dispatcher=dctx.getDispatcher();
 		try {
+			String topicId=(String)context.get("topicId");
+			String examId=(String)context.get("examId");
 			
-			if(topicId==null || topicId.trim().isEmpty()) {
-				return ServiceUtil.returnError("topicId is required");
+			if(topicId==null || topicId.trim().isEmpty() || examId==null || examId.trim().isEmpty()) {
+				return ServiceUtil.returnError("topicId and examId is required");
 			}
 			
 			
