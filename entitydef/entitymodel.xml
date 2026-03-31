@@ -77,7 +77,7 @@
 	<entity entity-name="ExamTopicMapping">
 		<field name="examId" type="id" not-null="true"></field>
 		<field name="topicId" type="id" not-null="true"></field>
-		<field name="percentage " type="floating-point" not-null="true"></field>
+		<field name="percentage" type="floating-point" not-null="true"></field>
 		<field name="topicPassPercentage" type="floating-point" not-null="true"></field>
 		
 		<prim-key field="topicId"/>

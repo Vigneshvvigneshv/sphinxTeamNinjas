@@ -268,7 +268,7 @@ public class QuestionResource {
 			return Response.ok(result).build();
 			
 			
-		}catch(Exception e) {
+		}catch(GenericServiceException e) {
 			result.put("status", "ERROR");
 			result.put("message", e.getMessage());
 			e.printStackTrace();

@@ -194,15 +194,10 @@
 		<attribute name="numAnswers" mode="IN" type="Long" optional="false" />
 		<attribute name="questionTypeId" mode="IN" type="String" optional="false" />
 		<attribute name="difficultyLevel" mode="IN" type="Long" optional="true" />
-		<attribute name="answerValue" mode="IN" type="BigDecimal"
-			optional="true" />
-		<attribute name="topicId" mode="IN" type="String"
-			optional="false" />
-		<attribute name="negativeMarkValue" mode="IN"
-			type="BigDecimal" optional="true" />
-
-		<attribute name="questionId" mode="OUT" type="Long"
-			optional="false"></attribute>
+		<attribute name="answerValue" mode="IN" type="BigDecimal" optional="true" />
+		<attribute name="topicId" mode="IN" type="String" optional="false" />
+		<attribute name="negativeMarkValue" mode="IN" type="BigDecimal" optional="true" />
+		<attribute name="questionId" mode="OUT" type="Long" optional="false"></attribute>
 	</service>
 
 
@@ -272,8 +267,16 @@
 	</service>
 	
 	<service  name="createExamTopic" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="createExamTopicService">
-		<attribute name="examId" mode="IN" type="String" optional="false"></attribute>
-		<attribute name="topicId" mode="IN"/>
+		<attribute name="examId" mode="IN" type="String" optional="false"/>
+		<attribute name="topicId" mode="IN" type="String" optional="false"/>
+		<attribute name="percentage" mode="IN" type="String" optional="false"/>
+		<attribute name="topicPassPercentage" mode="IN" type="String" optional="false"/>
+		<attribute name="message" mode="OUT" type="String" optional="true"/>
+	</service>
+	
+	<service name="createExamTopicService" engine="entity-auto" invoke="create" default-entity-name="ExamTopicMapping">
+		<auto-attributes include="pk" mode="IN" optional="false"/>
+		<auto-attributes include ="nonpk" mode="IN" optional="false"/>
 	</service>
 	
 </services>
