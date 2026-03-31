@@ -21,7 +21,12 @@
             Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
         </description>
 	</service>
-	
+<!-- ====================== user services ================================== -->
+	<!-- Get All user -->
+	<service engine="java" name="getAllUser" location="com.vastpro.sphinx.services.UserService" invoke="getAllUser">
+		<attribute name="userList" mode="OUT" type="List"></attribute>
+	</service>
+
 	<!-- UserLogin Service -->
 
 	<service name="validateUserLoginService" engine="java"
@@ -62,9 +67,9 @@
 	</service> -->
 	
 <!-- End of UserSignUP Service -->
+<!-- ====================== End user services ================================== -->
 
-
-<!-- topic Service start-->
+<!-- ===========================topic Service start=================================-->
 <!-- ======================================================================= -->
 	<!-- create topic -->
 	<service name="createTopicOwn" engine="java"
@@ -117,10 +122,10 @@
 	</service>
 	
 <!-- ======================================================================= -->
-<!-- end of topic service -->
+<!-- ==============================end of topic service ========================================-->
 
 
-<!-- Start of Exam Service -->
+<!-- =========================== Start of Exam Service========================================== -->
 <!-- ======================================================================= -->
 	<!-- Create Exam -->
 	<service engine="java" name="createExamOwn" location="com.vastpro.sphinx.services.ExamService" invoke="createExam">
@@ -177,23 +182,36 @@
 	<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
 </service>
 <!-- ======================================================================= -->
-<!-- End of Exam Service  -->
+<!-- ===================================End of Exam Service  ================================-->
 
 
-<!-- Start of Exam Assign to the user -->
+<!-- =========================Start of Exam Assign to the user ===============================-->
 	<!-- assign exam to the user  -->
 	<service engine="java" name="assignExamOwn" location="com.vastpro.sphinx.services.ExamAssignToUserService" invoke="assignExam">
 		<attribute name="partyId" mode="IN" type="String"></attribute>
 		<attribute name="examId" mode="IN" type="String"></attribute>
 	</service>
+	
+	<!-- remove assigned exam to the user  -->
+	<service engine="java" name="removeAssignExamOwn" location="com.vastpro.sphinx.services.ExamAssignToUserService" invoke="removeAssignedExam">
+		<attribute name="partyId" mode="IN" type="String"></attribute>
+		<attribute name="examId" mode="IN" type="String"></attribute>
+	</service>
+	
+	
 <!-- ======================================================================= -->
 	<!-- assign exam to the user  by entity-auto-->
  	<service engine="entity-auto" name="assignExam" invoke="create">
  		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
  		<auto-attributes mode="IN" include="nonpk" optional="false"></auto-attributes>
  	</service>
+ 	
+ 	<!-- remove assigned exam to the user  by entity-auto-->
+ 	<service engine="entity-auto" name="removeAssignedValue" invoke="delete">
+ 		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+ 	</service>
  
-<!-- end of Exam Assign to the user -->
+<!-- ================================end of Exam Assign to the user =========================== -->
 
 <!--  -->
 	<service name="createQuestionService" engine="java"

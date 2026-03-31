@@ -41,7 +41,39 @@ public class ExamAssignToUserService {
 			e.printStackTrace();
 			return ServiceUtil.returnError("Error, occur during assing the Exam"+e.getMessage());
 		}
-	
 	}
+	
+	public static Map<String,Object> removeAssignedExam(DispatchContext context, Map<String,Object> input){
+		LocalDispatcher dispatcher=context.getDispatcher();
+		Delegator delegator=context.getDelegator();
+		
+		try {
+			
+			String partyId=(String)input.get("partyId");
+			String examId=(String)input.get("examId");
+			GenericValue partyIdAlreadyExits = EntityQuery.use(delegator).from("UserLogin").where("partyId",partyId).queryFirst();
+			if(partyIdAlreadyExits==null) {
+				return ServiceUtil.returnError("User not found");
+			}
+			GenericValue examIdAlreadyExits=EntityQuery.use(delegator).from("ExamMaster").where("examId",examId).queryFirst();
+			if(examIdAlreadyExits==null) {
+				return ServiceUtil.returnError("Exam not found");
+			}
+			
+			GenericValue examAssignId=EntityQuery.use(delegator).from("ExamAssignMaster").where("partyId",partyId,"examId",examId).queryFirst();
+			input.put("examAssignId", examAssignId);
+			Map<String, Object> result = dispatcher.runSync("removeAssignedValue",input );
+			
+			if(ServiceUtil.isError(result)) {
+				return ServiceUtil.returnError("Error, occur during remove the assigned Exam");
+			}
+			return result;
+			 
+		} catch (GenericEntityException |GenericServiceException  e) {
+			e.printStackTrace();
+			return ServiceUtil.returnError("Error, occur during remove the assigned Exam"+e.getMessage());
+		}
+	}
+
 
 }

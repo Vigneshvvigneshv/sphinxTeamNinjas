@@ -7,6 +7,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -39,8 +40,8 @@ public class UserResource {
 				dispatcher = ServiceContainer.getLocalDispatcher("sphinx",
 						(Delegator) request.getAttribute("delegator"));
 			}
-			
-		 	Map<String, Object> userInput = new HashMap<>();
+
+			Map<String, Object> userInput = new HashMap<>();
 			userInput.put("userName", request.getAttribute("userName"));
 			userInput.put("password", request.getAttribute("password"));
 
@@ -53,8 +54,6 @@ public class UserResource {
 			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
 		}
 	}
-	
-	
 
 	@POST
 	@Path("/signup")
@@ -89,6 +88,20 @@ public class UserResource {
 			return Response.ok(result).build();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
+		}
+	}
+
+	@GET
+	@Path("/getalluser")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllUser(@Context HttpServletRequest request) {
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		try {
+			Map<String, Object> result = dispatcher.runSync("getAllUser", new HashMap<String, Object>());
+			return Response.ok(result).build();
+		} catch (Exception e) {
 			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
 		}
 	}
