@@ -12,32 +12,42 @@ import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
+
 /**
- * This class is used to perform operation in the exam for to create, delete, update, and find the exam
- * ExamMaster table is used to store and get the data
+ * This class is used to perform operation in the exam for to create, delete,
+ * update, and find the exam ExamMaster table is used to store and get the data
  */
 public class ExamService {
 
 	/**
+	 * CreateExam is used to create the exam, and store details in the ExamMaster
+	 * table
 	 * 
-	 * @param context
-	 * @param input
-	 * @return
+	 * @param context (context used to get the dispatcher and delegator)
+	 * @param input   (input is the method it carry the exam data)
+	 * @return map(map contains the success and error message)
 	 */
 	public static Map<String, Object> createExam(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
 		Delegator delegator = context.getDelegator();
 		try {
+			
+			//before update we check the examName is present or not
 			if (input.get("examName") != null) {
 				GenericValue examAlreadyExits = EntityQuery.use(delegator).from("ExamMaster")
 						.where("examName", input.get("examName")).queryFirst();
-				if (examAlreadyExits!=null) {
+				if (examAlreadyExits != null) {
 					return ServiceUtil.returnError("Exam Already Exits");
 				}
-			}else {
+			} else {
 				return ServiceUtil.returnError("Exam name cannot be empty");
 			}
+
+			// we create the own exam id and set into the table
+			// it will get the current serial number (getNextSeqId)
 			String examId = delegator.getNextSeqId("ExamMaster");
+
+			// get the current serial number and add the exam word in front of it
 			examId = "exam" + examId;
 			Map<String, Object> createMap = new HashMap<String, Object>();
 			createMap.put("examId", examId);
@@ -47,12 +57,17 @@ public class ExamService {
 			createMap.put("duration", Long.valueOf((String) input.get("duration")));
 			createMap.put("passPercentage", Long.valueOf((String) input.get("passPercentage")));
 
+			// call the entity-auto service it will create the record
 			Map<String, Object> result = dispatcher.runSync("createExam", createMap);
 
+			// from the entity-auto service return the map the map contain success or error
+			// to add the data
+			// we validate the it gives the error or success and show the message id it is
+			// error
 			if (ServiceUtil.isError(result)) {
 				return ServiceUtil.returnError("Error, occur during creating the Exam");
 			}
-
+			// if success then return the success message
 			return ServiceUtil.returnSuccess("Exam create successfully");
 
 		} catch (GenericServiceException | GenericEntityException e) {
@@ -61,11 +76,18 @@ public class ExamService {
 		}
 	}
 
-	
+	/**
+	 * This method is used to delete the exam in the ExamMaster Table
+	 * @param context (context used to get the dispatcher and delegator)
+	 * @param input   (input is the method it carry the exam data)
+	 * @return map(map contains the success and error message)
+	 */
+
 	public static Map<String, Object> deleteExam(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
 		Delegator delegator = context.getDelegator();
 		try {
+			//before update we check the examId is present or not
 			GenericValue examId = EntityQuery.use(delegator).from("ExamMaster").where("examId", input.get("examId"))
 					.queryFirst();
 
@@ -86,19 +108,26 @@ public class ExamService {
 			return ServiceUtil.returnError("Error, occur during delete exam" + e.getMessage());
 		}
 	}
+
 	
+	/**
+	 * This method is used to update the exam in the ExamMaster Table
+	 * @param context (context used to get the dispatcher and delegator)
+	 * @param input   (input is the method it carry the exam data)
+	 * @return map(map contains the success and error message)
+	 */
 	
 	public static Map<String, Object> updateExam(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
 		Delegator delegator = context.getDelegator();
 		try {
-			
-				GenericValue examIdExits = EntityQuery.use(delegator).from("ExamMaster")
-						.where("examId", input.get("examId")).queryFirst();
-				if (examIdExits==null) {
-					return ServiceUtil.returnError("Exam not found");
-				}
-			
+			//before update we check the examId is present or not
+			GenericValue examIdExits = EntityQuery.use(delegator).from("ExamMaster")
+					.where("examId", input.get("examId")).queryFirst();
+			if (examIdExits == null) {
+				return ServiceUtil.returnError("Exam not found");
+			}
+
 			Map<String, Object> createMap = new HashMap<String, Object>();
 			createMap.put("examId", input.get("examId"));
 			createMap.put("examName", input.get("examName"));
@@ -120,8 +149,14 @@ public class ExamService {
 			return ServiceUtil.returnError("Error, occur during update exam" + e.getMessage());
 		}
 	}
-	
 
+	
+	/**
+	 * This method is used to get all the exam from the ExamMaster Table
+	 * @param context (context used to get the dispatcher and delegator)
+	 * @param input   (input is the method it carry the exam data)
+	 * @return map(map contains the success and error message)
+	 */
 	public static Map<String, Object> getAllExam(DispatchContext context, Map<String, Object> input) {
 		Delegator delegator = context.getDelegator();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -137,18 +172,26 @@ public class ExamService {
 		}
 	}
 	
-	
-	public static Map<String,Object> getExamById(DispatchContext context,Map<String,Object> input){
-		Delegator delegator=context.getDelegator();
+	/**
+	 * This method is used to get the exam based on the examId 
+	 * @param context (context used to get the dispatcher and delegator)
+	 * @param input   (input is the method it carry the exam data)
+	 * @return map(map contains the success and error message)
+	 */
+
+	public static Map<String, Object> getExamById(DispatchContext context, Map<String, Object> input) {
+		Delegator delegator = context.getDelegator();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		try {
-			GenericValue examData=EntityQuery.use(delegator).from("ExamMaster").where("examId",input.get("examId")).queryOne();
-			if(examData==null) {
+			//before update we check the examId is present or not
+			GenericValue examData = EntityQuery.use(delegator).from("ExamMaster").where("examId", input.get("examId"))
+					.queryOne();
+			if (examData == null) {
 				return ServiceUtil.returnError("Exam not found");
 			}
-			result.put("examList",examData);
+			result.put("examList", examData);
 			return result;
-		}catch(GenericEntityException e) {
+		} catch (GenericEntityException e) {
 			return ServiceUtil.returnError("Error, occur during get exam by id" + e.getMessage());
 		}
 	}
