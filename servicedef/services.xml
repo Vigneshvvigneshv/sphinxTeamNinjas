@@ -280,10 +280,29 @@
 	</service>
 	
 	
-	<service name="getTopicByExamId" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="">
-		<attribute name="examId" mode="IN" type="String" optional="false"/>
-		
+	
+	
+	<!-- Getting topic list by Exam id -->
+	<service name="getTopicByExamId" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="getTopicByExamIdService">
+		<attribute name="examId" mode="IN" type="String" optional="false"/>	
 		<attribute name="message" mode="OUT" type="String" optional="true"/>
+		
+		<attribute name="examId" mode="OUT" type="String" optional="true"/>
+		<attribute name="examName" mode="OUT" type="String" optional="true"/>
+		<attribute name="topicList" mode="OUT" type="List" optional="true"/>	
 	</service>
 	
+	
+	
+	
+	<!-- delete topic in examTopicMappin -->
+	
+	<service name="deleteTopicInExamTopic" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="deleteTopicInExamTopic">
+		<attribute name="topicId" mode="IN" type="String" optional="false"/>
+		<attribute name="message" mode="OUT" type="String" optional="false"/>	
+	</service>
+	
+	<service name="deleteTopicInExamTopicDB" engine="entity-auto" invoke="delete" default-entity-name="ExamTopicMapping">
+		<auto-attributes include="pk" mode="IN"/>
+	</service>
 </services>

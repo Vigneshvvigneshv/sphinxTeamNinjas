@@ -72,11 +72,12 @@ public class ExamTopicService {
 	}
 	
 	
+	//Getting topicBy ExamId
 	public static Map<String,Object> getTopicByExamIdService(DispatchContext dctx,Map<String,Object>context){
 		
 		
 		Delegator delegator=dctx.getDelegator();	
-		LocalDispatcher dispatcher=dctx.getDispatcher();
+		
 		
 		try {
 			
@@ -86,16 +87,18 @@ public class ExamTopicService {
 				return ServiceUtil.returnError("examId is Required");
 			}
 			
-			List<GenericValue> exam=EntityQuery.use(delegator).from("ExamTopicMapping").where("examId",examId).queryList();
-			
+			GenericValue exam=EntityQuery.use(delegator).from("ExamMaster").where("examId",examId).queryOne();
 			
 			if(exam == null) {
 				return ServiceUtil.returnError("Exam not Found");
 			}
 			
+			List<GenericValue> exam1=EntityQuery.use(delegator).from("ExamTopicMapping").where("examId",examId).queryList();
+			
+		
 			List<Map<String,Object>> topicList=new ArrayList<>();
 			
-			for(GenericValue e:exam) {
+			for(GenericValue e:exam1) {
 				
 				Map<String,Object> tMap=new HashMap<>();
 				String topicId=e.getString("topicId");
@@ -109,10 +112,42 @@ public class ExamTopicService {
 				
 			}
 			
-			return null;
+			Map<String,Object> result=ServiceUtil.returnSuccess();
+			
+			result.put("examId", exam.getString("examId"));
+			result.put("examName", exam.getString("examName"));
+			result.put("topicList", topicList);
+			
+			
+			return result;
 			
 		}catch(Exception e) {
-			return null;
+			return ServiceUtil.returnError("Error Fetching in Topic "+e.getMessage());
+		}
+	}
+	
+	public static Map<String,Object> deleteTopicInExamTopic(DispatchContext dctx,Map<String,Object> context){
+		
+		String topicId=(String)context.get("topicId");
+		LocalDispatcher dispatcher=dctx.getDispatcher();
+		try {
+			
+			if(topicId==null || topicId.trim().isEmpty()) {
+				return ServiceUtil.returnError("topicId is required");
+			}
+			
+			
+			Map<String, Object>result=dispatcher.runSync("deleteTopicInExamTopicDB", context);
+			
+			if(ServiceUtil.isError(result)) {
+				return ServiceUtil.returnError((String)result.get("errorMessage"));
+			}
+			
+			return ServiceUtil.returnSuccess("Topic Deleted Successfully");
+		}catch(GenericServiceException e) {
+			e.printStackTrace();
+			
+			return ServiceUtil.returnError(e.getMessage());
 		}
 	}
 }
