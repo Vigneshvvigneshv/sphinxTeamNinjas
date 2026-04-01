@@ -67,7 +67,7 @@ public class ExamAssignToUserService {
 			GenericValue examAssignId = EntityQuery.use(delegator).from("ExamAssignMaster")
 					.where("partyId", partyId, "examId", examId).queryFirst();
 			if (examAssignId == null) {
-				return ServiceUtil.returnError("Exam is already not Assigned to the user");
+				return ServiceUtil.returnError("Exam is already not assigned to the user");
 			}
 			String assignId = examAssignId.getString("examAssignId");
 			Map<String, Object> result = dispatcher.runSync("removeAssignedValue", Map.of("examAssignId", assignId));

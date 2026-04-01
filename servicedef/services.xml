@@ -56,15 +56,38 @@
 		<attribute name="email" mode="IN" type="String"></attribute>
 	</service>
 
-<!-- <service name="userSignUpService" engine="entity-auto"
-		invoke="create" default-entity-name="">
-
-		<attribute name="userName" mode="IN" type="String"></attribute>
-		<attribute name="password" mode="IN" type="String"></attribute>
-		<attribute name="firstName" mode="IN" type="String"></attribute>
-		<attribute name="lastName" mode="IN" type="String"></attribute>
-		<attribute name="email" mode="IN" type="String"></attribute>
-	</service> -->
+	<service name="createParty" engine="entity-auto"
+		invoke="create" default-entity-name="Party">
+		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+	</service> 
+	
+	<service name="createPerson" engine="entity-auto"
+		invoke="create" default-entity-name="Person">
+		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+	</service> 
+	
+	<service name="createContactMech" engine="entity-auto"
+		invoke="create" default-entity-name="ContactMech">
+		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+	</service> 
+	<service name="createPartyContactMech" engine="entity-auto"
+		invoke="create" default-entity-name="PartyContactMech">
+		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+	</service> 
+	<service name="createUserLogin" engine="entity-auto"
+		invoke="create" default-entity-name="UserLogin">
+		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+	</service> 
+	<service name="createPartyRole" engine="entity-auto"
+		invoke="create" default-entity-name="PartyRole">
+		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+	</service> 
 	
 <!-- End of UserSignUP Service -->
 <!-- ====================== End user services ================================== -->

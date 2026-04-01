@@ -32,9 +32,9 @@ public class UserLoginService {
 
            if(PasswordHashing.checkPassword(String.valueOf(context.get("password")),user.getString("currentPassword"))) {
         	   GenericValue roleType = EntityQuery.use(delegator).from("PartyRole").where("partyId",user.get("partyId"))
-        						.queryOne();
+        						.queryFirst();
         	           	   
-        	   result.put("successMessage", "User Login Successfully");
+//        	   result.put("successMessage", "User Login Successfully");
         	   result.put("role",String.valueOf( roleType.getString("roleTypeId")));
         	   return result;
            }else {
