@@ -61,11 +61,12 @@ public class ExamAssignToUserService {
 			}
 			
 			GenericValue examAssignId=EntityQuery.use(delegator).from("ExamAssignMaster").where("partyId",partyId,"examId",examId).queryFirst();
-			input.put("examAssignId", examAssignId);
-			Map<String, Object> result = dispatcher.runSync("removeAssignedValue",input );
+			String assignId=examAssignId.getString("userLoginId");
+			Map<String, Object> result = dispatcher.runSync("removeAssignedValue",Map.of("examAssignId", assignId) );
 			
 			if(ServiceUtil.isError(result)) {
-				return ServiceUtil.returnError("Error, occur during remove the assigned Exam");
+//				return ServiceUtil.returnError("Error, occur during remove the assigned Exam");
+				return ServiceUtil.returnError((String)result.get("errorMessage"));
 			}
 			return result;
 			 

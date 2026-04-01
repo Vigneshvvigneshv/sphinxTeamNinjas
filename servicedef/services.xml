@@ -201,13 +201,13 @@
 	
 <!-- ======================================================================= -->
 	<!-- assign exam to the user  by entity-auto-->
- 	<service engine="entity-auto" name="assignExam" invoke="create">
+ 	<service engine="entity-auto" name="assignExam" invoke="create" default-entity-name="ExamAssignMaster">
  		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
  		<auto-attributes mode="IN" include="nonpk" optional="false"></auto-attributes>
  	</service>
  	
  	<!-- remove assigned exam to the user  by entity-auto-->
- 	<service engine="entity-auto" name="removeAssignedValue" invoke="delete">
+ 	<service engine="entity-auto" name="removeAssignedValue" invoke="delete" default-entity-name="ExamAssignMaster">
  		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
  	</service>
  
