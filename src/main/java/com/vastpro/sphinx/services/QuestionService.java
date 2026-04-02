@@ -286,6 +286,59 @@ public class QuestionService {
 		}
 	}
 
+	
+	public Map<String,Object> getQuestionById(DispatchContext dctx,Map<String,Object>context){
+		
+		Delegator delegator=dctx.getDelegator();
+		
+		try {
+			
+			
+			Long questionId=Long.valueOf(String.valueOf(context.get("questionId")));
+			
+			
+			if(questionId==null) {
+				return ServiceUtil.returnError("QuestionId is required");
+			}
+			
+			GenericValue question=EntityQuery.use(delegator).from("questionMaster").where("questionId",questionId).queryOne();
+			
+			
+			if(question==null) {
+				return ServiceUtil.returnError("question Not Found");
+			}
+			
+			
+			Map<String,Object> input=new HashMap<>();
+			
+			input.put("questionId",(question.getLong("questionId")));
+			input.put("questionDetail",(question.getString("questionDetail")));
+			input.put("optionA",(question.getString("optionA")));
+			input.put("optionB",(question.getString("optionB")));
+			input.put("optionC",(question.getString("optionC")));
+			input.put("optionD",(question.getString("optionD")));
+			input.put("answer",(question.getString("answer")));
+			input.put("numAnswers",(question.getLong("numAnswers")));
+			input.put("questionTypeId",(question.get("questionTypeId")));
+			input.put("difficultyLevel",(question.get("difficultyLevel")));
+			input.put("answerValue",(question.getString("answerValue")));	
+			input.put("topicId",(question.getString("topicId")));	
+			input.put("negativeMarkValue",(question.getBigDecimal("negativeMarkValue")));
+
+			
+			Map<String,Object>result=new HashMap<>();
+			result.put("question",input);
+			return result;
+			
+		}catch(Exception e) {
+			return ServiceUtil.returnError("Failed to Fetch Question");
+		}
+		
+	}
+	
+	
+	
+	
 	public Map<String, ? extends Object> getTemplateDocument(DispatchContext dctx, Map<String, ? extends Object> context) {
 
 		try {
