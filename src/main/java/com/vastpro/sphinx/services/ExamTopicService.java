@@ -106,10 +106,12 @@ public class ExamTopicService {
 				GenericValue topicPercentage=EntityQuery.use(delegator).from("ExamTopicMapping").where("examId",examId,"topicId",topicId).queryOne();
 				String topicName=topic.getString("topicName");
 				String percent=topicPercentage.getString("percentage");
+				String topicPassPercentage=topicPercentage.getString("topicPassPercentage");
+				
 				tMap.put("topicId",topicId);
 				tMap.put("topicName",topicName);
-				tMap.put("topicPercentage",percent);
-				
+				tMap.put("percentage",percent);
+				tMap.put("topicPassPercentage",topicPassPercentage);
 				topicList.add(tMap);
 				
 			}

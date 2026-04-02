@@ -200,6 +200,8 @@ public class QuestionResource {
 	    }
 	}
 	
+	
+	
 	@GET
 	@Path("/getquestionsbytopic")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -344,5 +346,35 @@ public class QuestionResource {
 							.entity(ServiceUtil.returnError("Unexpected error occured, try again after sometime!")).build();
 		}
 
+	}
+	
+	
+	@GET
+	@Path("/answer")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAnswerByQuetion(@Context HttpServletRequest request,@Context HttpServletResponse response) {
+		
+		 //getting dispatcher from request
+  		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
+  		if(dispatcher==null) {
+  			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
+  		}
+		
+  		
+  		try {
+  			String questionIdStr=(String)request.getAttribute("questionId");
+  			
+  			Long questionId=Long.valueOf(questionIdStr);
+  			
+  			Map<String,Object>input=new HashMap<>();
+  			
+  			input.put("quetionId", questionId);
+  			
+//  			Map<String,object>ServiceResult=dispatcher.runsync
+  			return null;
+  		}catch(Exception e) {
+  			return null;
+  		}
 	}
 }
