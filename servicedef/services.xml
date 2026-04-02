@@ -54,6 +54,7 @@
 		<attribute name="firstName" mode="IN" type="String"></attribute>
 		<attribute name="lastName" mode="IN" type="String"></attribute>
 		<attribute name="email" mode="IN" type="String"></attribute>
+		<attribute name="roleTypeId" mode="In" type="String"></attribute>
 	</service>
 
 	<service name="createParty" engine="entity-auto"
