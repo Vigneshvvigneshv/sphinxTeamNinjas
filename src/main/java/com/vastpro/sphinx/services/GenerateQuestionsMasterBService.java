@@ -157,9 +157,9 @@ public class GenerateQuestionsMasterBService {
 				
 				
 		}catch(GenericServiceException | GenericEntityException e  ) {
-			return ServiceUtil.returnError(e.getMessage());
+			return ServiceUtil.returnError("Failed to create Topic");
 		}catch(Exception e) {
-			return ServiceUtil.returnError(e.getMessage());
+			return ServiceUtil.returnError("Failed to create Topic");
 		}
 	}
 }

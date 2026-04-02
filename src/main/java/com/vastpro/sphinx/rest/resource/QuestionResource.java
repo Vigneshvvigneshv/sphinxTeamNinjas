@@ -2,15 +2,15 @@ package com.vastpro.sphinx.rest.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.http.HttpRequest;
-import java.util.ArrayList;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -25,26 +25,15 @@ import javax.ws.rs.core.Response;
 
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.entity.Delegator;
-import org.apache.ofbiz.entity.DelegatorFactory;
-import org.apache.ofbiz.entity.GenericValue;
-import org.apache.ofbiz.entity.util.EntityQuery;
+
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceContainer;
 import org.apache.ofbiz.service.ServiceUtil;
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
+
 
 import com.vastpro.sphinx.util.ConvertValue;
-import com.vastpro.sphinx.util.QuestionColumnConfigUtil;
-import com.vastpro.sphinx.util.QuestionColumnConfigUtil.ColumnConfig;
+
 
 
 @Path("/question")
@@ -278,114 +267,82 @@ public class QuestionResource {
 	}
 	
 	
+	@GET
+	@Path("/downloadTemplate")
+	@Produces("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	public Response downloadTemplate() {
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+
+		Map<String, ? extends Object> result;
+		try {
+			result = dispatcher.runSync("downloadTemplateDocument", UtilMisc.toMap());
+			if (result.get("responseMessage") != null && result.get("responseMessage").equals("success")) {
+				return Response.ok((Byte[]) result.get("bytes"))
+								.header("Content-Disposition", "attachment; filename=questions_template.xlsx")
+								.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet").build();
+			} else {
+				return null;
+			}
+
+		} catch (GenericServiceException e) {
+			return null;
+		}
+
+	}
+	
 	@POST
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadQuestions(@Context HttpServletRequest request, @FormDataParam("file") InputStream file,@FormDataParam("file") FormDataContentDisposition fileDetail) {
-		
-		 if (file == null || fileDetail == null) {
-			 
-		        return Response.status(400)
-		                .entity(ServiceUtil.returnError("File not received. Check Postman key name."))
-		                .build();
-		    }
-		String fileName=fileDetail.getFileName();
-		
-		if(!fileName.toLowerCase().endsWith(".xlsx")) {
-			return Response.status(400).entity(ServiceUtil.returnError("only files with .xlsx are allowed")).build();
+	public Response uploadQuestions(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+
+		InputStream file;
+		Part filePart;
+		ByteBuffer buffer;
+		try {
+			filePart = request.getPart("file");
+
+			if (filePart == null) {
+				return Response.status(Response.Status.BAD_REQUEST).entity(ServiceUtil.returnError("File was not found on Request!"))
+								.build();
+			}
+
+			String fileName = filePart.getSubmittedFileName();
+
+			if (!fileName.endsWith(".xlsx")) {
+				return Response.status(Response.Status.BAD_REQUEST).entity(ServiceUtil.returnError("Only Excel file are allowed!")).build();
+			}
+
+			byte[] bytes = filePart.getInputStream().readAllBytes();
+
+			buffer = ByteBuffer.wrap(bytes);
+
+			System.out.println("Uploaded: " + fileName);
+
+		} catch (IOException | ServletException e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+							.entity(ServiceUtil.returnError("Unexpected error occured!")).build();
 		}
-		
-		 //getting dispatcher from request
-  		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
-  		if(dispatcher==null) {
-  			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
-  		}
+
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		
 		try {
-			Workbook workbook = WorkbookFactory.create(file);
-			Sheet sheet = workbook.getSheetAt(0);
-			
-			List<Map<String, Object>> questions = new ArrayList<>();
-			
-			for(int i=1;i<=sheet.getLastRowNum();i++) {
-				Row row = sheet.getRow(i);
-				if (row == null)
-					continue;
-				
-				Map<String, Object> question = new HashMap<>();
-				
-				List<ColumnConfig> columns=QuestionColumnConfigUtil.getColumnConfigs();
-				
-				for (ColumnConfig col : columns) {
-					Cell cell = row.getCell(col.index);
-
-
-					if (col.required && (cell == null || cell.getCellType() == CellType.BLANK)) {
-						return Response.status(400)
-										.entity(ServiceUtil.returnError(
-														"Row " + i + ", Column " + col.index + " " + col.label + " is required", null))
-										.build();
-					}
-
-					if (cell == null) {
-						question.put(col.field, null);
-						continue;
-					}
-
-
-					switch (cell.getCellType()) {
-
-						case NUMERIC:
-							double numVal = cell.getNumericCellValue();
-
-						    if ("Number".equalsIgnoreCase(col.type)) {
-
-						        if ("answerValue".equals(col.field) || "negativeMarkValue".equals(col.field)) {
-						            question.put(col.field, numVal); // Double
-						        } else {
-						            question.put(col.field, (long) numVal); // Long
-						        }
-
-						    } else {
-						        question.put(col.field, String.valueOf((long) numVal));
-						    }
-						    break;
-
-						case STRING:
-							String strVal = cell.getStringCellValue();
-							question.put(col.field, strVal != null ? strVal.trim() : null);
-							break;
-
-						case BOOLEAN:
-							question.put(col.field, cell.getBooleanCellValue());
-							break;
-
-						case BLANK:
-							question.put(col.field, null);
-							break;
-						default:
-							question.put(col.field, null);
-							break;
-					}
-				}
-				questions.add(question);
+			Map<String, Object> result = dispatcher.runSync("uploadBulkQuestion", UtilMisc.toMap("file", buffer));
+			if (result.get("responseMessage") != null && result.get("responseMessage").equals("error")) {
+				return Response.status(Response.Status.BAD_REQUEST).entity(result).build();
 			}
-			
-			for (Map<String, ? extends Object> question : questions) {
-			Map<String,Object>result=dispatcher.runSync("createQuestionService", question);
-			
-			
+			else {
+				result.put("successMessage", "Questions uploaded successfully!");
 			}
+
+			return Response.ok().entity(result).build();
+
+		} catch (GenericServiceException e) {
 			
-			return Response.status(201).entity(ServiceUtil.returnSuccess("Question uploaded successfully")).build();
-			
-		}catch(EncryptedDocumentException  e) {
-			return Response.status(500).entity(ServiceUtil.returnError(e.getMessage())).build();
-		}catch(IOException e) {
-			return Response.status(500).entity(ServiceUtil.returnError(e.getMessage())).build();
-		}catch(GenericServiceException e) {
-			return Response.status(500).entity(ServiceUtil.returnError(e.getMessage())).build();
-		}	
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+							.entity(ServiceUtil.returnError("Unexpected error occured, try again after sometime!")).build();
+		}
+
 	}
 }

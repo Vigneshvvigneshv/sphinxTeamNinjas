@@ -41,9 +41,19 @@ public class GenerateQuestionResource {
 			String examId=(String) request.getAttribute("examId");
 			List<Map<String,Object>> topicList=(List<Map<String,Object>>)request.getAttribute("topics");
 			
+
 			
+			int currentPercentage=0;
 					
+			for(Map<String,Object>topic:topicList) {
+				String percentageStr=(String)topic.get("percentage");
+				Integer.parseInt(percentageStr);			
+				currentPercentage+=Integer.parseInt(percentageStr);
+			}
 			
+			if(currentPercentage!=100) {
+				return Response.ok().entity(ServiceUtil.returnError("percentage must be 100 ")).build();
+			}
 			 
 			for(Map<String,Object> topic:topicList) {
 				Map<String,Object>input=new HashMap<String,Object>();

@@ -320,6 +320,19 @@
 		<attribute name="hasPrevious" mode="OUT" type="Boolean" optional="false"/>
 	</service>
 	
+	<!-- upload questions -->
+	
+	<service name="downloadTemplateDocument" engine="java" location="com.vastpro.sphinx.services.QuestionService" invoke="getTemplateDocument">
+        <attribute name="bytes" mode="OUT" type="Byte []" optional="true" />
+    </service>
+    
+    
+	 <service name="uploadBulkQuestion" engine="java" location="com.vastpro.sphinx.services.QuestionService" invoke="uploadBulkQuestion">
+        <attribute name="file" mode="IN" type="java.nio.ByteBuffer" optional="true" />
+    </service>
+    
+    				
+	
 	<service  name="createExamTopic" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="createExamTopicService">
 		<attribute name="examId" mode="IN" type="String" optional="false"/>
 		<attribute name="topicId" mode="IN" type="String" optional="false"/>
