@@ -185,8 +185,8 @@ public class UserSignUpService {
 		} catch (GenericTransactionException e) {
 				Debug.logError(e.getMessage(),UserSignUpService.class.getName());
 		}
-//		return ServiceUtil.returnError("Unexcepted error during create the user");
-		return ServiceUtil.returnError((String)input.get("errorMessage"));
+		return ServiceUtil.returnError("Unexcepted error during create the user");
+//		return ServiceUtil.returnError((String)input.get("errorMessage"));
 	}
 }
 
