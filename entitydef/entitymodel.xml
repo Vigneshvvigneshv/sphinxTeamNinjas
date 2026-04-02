@@ -137,4 +137,56 @@
 		</relation>			
     </entity>
 
+
+<!-- This entity is a question bank master -->
+    <entity entity-name="QuestionBankMaster" package-name="in.vastpro.sphinx">
+		<field name="examId" type="id"></field>
+		<field name="questionId" type="numeric"></field>
+		<field name="topicId" type="id" not-null="true"/>
+		<field name="questionDetail" type="very-long" not-null="true"></field>
+		<field name="optiona" type="very-long" not-null="true"></field>
+		<field name="optionb" type="very-long" not-null="true"/>
+		<field name="optionc" type="very-long" not-null="true"></field>
+		<field name="optiond" type="very-long" not-null="true"></field>
+		<field name="optione" type="very-long" not-null="true"></field>
+		<field name="answer" type="short-varchar" not-null="true"></field>
+		<field name="numAnswers" type="numeric" not-null="true"/>
+		<field name="questionTypeId" type="short-varchar" not-null="true"></field>
+		<field name="difficultyLevel" type="numeric"></field>
+		<field name="answerValue" type="fixed-point"/>
+		<field name="negativeMarkValue" type="fixed-point"></field>		
+		<prim-key field="examId" />
+		<prim-key field="questionId" />
+		<relation rel-entity-name="ExamMaster" fk-name="QUESTION_BANK_FK" type="many">
+			<key-map field-name="examId" rel-field-name="examId" />
+		</relation>			
+    </entity>
+
+
+	<!-- First Questions are added/edited in this entity and when the exam
+	setup is invoked, the questions would be copied to the QuestionBankMaster	-->
+    <entity entity-name="QuestionBankMasterB" package-name="in.vastpro.sphinx">
+		<field name="examId" type="id"></field>
+		<field name="questionId" type="numeric"></field>
+		<field name="topicId" type="id" not-null="true"/>
+		<field name="questionDetail" type="very-long" not-null="true"></field>
+		<field name="optionA" type="very-long" not-null="true"></field>
+		<field name="optionB" type="very-long" not-null="true"/>
+		<field name="optionC" type="very-long" not-null="true"></field>
+		<field name="optionD" type="very-long" not-null="true"></field>
+		<field name="answer" type="id" not-null="true"></field>
+		<field name="numAnswers" type="numeric" not-null="true"/>
+		<field name="questionTypeId" type="short-varchar" not-null="true"></field>
+		<field name="difficultyLevel" type="numeric"></field>
+		<field name="answerValue" type="fixed-point"/>
+		<field name="negativeMarkValue" type="fixed-point"></field>			
+		<prim-key field="examId" />
+		<prim-key field="questionId" />
+		
+		<relation rel-entity-name="ExamMaster" fk-name="QUESTION_BANK_B_FK" type="many">
+			<key-map field-name="examId" rel-field-name="examId" />
+		</relation>
+					
+    </entity>
+
 </entitymodel>

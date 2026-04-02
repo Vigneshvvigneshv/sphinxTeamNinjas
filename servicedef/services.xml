@@ -245,7 +245,6 @@
 		<attribute name="optionB" mode="IN" type="String" optional="false" />
 		<attribute name="optionC" mode="IN" type="String" optional="false" />
 		<attribute name="optionD" mode="IN" type="String" optional="false" />
-		<attribute name="optionE" mode="IN" type="String" optional="true" />
 		<attribute name="answer" mode="IN" type="String" optional="false" />
 		<attribute name="numAnswers" mode="IN" type="Long" optional="false" />
 		<attribute name="questionTypeId" mode="IN" type="String" optional="false" />
@@ -275,7 +274,6 @@
     <attribute name="optionB"           type="String"     mode="IN"  optional="true"/>
     <attribute name="optionC"           type="String"     mode="IN"  optional="true"/>
     <attribute name="optionD"           type="String"     mode="IN"  optional="true"/>
-    <attribute name="optionE"           type="String"     mode="IN"  optional="true"/>
     <attribute name="answer"            type="String"     mode="IN"  optional="true"/>
     <attribute name="numAnswers"        type="Long"       mode="IN"  optional="true"/>
     <attribute name="questionTypeId"    type="String"     mode="IN"  optional="true"/>
@@ -363,4 +361,19 @@
 		<auto-attributes include="pk" mode="IN"/>
 		
 	</service>
+	
+	
+	<!-- generatingquestion by topic percentage -->
+	<service name="generateQuestionsService" engine="java" location="com.vastpro.sphinx.services.GenerateQuestionsMasterBService" invoke="generateQuestionsService">
+		<attribute name="examId" mode="IN" type="String"/>
+		<attribute name="TopicList" mode="IN" type="List"/>
+	</service>
+	
+	
+  <service name="addQuestionInMasterB" engine="entity-auto" invoke="create" default-entity-name="QuestionBankMasterB">
+	<auto-attributes include="pk" mode ="IN" optional="false"/>
+	<auto-attributes include="nonpk" mode="IN" optional="false"/>
+ </service>
+	
+	
 </services>
