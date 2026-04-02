@@ -65,33 +65,34 @@ public class GenerateQuestionResource {
 					result.put("status", "ERROR");
 					result.put("errorMessage", ServiceUtil.getErrorMessage(serviceResult));
 					return Response.status(500).entity(result).build();
-				}
+				}	
 				
-				
-			
-				Map<String,Object> listTopics=new HashMap<String, Object>();
-				
-				listTopics.put("TopicList", topicList);
-				listTopics.put("examId",examId);
-				
-				Map<String,Object>serviceResultgenerate=dispatcher.runSync("genarateQuestionsSerice",listTopics);
-				
-				if(ServiceUtil.isError(serviceResult)) {	
-					result.put("status", "ERROR");
-					result.put("errorMessage", ServiceUtil.getErrorMessage(serviceResult));
-					return Response.status(500).entity(result).build();
-				}
-				
-				result.put("status", "success");
-				result.put("message", serviceResult.get("successMessage"));
-				
-				return Response.ok().entity(result).build();
 			}
+			
+			//GenerateQuestions Working...
+			Map<String,Object> listTopics=new HashMap<String, Object>();
+			
+			listTopics.put("TopicList", topicList);
+			listTopics.put("examId",examId);
+			
+			Map<String,Object>serviceResultgenerate=dispatcher.runSync("generateQuestionsService",listTopics);
+			
+			if(ServiceUtil.isError(serviceResultgenerate)) {	
+				result.put("status", "ERROR");
+				result.put("errorMessage", ServiceUtil.getErrorMessage(serviceResultgenerate));
+				return Response.status(500).entity(result).build();
+			}
+			
+			result.put("status", "success");
+			result.put("message", serviceResultgenerate.get("successMessage"));
+			
+			return Response.ok().entity(result).build();
 		
 		}catch(Exception e) {
 			e.printStackTrace();
-			return null;
+			result.put("message",e.getMessage());
+			return Response.ok().entity(result).build();
 		}
-		return null;
+		
 	}
 }
