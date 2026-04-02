@@ -81,7 +81,7 @@ public class UserResource {
 			userInput.put("firstName", request.getAttribute("firstName"));
 			userInput.put("lastName", request.getAttribute("lastName"));
 			userInput.put("email", request.getAttribute("email"));
-
+			userInput.put("roleTypeId",request.getAttribute("roleTypeId"));
 			Map<String, Object> result = dispatcher.runSync("userSignUpServiceOwn", userInput);
 
 //			return result;

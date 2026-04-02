@@ -34,7 +34,7 @@ public class UserSignUpService {
 			String firstName = (String) params.get("firstName");
 			String lastName = (String) params.get("lastName");
 			String email = (String) params.get("email");
-			
+			String role=(String) params.get("roleTypeId");
 			
 			
 				if(!FormValidation.validateUsername(username)) {
@@ -56,7 +56,9 @@ public class UserSignUpService {
 				if(!FormValidation.validateLastName(lastName)) {
 					return ServiceUtil.returnError("Lastname must be letters");
 				}
-				
+				if(role==null&&("SPHINX_USER".equals(role) ||"SPHINX_ADMIN".equals(role))) {
+					return ServiceUtil.returnError("Invalid role");
+				}
 			
 			// Check if username already exists
 			GenericValue existingUser = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", username)
@@ -100,7 +102,7 @@ public class UserSignUpService {
 //			delegator.create(contactMech);
 			input.put("contactMechId",contactMechId);
 			input.put("infoString",email);
-			input.put("contactMechTypeId","EMAIL_ADDRESS");
+		
 
 //			GenericValue partyContactMech = delegator.makeValue("PartyContactMech");
 //			partyContactMech.set("contactMechId", contactMechId);
@@ -127,7 +129,7 @@ public class UserSignUpService {
 //			partyRole.set("partyId", partyId);
 //			partyRole.set("roleTypeId", "SPHINX_USER");
 //			delegator.create(partyRole);
-			input.put("roleTypeId", "SPHINX_USER");
+			input.put("roleTypeId", role);
 			
 			TransactionUtil.begin();
 			
@@ -185,8 +187,8 @@ public class UserSignUpService {
 		} catch (GenericTransactionException e) {
 				Debug.logError(e.getMessage(),UserSignUpService.class.getName());
 		}
-//		return ServiceUtil.returnError("Unexcepted error during create the user");
-		return ServiceUtil.returnError((String)input.get("errorMessage"));
+		return ServiceUtil.returnError("Unexcepted error during create the user");
+//		return ServiceUtil.returnError((String)input.get("errorMessage"));
 	}
 }
 
