@@ -28,56 +28,6 @@ import org.apache.ofbiz.service.ServiceUtil;
 @Path("/examtopic")
 public class ExamTopicResource {
 	
-	@POST
-	@Path("/createexamtopic")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response createExamTopic(@Context HttpServletRequest request,@Context HttpServletResponse response ) {
-		
-		
-		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
-		Map<String,Object>result=new HashMap<>();
-		if(dispatcher==null) {
-			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
-		}
-		
-		try {
-			Map<String,Object>input=new HashMap<String,Object>();
-			
-			input.put("examId",request.getAttribute("examId"));
-			input.put("topicId",request.getAttribute("topicId"));
-			input.put("percentage",request.getAttribute("percentage"));
-			input.put("topicPassPercentage",request.getAttribute("topicPassPercentage"));
-		
-			
-			if (input.get("examId") == null || input.get("topicId") == null) {
-			    return Response.status(400)
-			        .entity(ServiceUtil.returnError("examId and topicId are required"))
-			        .build();
-			}
-			
-			
-			Map<String,Object>serviceResult=dispatcher.runSync("createExamTopic", input);
-			
-			
-			if(ServiceUtil.isError(serviceResult)) {	
-				result.put("status", "ERROR");
-				result.put("errorMessage", ServiceUtil.getErrorMessage(serviceResult));
-				return Response.status(500).entity(result).build();
-			}
-			
-			result.put("status", "success");
-			result.put("message", serviceResult.get("successMessage"));
-			return Response.ok().entity(result).build();
-			
-		}catch(GenericServiceException e) {
-			e.printStackTrace();
-			result.put("status","ERROR");
-			result.put("message", e.getMessage());
-			return Response.status(500).entity(result).build();
-		}
-		
-	}
 	
 	@GET
 	@Path("/gettopicbyexamid")
@@ -121,7 +71,7 @@ public class ExamTopicResource {
   			
   		}catch(GenericServiceException e) {
   			e.printStackTrace();
-  			result.put("message", e.getMessage());
+  			result.put("message", "Failed to fetch Topics");
   			return Response.status(500).entity(result).build();
   		}
 	}

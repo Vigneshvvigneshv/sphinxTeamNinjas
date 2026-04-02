@@ -67,7 +67,7 @@ public class ExamTopicService {
 			return ServiceUtil.returnSuccess("Exam TopicMaster Created SuccessFully");
 			
 		}catch(GenericServiceException | GenericEntityException e) {
-			return ServiceUtil.returnError(e.getMessage());
+			return ServiceUtil.returnError("");
 		}
 	}
 	
@@ -103,14 +103,18 @@ public class ExamTopicService {
 				Map<String,Object> tMap=new HashMap<>();
 				String topicId=e.getString("topicId");
 				GenericValue topic =EntityQuery.use(delegator).from("topicMaster").where("topicId",topicId).queryOne();
-				
+				GenericValue topicPercentage=EntityQuery.use(delegator).from("ExamTopicMapping").where("examId",examId,"topicId",topicId).queryOne();
 				String topicName=topic.getString("topicName");
+				String percent=topicPercentage.getString("percentage");
 				tMap.put("topicId",topicId);
 				tMap.put("topicName",topicName);
+				tMap.put("topicPercentage",percent);
 				
 				topicList.add(tMap);
 				
 			}
+			
+			
 			
 			Map<String,Object> result=ServiceUtil.returnSuccess();
 			
@@ -149,7 +153,7 @@ public class ExamTopicService {
 		}catch(GenericServiceException e) {
 			e.printStackTrace();
 			
-			return ServiceUtil.returnError(e.getMessage());
+			return ServiceUtil.returnError("Failed to Delete Topic");
 		}
 	}
 }
