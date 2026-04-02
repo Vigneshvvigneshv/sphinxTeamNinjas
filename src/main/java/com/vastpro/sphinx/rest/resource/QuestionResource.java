@@ -137,17 +137,17 @@ public class QuestionResource {
 	        Map<String, Object> serviceResult  = dispatcher.runSync("updateQuestionMaster", input);
 
 	        if (ServiceUtil.isError(serviceResult)) {
-	        	result.put("status",  "ERROR");
+	        	result.put("responseMessage",  "ERROR");
 	        	result.put("message", ServiceUtil.getErrorMessage(serviceResult));
 	            return Response.status(500).entity(result ).build();
 	        }
 
-	        result.put("status","SUCCESS");
+	        result.put("responseMessage","SUCCESS");
 	        result.put("message","Question updated successfully");
 	        return Response.ok(result).build();
 
 	    } catch (Exception e) {
-	    	result.put("status",  "ERROR");
+	    	result.put("responseMessage",  "ERROR");
 	    	result.put("message", e.getMessage());
 	        return Response.status(500).entity(result).build();
 	    }
@@ -170,7 +170,7 @@ public class QuestionResource {
 	        String questionIdStr=String.valueOf(request.getAttribute("questionId"));
 	        
 	        if (questionIdStr == null || questionIdStr.trim().isEmpty()) {
-	        	result.put("status",  "ERROR");
+	        	result.put("responseMessage",  "ERROR");
 	        	result.put("message", "questionId is required");
 	        	return Response.status(400).entity(result).build();
 	        }
@@ -184,21 +184,23 @@ public class QuestionResource {
 	        Map<String, Object> serviceResult = dispatcher.runSync("deleteQuestionMaster",input);
 
 	        if (ServiceUtil.isError(serviceResult)) {
-	            result.put("status",  "ERROR");
+	            result.put("responseMessage",  "ERROR");
 	            
 	            return Response.status(500).entity(result).build();
 	        }
 
-	        result.put("status","SUCCESS");
+	        result.put("responseMessage","SUCCESS");
 	        result.put("message", "question deleted Successfully");
 	        return Response.ok(result).build();
 
 	    } catch (Exception e) {
-	        result.put("status",  "ERROR");
+	        result.put("responseMessage",  "ERROR");
 	        result.put("message", e.getMessage());
 	        return Response.status(500).entity(result).build();
 	    }
 	}
+	
+	
 	
 	@GET
 	@Path("/getquestionsbytopic")
@@ -216,7 +218,7 @@ public class QuestionResource {
 		try {
 			
 			if(topicId==null || topicId.trim().isEmpty()) {
-				result.put("status","ERROR");
+				result.put("responseMessage","ERROR");
 				result.put("message","TopicId is Required");
 				return Response.status(400).entity(result).build();
 			}
@@ -236,12 +238,12 @@ public class QuestionResource {
 			
 		
 			if(ServiceUtil.isError(serviceResult)) {
-				result.put("status", "ERROR");
+				result.put("responseMessage", "ERROR");
 				result.put("message", ServiceUtil.getErrorMessage(serviceResult));
 				return Response.status(500).entity(result).build();
 			}
 			
-			result.put("status", "SUCCESS");
+			result.put("responseMessage", "SUCCESS");
 			result.put("topicId", serviceResult.get("topicId"));
 			result.put("topicName", serviceResult.get("topicName"));
 			result.put("totalCount", serviceResult.get("totalCount"));
@@ -259,7 +261,7 @@ public class QuestionResource {
 			
 			
 		}catch(GenericServiceException e) {
-			result.put("status", "ERROR");
+			result.put("responseMessage", "ERROR");
 			result.put("message", e.getMessage());
 			e.printStackTrace();
 			return Response.status(500).entity(result).build();
@@ -344,5 +346,56 @@ public class QuestionResource {
 							.entity(ServiceUtil.returnError("Unexpected error occured, try again after sometime!")).build();
 		}
 
+	}
+	
+	
+	@GET
+	@Path("/getquestionbyid")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getQuetionsById(@Context HttpServletRequest request,@Context HttpServletResponse response) {
+		
+		 //getting dispatcher from request
+  		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
+  		if(dispatcher==null) {
+  			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
+  		}
+		
+  		
+  		Map<String,Object>result=new HashMap<>();
+  		
+  		
+  		try {
+  			String questionIdStr=(String)request.getAttribute("questionId");
+  			
+  			Long questionId=Long.valueOf(questionIdStr);
+  			
+  			Map<String,Object>input=new HashMap<>();
+  			
+  			input.put("questionId", questionId);
+  			
+  			Map<String,Object>ServiceResult=dispatcher.runSync("getQuestionById", input);
+  			
+  			
+  			
+  			if(ServiceUtil.isError(ServiceResult)) {
+  				result.put("responseMessage","ERROR");
+  				result.put("message", ServiceUtil.getErrorMessage(ServiceResult));
+  				result.put("question",null);
+  				
+  				return Response.status(500).entity(result).build();
+  			}
+  			
+  			result.put("responseMessage", "Success");
+  			result.put("message","Question Fetched SuccessFully");
+  			result.put("question", ServiceResult.get("question"));
+  			return Response.ok().entity(result).build();
+  		}catch(GenericServiceException e) {
+  			result.put("responseMesage", "ERROR");
+  			result.put("message", "Failed to Fetch the question");
+  			
+  			return Response.ok().entity(result).build();
+  							
+  		}
 	}
 }

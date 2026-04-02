@@ -57,12 +57,12 @@ public class ExamTopicResource {
   			Map<String,Object>serviceResult=dispatcher.runSync("getTopicByExamId",input);
   			
   			if(ServiceUtil.isError(serviceResult)) {
-				result.put("status", "ERROR");
+				result.put("responseMessage", "ERROR");
 				result.put("message", ServiceUtil.getErrorMessage(serviceResult));
 				return Response.status(500).entity(result).build();
 			}
   			
-  			result.put("status", "SUCCESS");
+  			result.put("responseMessage", "SUCCESS");
   			result.put("examId", serviceResult.get("examId"));
   			result.put("examName",serviceResult.get("examName"));
   			result.put("topicList", serviceResult.get("topicList"));
@@ -71,6 +71,7 @@ public class ExamTopicResource {
   			
   		}catch(GenericServiceException e) {
   			e.printStackTrace();
+  			result.put("responseMessage", "ERROR");
   			result.put("message", "Failed to fetch Topics");
   			return Response.status(500).entity(result).build();
   		}

@@ -270,7 +270,7 @@
 	</service>
 
 
-<service  name="createQuestion" engine="entity-auto" invoke="create" default-entity-name="questionMaster">
+	<service name="createQuestion" engine="entity-auto" invoke="create" default-entity-name="questionMaster">
 		<auto-attributes include="pk" mode="OUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="false"/>
 	</service>
@@ -334,6 +334,14 @@
 		<attribute name="hasPrevious" mode="OUT" type="Boolean" optional="false"/>
 	</service>
 	
+	<!-- GetQuestion by question id -->
+	
+	<service name="getQuestionById" engine="java" location="com.vastpro.sphinx.services.QuestionService" invoke="getQuestionById">
+	
+		<attribute name="questionId" mode="IN" type="Long"></attribute>
+		<attribute name="question" mode="OUT" type="Map"></attribute>
+	</service>
+	
 	<!-- upload questions -->
 	
 	<service name="downloadTemplateDocument" engine="java" location="com.vastpro.sphinx.services.QuestionService" invoke="getTemplateDocument">
@@ -346,7 +354,7 @@
     </service>
     
     				
-	
+	<!-- Creating the topic in exam  -->
 	<service  name="createExamTopic" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="createExamTopicService">
 		<attribute name="examId" mode="IN" type="String" optional="false"/>
 		<attribute name="topicId" mode="IN" type="String" optional="false"/>
@@ -374,10 +382,9 @@
 	</service>
 	
 	
-	
+
 	
 	<!-- delete topic in examTopicMappin -->
-	
 	<service name="deleteTopicInExamTopic" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="deleteTopicInExamTopic">
 		<attribute name="topicId" mode="IN" type="String" optional="false"/>
 		<attribute name="examId" mode="IN" type="String" optional="false"/>
@@ -390,7 +397,7 @@
 	</service>
 	
 	
-	<!-- generatingquestion by topic percentage -->
+	<!-- generating question by topic percentage -->
 	<service name="generateQuestionsService" engine="java" location="com.vastpro.sphinx.services.GenerateQuestionsMasterBService" invoke="generateQuestionsService">
 		<attribute name="examId" mode="IN" type="String"/>
 		<attribute name="TopicList" mode="IN" type="List"/>
