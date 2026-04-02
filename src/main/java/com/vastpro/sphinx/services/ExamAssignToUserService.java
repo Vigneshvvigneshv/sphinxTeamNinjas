@@ -46,7 +46,7 @@ public class ExamAssignToUserService {
 			if (ServiceUtil.isError(result)) {
 				return ServiceUtil.returnError("Error, occur during assing the Exam");
 			}
-			return result;
+			return ServiceUtil.returnSuccess("User Assigned to the exam successfully");
 
 		} catch (GenericEntityException | GenericServiceException e) {
 			// TODO Auto-generated catch block
@@ -120,7 +120,7 @@ public class ExamAssignToUserService {
 			Long numberOfAttempts = getRecords.getLong("noOfAttempts");
 			Long allowAttempts =getRecords.getLong("allowedAttempts");
 		
-			if(numberOfAttempts<=allowAttempts) {
+			if(numberOfAttempts<allowAttempts) {
 				input.put("noOfAttempts", (numberOfAttempts+1));
 			}else {
 				return ServiceUtil.returnError("User reached a maximum attempts");
@@ -130,12 +130,12 @@ public class ExamAssignToUserService {
 			
 			if(ServiceUtil.isError(result)) {
 				Debug.logError((String)result.get("errorMessage"), ExamAssignToUserService.class.getName());
-				return ServiceUtil.returnError("Error, occur launch the exam"); 
+				return ServiceUtil.returnError("Error, occur during launch the exam"); 
 			}
-			return result;
+			return ServiceUtil.returnSuccess("exam Launched Successfully");
 		}catch (GenericEntityException | GenericServiceException e) {
 			Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
-			return ServiceUtil.returnError("Error, occur launch the exam");
+			return ServiceUtil.returnError("Error, occur during launch the exam");
 		}
 	}
 }

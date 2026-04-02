@@ -124,7 +124,7 @@
 		<field name="canSplitExams" type="numeric"/>
 		<field name="canSeeDetailedResults" type="numeric"></field>
 		<field name="maxSplitAttempts" type="numeric"></field>
-		<!-- A party can take th exam only within these stipulated dates -->
+		<!-- A party can take the exam only within these stipulated dates -->
 		<field name="fromDate" type="date-time"></field>
 		<field name="thruDate" type="date-time"></field>
 		<prim-key field="partyId" />
@@ -188,5 +188,28 @@
 		</relation>
 					
     </entity>
+    
+    
+    <!-- to get the user -->
+       <view-entity entity-name="PartyPersonalInfo" package-name="">
+        <member-entity entity-alias="PY" entity-name="Party"/>
+        <member-entity entity-alias="PN" entity-name="Person"/>
+        <member-entity entity-alias="PR" entity-name="PartyRole"/>
+        
+        <alias entity-alias="PR" name="roleTypeId"/>
+        <alias entity-alias="PY" name="partyId"/>
+        <alias entity-alias="PY" name="partyTypeId"/>
+        <alias entity-alias="PY" name="statusId"/>
+        <alias entity-alias="PN" name="firstName"/>
+        <alias entity-alias="PN" name="lastName"/> 
+        
+        <view-link entity-alias="PY" rel-entity-alias="PN">
+            <key-map field-name="partyId"/>
+        </view-link>
+        
+        <view-link entity-alias="PY" rel-entity-alias="PR">
+            <key-map field-name="partyId"/>
+        </view-link>
+    </view-entity>
 
 </entitymodel>

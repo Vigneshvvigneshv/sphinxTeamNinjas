@@ -81,7 +81,7 @@ public class UserSignUpService {
 			Map<String,Object> input=new HashMap<String, Object>();
 			input.put("partyId",partyId);
 			input.put("partyTypeId","PERSON");
-			input.put("statusId","PARTY_DISABLED");
+			input.put("statusId","PARTY_ENABLED");
 			input.put("firstName",firstName);
 			input.put("lastName",lastName);
 			input.put("infoString",email);

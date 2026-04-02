@@ -54,7 +54,7 @@
 		<attribute name="firstName" mode="IN" type="String"></attribute>
 		<attribute name="lastName" mode="IN" type="String"></attribute>
 		<attribute name="email" mode="IN" type="String"></attribute>
-		<attribute name="roleTypeId" mode="In" type="String"></attribute>
+		<attribute name="roleTypeId" mode="IN" type="String"></attribute>
 	</service>
 
 	<service name="createParty" engine="entity-auto"
@@ -235,7 +235,7 @@
 	<!-- assign exam to the user  by entity-auto-->
  	<service engine="entity-auto" name="assignExam" invoke="create" default-entity-name="PartyExamRelationship">
  		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
- 		<auto-attributes mode="IN" include="nonpk" optional="false"></auto-attributes>
+ 		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
  	</service>
  	
  	<!-- remove assigned exam to the user  by entity-auto-->
@@ -388,6 +388,5 @@
 	<auto-attributes include="pk" mode ="IN" optional="false"/>
 	<auto-attributes include="nonpk" mode="IN" optional="false"/>
  </service>
-	
 	
 </services>

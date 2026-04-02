@@ -15,8 +15,12 @@ public class UserService {
 		Delegator delegator=context.getDelegator();
 		Map<String,Object> result=ServiceUtil.returnSuccess();
 		try {
-			List<GenericValue> userList=EntityQuery.use(delegator).from("UserLogin").queryList();
-			if(!(userList.size()>0)) {
+			
+			 List<GenericValue> userList = EntityQuery.use(delegator).from("PartyPersonalInfo")
+						.where("partyTypeId", "PERSON", "statusId", "PARTY_ENABLED", "roleTypeId", "SPHINX_USER").queryList();
+//			List<GenericValue> userList=EntityQuery.use(delegator).from("UserLogin").queryList();
+			
+			 if(!(userList.size()>0)) {
 				return ServiceUtil.returnSuccess("No user Found");
 			}
 			result.put("userList",userList);
