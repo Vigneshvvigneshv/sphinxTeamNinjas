@@ -71,21 +71,14 @@ public class UserSignUpService {
 			// Create Party
 			String partyId = delegator.getNextSeqId("Party");
 			partyId = "USR_" + partyId;
-			
+			String contactMechId = delegator.getNextSeqId("ContactMech");
 //			GenericValue party = delegator.makeValue("Party");
 //			party.set("partyId", partyId);
 //			party.set("partyTypeId", "PERSON");
 //			party.set("statusId", "PARTY_DISABLED"); // pending approval
 //			delegator.create(party);
 			
-			Map<String,Object> input=new HashMap<String, Object>();
-			input.put("partyId",partyId);
-			input.put("partyTypeId","PERSON");
-			input.put("statusId","PARTY_ENABLED");
-			input.put("firstName",firstName);
-			input.put("lastName",lastName);
-			input.put("infoString",email);
-			input.put("contactMechTypeId","EMAIL_ADDRESS");
+
 			// Create Person
 //			GenericValue person = delegator.makeValue("Person");
 //			person.set("partyId", partyId);
@@ -94,15 +87,13 @@ public class UserSignUpService {
 //			delegator.create(person);
 
 			// to Store the email of the user in the contectMech
-			String contactMechId = delegator.getNextSeqId("ContactMech");
+	
 //			GenericValue contactMech = delegator.makeValue("ContactMech");
 //			contactMech.set("contactMechId", contactMechId);
 //			contactMech.set("infoString", email);
 //			contactMech.set("contactMechTypeId", "EMAIL_ADDRESS");
 //			delegator.create(contactMech);
-			input.put("contactMechId",contactMechId);
-			input.put("infoString",email);
-		
+			
 
 //			GenericValue partyContactMech = delegator.makeValue("PartyContactMech");
 //			partyContactMech.set("contactMechId", contactMechId);
@@ -110,8 +101,7 @@ public class UserSignUpService {
 //			partyContactMech.set("fromDate", UtilDateTime.nowTimestamp());
 //			delegator.create(partyContactMech);
 
-			input.put("fromDate", UtilDateTime.nowTimestamp());
-			
+	
 			// Create UserLogin with user's own password
 //			GenericValue userLogin = delegator.makeValue("UserLogin");
 //			userLogin.set("userLoginId", username);
@@ -119,47 +109,79 @@ public class UserSignUpService {
 //			userLogin.set("enabled", "N"); // disabled until admin approves
 //			userLogin.set("partyId", partyId);
 //			delegator.create(userLogin);
-			
-			input.put("userLoginId", username);
-			input.put("currentPassword", PasswordHashing.encryptPassword(password));
-			input.put("enabled", "N");
+	
 
 			// Assign Role
 //			GenericValue partyRole = delegator.makeValue("PartyRole");
 //			partyRole.set("partyId", partyId);
 //			partyRole.set("roleTypeId", "SPHINX_USER");
 //			delegator.create(partyRole);
-			input.put("roleTypeId", role);
+		
 			
 			TransactionUtil.begin();
 			
-			
-			Map<String,Object> party=dispatcher.runSync("createParty", input);
-			if(ServiceUtil.isError(party)) {
-				return handleTransaction(party);
-			}
-			Map<String,Object> person=dispatcher.runSync("createPerson", input);
-			if(ServiceUtil.isError(person)) {
-				return handleTransaction(person);
-			}
-			
-			Map<String,Object> partyRole=dispatcher.runSync("createPartyRole", input);
-			if(ServiceUtil.isError(partyRole)) {
-				return handleTransaction(partyRole);
-			}
-			
-			Map<String,Object> contactMech=dispatcher.runSync("createContactMech", input);
-			if(ServiceUtil.isError(contactMech)) {
-				return handleTransaction(contactMech);
-			}
-			Map<String,Object> partyContactMech=dispatcher.runSync("createPartyContactMech", input);
-			if(ServiceUtil.isError(partyContactMech)) {
-				return handleTransaction(partyContactMech);
-			}
-			Map<String,Object> userLogin=dispatcher.runSync("createUserLogin", input);
-			if(ServiceUtil.isError(userLogin)) {
-				return handleTransaction(userLogin);
-			}
+			//create party
+			 Map<String, Object> partyInput = new HashMap<>();
+		        partyInput.put("partyId", partyId);
+		        partyInput.put("partyTypeId", "PERSON");
+		        partyInput.put("statusId", "PARTY_ENABLED");
+		        Map<String, Object> partyResult = dispatcher.runSync("createParty", partyInput);
+		        if (ServiceUtil.isError(partyResult)) return handleTransaction();
+
+		        
+		        //create role
+		        Map<String, Object> partyRoleInput = new HashMap<>();
+		        partyRoleInput.put("partyId", partyId);
+		        partyRoleInput.put("roleTypeId", role);
+		        Map<String, Object> partyRoleResult = dispatcher.runSync("createPartyRole", partyRoleInput);
+		        if (ServiceUtil.isError(partyRoleResult)) return handleTransaction();
+		        
+		       
+		        
+		        //create person
+		        Map<String, Object> personInput = new HashMap<>();
+		        personInput.put("partyId", partyId);
+		        personInput.put("firstName", firstName);
+		        personInput.put("lastName", lastName);
+		        Map<String, Object> personResult = dispatcher.runSync("createPerson", personInput);
+		        if (ServiceUtil.isError(personResult)) return handleTransaction();
+
+		        
+		        GenericValue naRole = EntityQuery.use(delegator)
+		                .from("PartyRole")
+		                .where("partyId", partyId, "roleTypeId", "_NA_")
+		                .queryOne();
+		        if (naRole != null) {
+		            naRole.remove();
+		        }
+		        
+		        
+		        //create contact 
+		        Map<String, Object> contactMechInput = new HashMap<>();
+		        contactMechInput.put("contactMechId", contactMechId);
+		        contactMechInput.put("infoString", email);
+		        contactMechInput.put("contactMechTypeId", "EMAIL_ADDRESS");
+		        Map<String, Object> contactMechResult = dispatcher.runSync("createContactMech", contactMechInput);
+		        if (ServiceUtil.isError(contactMechResult)) return handleTransaction();
+
+		        
+		        Map<String, Object> partyContactMechInput = new HashMap<>();
+		        partyContactMechInput.put("partyId", partyId);
+		        partyContactMechInput.put("contactMechId", contactMechId);
+		        partyContactMechInput.put("fromDate", UtilDateTime.nowTimestamp());
+		        Map<String, Object> partyContactMechResult = dispatcher.runSync("createPartyContactMech", partyContactMechInput);
+		        if (ServiceUtil.isError(partyContactMechResult)) return handleTransaction();
+
+		       //create user login
+		        Map<String, Object> userLoginInput = new HashMap<>();
+		        userLoginInput.put("userLoginId", username);
+		        userLoginInput.put("currentPassword", PasswordHashing.encryptPassword(password));
+		        userLoginInput.put("enabled", "N");
+		        userLoginInput.put("partyId", partyId);
+		        Map<String, Object> userLoginResult = dispatcher.runSync("createUserLogin", userLoginInput);
+		        if (ServiceUtil.isError(userLoginResult)) return handleTransaction();
+
+		      
 			
 			
 			
@@ -181,7 +203,7 @@ public class UserSignUpService {
 		return result;
 	}
 	
-	private static Map<String,Object> handleTransaction(Map<String,Object> input){
+	private static Map<String,Object> handleTransaction(){
 		try {
 			TransactionUtil.rollback();
 		} catch (GenericTransactionException e) {
