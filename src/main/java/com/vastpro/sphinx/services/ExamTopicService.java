@@ -30,8 +30,6 @@ public class ExamTopicService {
 			String topicPassPercentageStr=(String)context.get("topicPassPercentage");
 			
 			
-			
-			
 			GenericValue exam=EntityQuery.use(delegator).from("ExamMaster").where("examId",examId).queryOne();
 			
 			if(exam==null) {
@@ -75,9 +73,7 @@ public class ExamTopicService {
 	//Getting topicBy ExamId
 	public static Map<String,Object> getTopicByExamIdService(DispatchContext dctx,Map<String,Object>context){
 		
-		
 		Delegator delegator=dctx.getDelegator();	
-		
 		
 		try {
 			
@@ -108,24 +104,18 @@ public class ExamTopicService {
 				String percent=topicPercentage.getString("percentage");
 				
 				
-			
 				 int percentage = (int) Double.parseDouble(percent);
-				
 				
 				String topicPassPercentage=topicPercentage.getString("topicPassPercentage");
 				 int passPercentage = (int) Double.parseDouble(topicPassPercentage);
 			
 				
-				
 				tMap.put("topicId",topicId);
 				tMap.put("topicName",topicName);
 				tMap.put("percentage",percentage);
 				tMap.put("topicPassPercentage",passPercentage);
-				topicList.add(tMap);
-				
+				topicList.add(tMap);	
 			}
-			
-			
 			
 			Map<String,Object> result=ServiceUtil.returnSuccess();
 			
@@ -143,7 +133,6 @@ public class ExamTopicService {
 	
 	public static Map<String,Object> deleteTopicInExamTopic(DispatchContext dctx,Map<String,Object> context){
 		
-	
 		LocalDispatcher dispatcher=dctx.getDispatcher();
 		try {
 			String topicId=(String)context.get("topicId");

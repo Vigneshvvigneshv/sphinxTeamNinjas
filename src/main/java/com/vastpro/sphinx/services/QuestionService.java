@@ -46,15 +46,38 @@ public class QuestionService {
 
 			String topicId = (String) questions.get("topicId");
 			String questionDetail = (String) questions.get("questionDetail");
-			String questionTypeId = (String) questions.get("questionTypeId");
-			String answer = (String) questions.get("answer");
 			
-			questions.put("negativeMarkValue",0.0);
+			String answer = (String) questions.get("answer");
+			String optionA=(String) questions.get("optionA");
+			String optionB=(String) questions.get("optionB");
+			String optionC=(String) questions.get("optionC");
+			String optionD=(String) questions.get("optionD");
+			Long numAnswers = (Long) questions.get("numAnswers");
+			String questionTypeId = (String) questions.get("questionTypeId");
+			Long difficultyLevel = (Long) questions.get("difficultyLevel");
+			BigDecimal answerValue = (BigDecimal) questions.get("answerValue");
+			
+			
+//			questions.put("negativeMarkValue",0.0);
 
 			if (topicId == null || questionDetail == null || answer == null) {
 				return ServiceUtil.returnError("topic Id and quetionDetail and answer are required");
 			}
 
+			if(questionTypeId.trim().equals("SINGLE_CHOICE") || questionTypeId.trim().equals("MULTI_CHOICE"))  {
+				if(optionA.isEmpty() || optionB.isEmpty() || optionC.isEmpty() || optionD.isEmpty() ) {
+					return ServiceUtil.returnError("options can not be empty for SINGLE_CHOICE and Multi Choice Question");
+				}
+				
+				
+			}else if(questionTypeId.trim().equals("TRUE_FALSE")) {
+				if(optionA.isEmpty() || optionB.isEmpty() ||optionA.trim()==null || optionB.trim()==null) {
+					return ServiceUtil.returnError("options can not be empty for True_FALSE");
+				}
+			}
+				
+			
+			
 			// check topic exists
 			GenericValue topic = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId).queryOne();
 
@@ -81,9 +104,16 @@ public class QuestionService {
 			// question.set("negativeMarkValue",questions.getOrDefault("negativeMarkValue", 0.0));
 			// delegator.create(question);
 
-			dispatcher.runSync("createQuestion", questions);
+		Map<String,Object>serviceResult=dispatcher.runSync("createQuestion", questions);
 
 			Map<String, Object> result = ServiceUtil.returnSuccess("Question created Successfully");
+			
+			if(ServiceUtil.isError(serviceResult)) {
+				result.put("responseMesage", "Failed to create questions");
+				result.put("questionId", questionId);
+				return result;
+			}
+			
 			result.put("responseMessage", "Question created Successfully");
 			result.put("questionId", questionId);
 			return result;
