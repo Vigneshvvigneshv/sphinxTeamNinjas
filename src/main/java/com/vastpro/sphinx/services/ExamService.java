@@ -98,13 +98,16 @@ public class ExamService {
 				return ServiceUtil.returnSuccess("Exam not found");
 			}
 
-			GenericValue examPresentInExamTopic = EntityQuery.use(delegator).from("ExamTopicMapping").where("examId", input.get("examId"))
-							.queryFirst();
+			List<GenericValue> examPresentInExamTopic = EntityQuery.use(delegator).from("ExamTopicMapping")
+							.where("examId", input.get("examId")).queryList();
 
-			if (examPresentInExamTopic != null) {
-				Map<String, Object> result1 = dispatcher.runSync("deleteTopicInExamTopicMaster", input);
-				if (ServiceUtil.isError(result1)) {
-					return ServiceUtil.returnError((String) result1.get("errorMessage"));
+			if (examPresentInExamTopic.size() > 0) {
+				// Map<String, Object> result1 = dispatcher.runSync("deleteTopicInExamTopicMaster", input);
+				// if (ServiceUtil.isError(result1)) {
+				// return ServiceUtil.returnError((String) result1.get("errorMessage"));
+				// }
+				for (GenericValue data : examPresentInExamTopic) {
+					data.remove();
 				}
 			}
 
@@ -115,7 +118,9 @@ public class ExamService {
 			}
 
 			return ServiceUtil.returnSuccess("Exam deleted successfully");
-		} catch (GenericServiceException | GenericEntityException e) {
+		} catch (GenericServiceException |
+
+						GenericEntityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return ServiceUtil.returnError("Error, occur during delete exam" + e.getMessage());
