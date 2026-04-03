@@ -94,7 +94,19 @@ public class ExamService {
 			if (examId == null) {
 				return ServiceUtil.returnSuccess("Exam not found");
 			}
+			
+			GenericValue examPresentInExamTopic = EntityQuery.use(delegator).from("ExamTopicMapping").where("examId", input.get("examId"))
+					.queryFirst();
 
+			if (examPresentInExamTopic != null) {
+				return ServiceUtil.returnSuccess("When delete the Exam, Topic also removed from the exam");
+			}
+			
+			Map<String, Object> result1 = dispatcher.runSync("deleteTopicInExamTopicMaster", input);
+			if (ServiceUtil.isError(result1)) {
+				return ServiceUtil.returnError((String) result1.get("errorMessage"));
+			}
+			
 			Map<String, Object> result = dispatcher.runSync("deleteExam", input);
 
 			if (ServiceUtil.isError(result)) {

@@ -410,9 +410,12 @@
 	
 	<service name="deleteTopicInExamTopicDB" engine="entity-auto" invoke="delete" default-entity-name="ExamTopicMapping">
 		<auto-attributes include="pk" mode="IN"/>
-		
 	</service>
 	
+	<!-- Delete the examTopic based on the examId -->
+	<service name="deleteTopicInExamTopicMaster" engine="entity-auto" invoke="delete" default-entity-name="ExamTopicMapping">
+		<auto-attributes include="pk" mode="IN" optional="true"/>
+	</service>
 	
 	<!-- generating question by topic percentage -->
 	<service name="generateQuestionsService" engine="java" location="com.vastpro.sphinx.services.GenerateQuestionsMasterBService" invoke="generateQuestionsService">
