@@ -15,107 +15,103 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.ofbiz.entity.Delegator;
+import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
+import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceContainer;
 import org.apache.ofbiz.service.ServiceUtil;
-import org.eclipse.jgit.transport.ReceiveCommand.Result;
 
 @Path("/generatequestions")
 public class GenerateQuestionResource {
-	
-	
+
 	@POST
 	@Path("/generatequestion")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response generateQuestionsByTopic(@Context HttpServletRequest request,@Context HttpServletResponse reponse) {
-		
-		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
-		Map<String,Object>result=new HashMap<>();
-		if(dispatcher==null) {
-			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
-		}
-		
-		
-		Delegator delegator=(Delegator)request.getAttribute("delegator");
-		
-		try {
-			
-			String examId=(String) request.getAttribute("examId");
-			List<Map<String,Object>> topicList=(List<Map<String,Object>>)request.getAttribute("topics");
-			
+	public Response generateQuestionsByTopic(@Context HttpServletRequest request, @Context HttpServletResponse reponse) {
 
-			
-			int currentPercentage=0;
-					
-			for(Map<String,Object>topic:topicList) {
-				String percentageStr=String.valueOf(topic.get("percentage"));
-							
-				currentPercentage+=Integer.parseInt(percentageStr);
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		Map<String, Object> result = new HashMap<>();
+		if (dispatcher == null) {
+			dispatcher = ServiceContainer.getLocalDispatcher("sphinx", (Delegator) request.getAttribute("delegator"));
+		}
+
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+
+		try {
+
+			String examId = (String) request.getAttribute("examId");
+			List<Map<String, Object>> topicList = (List<Map<String, Object>>) request.getAttribute("topics");
+
+			int currentPercentage = 0;
+
+			for (Map<String, Object> topic : topicList) {
+				String percentageStr = String.valueOf(topic.get("percentage"));
+
+				currentPercentage += Integer.parseInt(percentageStr);
 			}
-			
-			if(currentPercentage!=100) {
+
+			if (currentPercentage != 100) {
 				return Response.ok().entity(ServiceUtil.returnError("percentage must be 100 ")).build();
 			}
-			 
-			for(Map<String,Object> topic:topicList) {
-				Map<String,Object>input=new HashMap<String,Object>();
-				
-				input.put("examId",examId);
-				input.put("topicId",topic.get("topicId"));
-				input.put("percentage",topic.get("percentage"));
-				input.put("topicPassPercentage",topic.get("topicPassPercentage"));
-				
+
+			for (Map<String, Object> topic : topicList) {
+				Map<String, Object> input = new HashMap<String, Object>();
+
+				input.put("examId", examId);
+				input.put("topicId", topic.get("topicId"));
+				input.put("percentage", topic.get("percentage"));
+				input.put("topicPassPercentage", topic.get("topicPassPercentage"));
+
 				if (input.get("examId") == null || input.get("topicId") == null) {
-				    return Response.status(400)
-				        .entity(ServiceUtil.returnError("examId and topicId are required"))
-				        .build();
+					return Response.status(400).entity(ServiceUtil.returnError("examId and topicId are required")).build();
 				}
-				
-				GenericValue examTopic=EntityQuery.use(delegator).from("ExamTopicMapping").where("examId",examId,"topicId",topic.get("topicId")).queryOne();
-				
-				Map<String,Object>serviceResult=null;
-				if(examTopic==null) {	
-					serviceResult=dispatcher.runSync("createExamTopic", input);
+
+				GenericValue examTopic = EntityQuery.use(delegator).from("ExamTopicMapping")
+								.where("examId", examId, "topicId", topic.get("topicId")).queryOne();
+
+				Map<String, Object> serviceResult = null;
+				if (examTopic == null) {
+					serviceResult = dispatcher.runSync("createExamTopic", input);
+				} else {
+					serviceResult = dispatcher.runSync("updateExamTopic", input);
 				}
-				else {
-					serviceResult=dispatcher.runSync("updateExamTopic", input);
-				}
-				
-				if(ServiceUtil.isError(serviceResult)) {	
+
+				if (ServiceUtil.isError(serviceResult)) {
 					result.put("status", "ERROR");
-					result.put("errorMessage", ServiceUtil.getErrorMessage(serviceResult));
+					result.put("errorMessage", "Topic Percentage should be total 100 percent");
 					return Response.status(500).entity(result).build();
-				}	
-				
+				}
+
 			}
-			
-			//GenerateQuestions Working...
-			Map<String,Object> listTopics=new HashMap<String, Object>();
-			
+
+			// GenerateQuestions Working...
+			Map<String, Object> listTopics = new HashMap<String, Object>();
+
 			listTopics.put("TopicList", topicList);
-			listTopics.put("examId",examId);
-			
-			Map<String,Object>serviceResultgenerate=dispatcher.runSync("generateQuestionsService",listTopics);
-			
-			if(ServiceUtil.isError(serviceResultgenerate)) {	
+			listTopics.put("examId", examId);
+
+			Map<String, Object> serviceResultgenerate = dispatcher.runSync("generateQuestionsService", listTopics);
+
+			if (ServiceUtil.isError(serviceResultgenerate)) {
 				result.put("status", "ERROR");
-				result.put("errorMessage", ServiceUtil.getErrorMessage(serviceResultgenerate));
+				result.put("errorMessage", "Error in generating quetion");
 				return Response.status(500).entity(result).build();
 			}
-			
+
 			result.put("status", "success");
 			result.put("message", serviceResultgenerate.get("successMessage"));
-			
+			result.put("responseMessage", "successfully Created question");
 			return Response.ok().entity(result).build();
-		
-		}catch(Exception e) {
+
+		} catch (GenericServiceException | GenericEntityException e) {
 			e.printStackTrace();
-			result.put("message",e.getMessage());
+
+			result.put("message", "Error in creating questions");
 			return Response.ok().entity(result).build();
 		}
-		
+
 	}
 }
