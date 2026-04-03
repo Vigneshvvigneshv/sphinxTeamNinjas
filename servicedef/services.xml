@@ -24,7 +24,7 @@
 <!-- ====================== user services ================================== -->
 	<!-- Get All user -->
 	<service engine="java" name="getAllUser" location="com.vastpro.sphinx.services.UserService" invoke="getAllUser">
-		<attribute name="userList" mode="OUT" type="List"></attribute>
+		<attribute name="userList" mode="OUT" type="List" optional="true"></attribute>
 	</service>
 
 	<!-- UserLogin Service -->
