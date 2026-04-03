@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
@@ -46,38 +45,34 @@ public class QuestionService {
 
 			String topicId = (String) questions.get("topicId");
 			String questionDetail = (String) questions.get("questionDetail");
-			
+
 			String answer = (String) questions.get("answer");
-			String optionA=(String) questions.get("optionA");
-			String optionB=(String) questions.get("optionB");
-			String optionC=(String) questions.get("optionC");
-			String optionD=(String) questions.get("optionD");
+			String optionA = (String) questions.get("optionA");
+			String optionB = (String) questions.get("optionB");
+			String optionC = (String) questions.get("optionC");
+			String optionD = (String) questions.get("optionD");
 			Long numAnswers = (Long) questions.get("numAnswers");
 			String questionTypeId = (String) questions.get("questionTypeId");
 			Long difficultyLevel = (Long) questions.get("difficultyLevel");
 			BigDecimal answerValue = (BigDecimal) questions.get("answerValue");
-			
-			
-//			questions.put("negativeMarkValue",0.0);
+
+			// questions.put("negativeMarkValue",0.0);
 
 			if (topicId == null || questionDetail == null || answer == null) {
 				return ServiceUtil.returnError("topic Id and quetionDetail and answer are required");
 			}
 
-			if(questionTypeId.trim().equals("SINGLE_CHOICE") || questionTypeId.trim().equals("MULTI_CHOICE"))  {
-				if(optionA.isEmpty() || optionB.isEmpty() || optionC.isEmpty() || optionD.isEmpty() ) {
+			if (questionTypeId.trim().equals("SINGLE_CHOICE") || questionTypeId.trim().equals("MULTI_CHOICE")) {
+				if (optionA.isEmpty() || optionB.isEmpty() || optionC.isEmpty() || optionD.isEmpty()) {
 					return ServiceUtil.returnError("options can not be empty for SINGLE_CHOICE and Multi Choice Question");
 				}
-				
-				
-			}else if(questionTypeId.trim().equals("TRUE_FALSE")) {
-				if(optionA.isEmpty() || optionB.isEmpty() ||optionA.trim()==null || optionB.trim()==null) {
+
+			} else if (questionTypeId.trim().equals("TRUE_FALSE")) {
+				if (optionA.isEmpty() || optionB.isEmpty() || optionA.trim() == null || optionB.trim() == null) {
 					return ServiceUtil.returnError("options can not be empty for True_FALSE");
 				}
 			}
-				
-			
-			
+
 			// check topic exists
 			GenericValue topic = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId).queryOne();
 
@@ -104,16 +99,16 @@ public class QuestionService {
 			// question.set("negativeMarkValue",questions.getOrDefault("negativeMarkValue", 0.0));
 			// delegator.create(question);
 
-		Map<String,Object>serviceResult=dispatcher.runSync("createQuestion", questions);
+			Map<String, Object> serviceResult = dispatcher.runSync("createQuestion", questions);
 
 			Map<String, Object> result = ServiceUtil.returnSuccess("Question created Successfully");
-			
-			if(ServiceUtil.isError(serviceResult)) {
+
+			if (ServiceUtil.isError(serviceResult)) {
 				result.put("responseMesage", "Failed to create questions");
 				result.put("questionId", questionId);
 				return result;
 			}
-			
+
 			result.put("responseMessage", "Question created Successfully");
 			result.put("questionId", questionId);
 			return result;
@@ -157,16 +152,14 @@ public class QuestionService {
 			BigDecimal answerValue = (BigDecimal) context.get("answerValue");
 			String topicId = (String) context.get("topicId");
 			BigDecimal negativeMarkValue = (BigDecimal) context.get("negativeMarkValue");
-			
-			
-			if(questionTypeId.trim().equals("SINGLE_CHOICE") || questionTypeId.trim().equals("MULTI_CHOICE"))  {
-				if(optionA.isEmpty() || optionB.isEmpty() || optionC.isEmpty() || optionD.isEmpty() ) {
+
+			if (questionTypeId.trim().equals("SINGLE_CHOICE") || questionTypeId.trim().equals("MULTI_CHOICE")) {
+				if (optionA.isEmpty() || optionB.isEmpty() || optionC.isEmpty() || optionD.isEmpty()) {
 					return ServiceUtil.returnError("options can not be empty for SINGLE_CHOICE and Multi Choice Question");
 				}
-				
-				
-			}else if(questionTypeId.trim().equals("TRUE_FALSE")) {
-				if(optionA.isEmpty() || optionB.isEmpty() ||optionA.trim()==null || optionB.trim()==null) {
+
+			} else if (questionTypeId.trim().equals("TRUE_FALSE")) {
+				if (optionA.isEmpty() || optionB.isEmpty() || optionA.trim() == null || optionB.trim() == null) {
 					return ServiceUtil.returnError("options can not be empty for True_FALSE");
 				}
 			}
@@ -247,8 +240,6 @@ public class QuestionService {
 			return ServiceUtil.returnError("Error deleting question: " + e.getMessage());
 		}
 	}
-	
-	
 
 	public static Map<String, Object> getQuestionsByTopic(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
@@ -329,59 +320,54 @@ public class QuestionService {
 		}
 	}
 
-	
-	public Map<String,Object> getQuestionById(DispatchContext dctx,Map<String,Object>context){
-		
-		Delegator delegator=dctx.getDelegator();
-		
+	public Map<String, Object> getQuestionById(DispatchContext dctx, Map<String, Object> context) {
+
+		Delegator delegator = dctx.getDelegator();
+
 		try {
-			
-			
-			Long questionId=Long.valueOf(String.valueOf(context.get("questionId")));
-			
-			
-			if(questionId==null) {
+
+			Long questionId = Long.valueOf(String.valueOf(context.get("questionId")));
+
+			if (questionId == null) {
 				return ServiceUtil.returnError("QuestionId is required");
 			}
-			
-			GenericValue question=EntityQuery.use(delegator).from("questionMaster").where("questionId",questionId).queryOne();
-			
-			
-			if(question==null) {
+
+			GenericValue question = EntityQuery.use(delegator).from("questionMaster").where("questionId", questionId).queryOne();
+
+			if (question == null) {
 				return ServiceUtil.returnError("question Not Found");
 			}
-			
-			
-			Map<String,Object> input=new HashMap<>();
-			
-			input.put("questionId",(question.getLong("questionId")));
-			input.put("questionDetail",(question.getString("questionDetail")));
-			input.put("optionA",(question.getString("optionA")));
-			input.put("optionB",(question.getString("optionB")));
-			input.put("optionC",(question.getString("optionC")));
-			input.put("optionD",(question.getString("optionD")));
-			input.put("answer",(question.getString("answer")));
-			input.put("numAnswers",(question.getLong("numAnswers")));
-			input.put("questionTypeId",(question.get("questionTypeId")));
-			input.put("difficultyLevel",(question.get("difficultyLevel")));
-			input.put("answerValue",(question.getString("answerValue")));	
-			input.put("topicId",(question.getString("topicId")));	
-			input.put("negativeMarkValue",(question.getBigDecimal("negativeMarkValue")));
 
-			
-			Map<String,Object>result=new HashMap<>();
-			result.put("question",input);
+			Map<String, Object> input = new HashMap<>();
+
+			String answerValueStr = question.getString("answerValue");
+			int answerValue = (int) Double.parseDouble(answerValueStr);
+
+			input.put("questionId", (question.getLong("questionId")));
+			input.put("questionDetail", (question.getString("questionDetail")));
+			input.put("optionA", (question.getString("optionA")));
+			input.put("optionB", (question.getString("optionB")));
+			input.put("optionC", (question.getString("optionC")));
+			input.put("optionD", (question.getString("optionD")));
+			input.put("answer", question.getString("answer"));
+			input.put("numAnswers", (question.getLong("numAnswers")));
+			input.put("questionTypeId", (question.get("questionTypeId")));
+			input.put("difficultyLevel", (question.get("difficultyLevel")));
+			input.put("answerValue", answerValue);
+			input.put("topicId", (question.getString("topicId")));
+			input.put("negativeMarkValue", (question.getBigDecimal("negativeMarkValue")));
+
+			Map<String, Object> result = new HashMap<>();
+			result.put("question", input);
 			return result;
-			
-		}catch(Exception e) {
+
+		} catch (Exception e) {
+
 			return ServiceUtil.returnError("Failed to Fetch Question");
 		}
-		
+
 	}
-	
-	
-	
-	
+
 	public Map<String, ? extends Object> getTemplateDocument(DispatchContext dctx, Map<String, ? extends Object> context) {
 
 		try {
@@ -434,8 +420,6 @@ public class QuestionService {
 		}
 
 	}
-
-
 
 	public Map<String, ? extends Object> uploadBulkQuestion(DispatchContext dctx, Map<String, ? extends Object> context) {
 
@@ -494,26 +478,26 @@ public class QuestionService {
 
 					case NUMERIC:
 						double numVal = cell.getNumericCellValue();
-						
-						    switch (col.field) {
-	
-						     case "numAnswers":
-						     case "difficultyLevel":
-						            question.put(col.field, (long) numVal); // ✅ Long
-						            break;
 
-						        case "answerValue":
-						        case "negativeMarkValue":
-						            question.put(col.field, Double.valueOf(numVal)); // ✅ BigDecimal
-						            break;	
-						            
-						        default:
-						            
-						            question.put(col.field, String.valueOf((long) numVal)); // ✅ String
-						            break;
-						    }
-						    
-						 break;
+						switch (col.field) {
+
+						case "numAnswers":
+						case "difficultyLevel":
+							question.put(col.field, (long) numVal); // ✅ Long
+							break;
+
+						case "answerValue":
+						case "negativeMarkValue":
+							question.put(col.field, Double.valueOf(numVal)); // ✅ BigDecimal
+							break;
+
+						default:
+
+							question.put(col.field, String.valueOf((long) numVal)); // ✅ String
+							break;
+						}
+
+						break;
 
 					case STRING:
 						String strVal = cell.getStringCellValue();
@@ -537,14 +521,11 @@ public class QuestionService {
 
 			// Transaction BEGIN
 			TransactionUtil.begin();
-			
 
 			for (Map<String, ? extends Object> question : questions) {
-				
-			
+
 				Map<String, Object> serviceResult = dctx.getDispatcher().runSync("createQuestionService", question);
-				
-				
+
 				if (serviceResult.get("responseMessage") != null && serviceResult.get("responseMessage").equals("error")) {
 					Map<String, Object> errorResult = ServiceUtil.returnError((String) serviceResult.get("errorMessage"));
 
