@@ -26,7 +26,6 @@ public class GenerateQuestionsMasterBService {
 		LocalDispatcher dispatcher=dctx.getDispatcher();
 		
 		
-		
 		try {
 			String examId=(String)context.get("examId");
 			List<Map<String,Object>> topicList=(List<Map<String, Object>>) context.get("TopicList");
@@ -50,7 +49,11 @@ public class GenerateQuestionsMasterBService {
 			//this loop for adding the each topic questions
 			for(Map<String,Object> topic:topicList) {
 				String topicId=(String) topic.get("topicId");
-				String percentageStr=(String.valueOf(topic.get("percentage")));
+				
+				GenericValue examDetails=EntityQuery.use(delegator).from("ExamTopicMapping").where("examId",examId,"topicId",topicId).queryOne();
+				
+				
+				String percentageStr=(String.valueOf(examDetails.getDouble("percentage")));
 				
 				Double percentage=Double.valueOf(percentageStr);
 				int count=(int)Math.floor((percentage/100)*noOfQuestions);
@@ -146,7 +149,16 @@ public class GenerateQuestionsMasterBService {
 					input.put("topicId",(question.get("topicId")));	
 					input.put("negativeMarkValue",(question.get("negativeMarkValue")));
 					
+					//checking question already exist in question
+					GenericValue alreadyExistsQuestion=EntityQuery.use(delegator).
+															from("QuestionBankMasterB")
+															.where("questionId",question.get("questionId"))
+															.queryOne();
 					
+					if(alreadyExistsQuestion!=null) {
+						continue;
+					}
+						
 					Map<String,Object> serviceResult=dispatcher.runSync("addQuestionInMasterB", input);
 					
 					if(ServiceUtil.isError(serviceResult)) {
@@ -157,9 +169,14 @@ public class GenerateQuestionsMasterBService {
 				
 				
 		}catch(GenericServiceException | GenericEntityException e  ) {
+			e.printStackTrace();
 			return ServiceUtil.returnError("Failed to create Topic");
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ServiceUtil.returnError("Failed to create Topic");
 		}
 	}
+	
+	
+	
 }

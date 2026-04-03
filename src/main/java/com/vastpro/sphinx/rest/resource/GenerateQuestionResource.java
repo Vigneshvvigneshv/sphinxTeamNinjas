@@ -15,6 +15,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.ofbiz.entity.Delegator;
+import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceContainer;
 import org.apache.ofbiz.service.ServiceUtil;
@@ -36,6 +38,9 @@ public class GenerateQuestionResource {
 			dispatcher=ServiceContainer.getLocalDispatcher("sphinx", (Delegator)request.getAttribute("delegator"));
 		}
 		
+		
+		Delegator delegator=(Delegator)request.getAttribute("delegator");
+		
 		try {
 			
 			String examId=(String) request.getAttribute("examId");
@@ -46,8 +51,8 @@ public class GenerateQuestionResource {
 			int currentPercentage=0;
 					
 			for(Map<String,Object>topic:topicList) {
-				String percentageStr=(String)topic.get("percentage");
-				Integer.parseInt(percentageStr);			
+				String percentageStr=String.valueOf(topic.get("percentage"));
+							
 				currentPercentage+=Integer.parseInt(percentageStr);
 			}
 			
@@ -69,7 +74,15 @@ public class GenerateQuestionResource {
 				        .build();
 				}
 				
-				Map<String,Object>serviceResult=dispatcher.runSync("createExamTopic", input);
+				GenericValue examTopic=EntityQuery.use(delegator).from("ExamTopicMapping").where("examId",examId,"topicId",topic.get("topicId")).queryOne();
+				
+				Map<String,Object>serviceResult=null;
+				if(examTopic==null) {	
+					serviceResult=dispatcher.runSync("createExamTopic", input);
+				}
+				else {
+					serviceResult=dispatcher.runSync("updateExamTopic", input);
+				}
 				
 				if(ServiceUtil.isError(serviceResult)) {	
 					result.put("status", "ERROR");

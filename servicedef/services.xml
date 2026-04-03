@@ -299,7 +299,7 @@
 
 <service name="updateQuestion" engine="entity-auto" invoke="update" default-entity-name="questionMaster">
 	<auto-attributes include="pk" mode ="IN" optional="false"/>
-	<auto-attributes include="nonpk" mode="IN" optional="false"/>
+	<auto-attributes include="nonpk" mode="IN" optional="true"/>
 </service>
 
 <!-- DeleteQuestion Service -->
@@ -368,6 +368,23 @@
 		<auto-attributes include ="nonpk" mode="IN" optional="false"/>
 	</service>
 	
+	<!-- Update the examtopic -->
+	<service  name="updateExamTopic" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="updateExamTopicService">
+		<attribute name="examId" mode="IN" type="String" optional="true"/>
+		<attribute name="topicId" mode="IN" type="String" optional="true"/>
+		<attribute name="percentage" mode="IN" type="String" optional="true"/>
+		<attribute name="topicPassPercentage" mode="IN" type="String" optional="true"/>
+		<attribute name="message" mode="OUT" type="String" optional="true"/>
+	</service>
+	
+	<service name="updateExamTopicService" engine="entity-auto" invoke="update" default-entity-name="ExamTopicMapping">
+		<auto-attributes include="pk" mode="IN" optional="false"/>
+		<auto-attributes include ="nonpk" mode="IN" optional="false"/>
+	</service>
+	
+	
+	
+	
 	
 	
 	
@@ -406,7 +423,7 @@
 	
   <service name="addQuestionInMasterB" engine="entity-auto" invoke="create" default-entity-name="QuestionBankMasterB">
 	<auto-attributes include="pk" mode ="IN" optional="false"/>
-	<auto-attributes include="nonpk" mode="IN" optional="false"/>
+	<auto-attributes include="nonpk" mode="IN" optional="true"/>
  </service>
 	
 </services>

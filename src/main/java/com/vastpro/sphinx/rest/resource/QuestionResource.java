@@ -353,7 +353,7 @@ public class QuestionResource {
 	@Path("/getquestionbyid")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getQuetionsById(@Context HttpServletRequest request,@Context HttpServletResponse response) {
+	public Response getQuetionsById(@QueryParam("questionId") String questionIdStr, @Context HttpServletRequest request,@Context HttpServletResponse response) {
 		
 		 //getting dispatcher from request
   		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
@@ -366,7 +366,7 @@ public class QuestionResource {
   		
   		
   		try {
-  			String questionIdStr=(String)request.getAttribute("questionId");
+//  			String questionIdStr=(String)request.getAttribute("questionId");
   			
   			Long questionId=Long.valueOf(questionIdStr);
   			

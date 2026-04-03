@@ -59,13 +59,65 @@ public class ExamTopicService {
 			Map<String,Object>serviceResult=dispatcher.runSync("createExamTopicService", input);
 			
 			if(ServiceUtil.isError(serviceResult)) {
-				return ServiceUtil.returnError((String)serviceResult.get("errorMessage"));
+				return ServiceUtil.returnError("Error Occured in Creating Exam Topic");
 			}
 			
 			return ServiceUtil.returnSuccess("Exam TopicMaster Created SuccessFully");
 			
 		}catch(GenericServiceException | GenericEntityException e) {
-			return ServiceUtil.returnError("");
+			return ServiceUtil.returnError("Error Occured in Creating Exam Topic");
+		}
+	}
+	
+	
+	public static Map<String,Object> updateExamTopicService(DispatchContext dctx,Map<String,Object>context){
+		Delegator delegator=dctx.getDelegator();
+		LocalDispatcher dispatcher=dctx.getDispatcher();
+		try {
+			String examId=(String)context.get("examId");
+			String topicId=(String)context.get("topicId");
+			String percentageStr=(String)context.get("percentage");
+			String topicPassPercentageStr=(String)context.get("topicPassPercentage");
+			
+			GenericValue exam=EntityQuery.use(delegator).from("ExamMaster").where("examId",examId).queryOne();
+			
+			if(exam==null) {
+				return ServiceUtil.returnError("exam not found");
+			}
+			
+			GenericValue topic=EntityQuery.use(delegator).from("topicMaster").where("topicId",topicId).queryOne();
+			
+			if(topic==null) {
+				return ServiceUtil.returnError("Topic Not Found");
+			}
+			
+			if(percentageStr==null || topicPassPercentageStr==null) {
+				return ServiceUtil.returnError("percenatge and topicPassPercentage are required");
+			}
+			
+			Double percentage=Double.parseDouble(percentageStr);
+			Double topicPassPercentage=Double.parseDouble(topicPassPercentageStr);
+			
+			Map<String, Object>input=new HashMap<String,Object>();
+			
+			input.put("examId",examId);
+			input.put("topicId",topicId);
+			input.put("percentage",percentage);
+			input.put("topicPassPercentage",topicPassPercentage);
+			
+			Map<String,Object>serviceResult=dispatcher.runSync("updateExamTopicService", input);
+			
+			if(ServiceUtil.isError(serviceResult)) {
+				
+				return ServiceUtil.returnError("Error Occured in Updating the Exam Topic");
+			}
+			 
+			return ServiceUtil.returnSuccess("Exam TopicMaster updated SuccessFully");
+			
+			
+		}catch(GenericServiceException | GenericEntityException e ) {
+			e.printStackTrace();
+			return ServiceUtil.returnError("Error Occured in Updating the Exam Topic");
 		}
 	}
 	
