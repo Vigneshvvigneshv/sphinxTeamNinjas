@@ -157,6 +157,19 @@ public class QuestionService {
 			BigDecimal answerValue = (BigDecimal) context.get("answerValue");
 			String topicId = (String) context.get("topicId");
 			BigDecimal negativeMarkValue = (BigDecimal) context.get("negativeMarkValue");
+			
+			
+			if(questionTypeId.trim().equals("SINGLE_CHOICE") || questionTypeId.trim().equals("MULTI_CHOICE"))  {
+				if(optionA.isEmpty() || optionB.isEmpty() || optionC.isEmpty() || optionD.isEmpty() ) {
+					return ServiceUtil.returnError("options can not be empty for SINGLE_CHOICE and Multi Choice Question");
+				}
+				
+				
+			}else if(questionTypeId.trim().equals("TRUE_FALSE")) {
+				if(optionA.isEmpty() || optionB.isEmpty() ||optionA.trim()==null || optionB.trim()==null) {
+					return ServiceUtil.returnError("options can not be empty for True_FALSE");
+				}
+			}
 
 			Map<String, Object> updateQuestion = new HashMap<>();
 
