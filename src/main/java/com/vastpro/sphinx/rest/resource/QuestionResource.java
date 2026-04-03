@@ -83,8 +83,7 @@ public class QuestionResource {
 	@Path("/updatequestion")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response updateQuestion(@QueryParam("questionId") String questionIdStr, @Context HttpServletRequest request,
-					@Context HttpServletResponse response) {
+	public Response updateQuestion(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 
 		// getting dispatcher from request
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -96,7 +95,7 @@ public class QuestionResource {
 		try {
 
 			// questionId must be sent by frontend
-			// String questionIdStr = (String) request.getAttribute("questionId");
+			String questionIdStr = (String) request.getAttribute("questionId");
 			if (questionIdStr == null) {
 				result.put("status", "ERROR");
 				result.put("message", "questionId is required");
