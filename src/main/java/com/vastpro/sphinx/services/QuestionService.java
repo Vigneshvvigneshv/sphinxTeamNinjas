@@ -488,7 +488,7 @@ public class QuestionService {
 
 						case "answerValue":
 						case "negativeMarkValue":
-							question.put(col.field, Double.valueOf(numVal)); //  BigDecimal
+							question.put(col.field, Double.valueOf(numVal)); // BigDecimal
 							break;
 
 						default:
@@ -551,11 +551,12 @@ public class QuestionService {
 		}
 
 	}
+
 	/**
 	 * this method is used to get the all the question for the exam
 	 */
-	public static Map<String,Object> getAllQuestion(){
-		
+	public static Map<String, Object> getAllQuestion() {
+		return null;
 	}
-	
+
 }
