@@ -17,6 +17,8 @@ import javax.ws.rs.core.Response;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.transaction.GenericTransactionException;
+import org.apache.ofbiz.entity.transaction.TransactionUtil;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
@@ -57,6 +59,8 @@ public class GenerateQuestionResource {
 				return Response.ok().entity(ServiceUtil.returnError("percentage must be 100 ")).build();
 			}
 
+			TransactionUtil.begin();
+
 			for (Map<String, Object> topic : topicList) {
 				Map<String, Object> input = new HashMap<String, Object>();
 
@@ -69,6 +73,7 @@ public class GenerateQuestionResource {
 					return Response.status(400).entity(ServiceUtil.returnError("examId and topicId are required")).build();
 				}
 
+				//
 				GenericValue examTopic = EntityQuery.use(delegator).from("ExamTopicMapping")
 								.where("examId", examId, "topicId", topic.get("topicId")).queryOne();
 
@@ -80,8 +85,10 @@ public class GenerateQuestionResource {
 				}
 
 				if (ServiceUtil.isError(serviceResult)) {
+					TransactionUtil.rollback();
 					result.put("status", "ERROR");
-					result.put("errorMessage", "Topic Percentage should be total 100 percent");
+					result.put("errorMessage", ServiceUtil.getErrorMessage(serviceResult));
+
 					return Response.status(500).entity(result).build();
 				}
 
@@ -96,10 +103,12 @@ public class GenerateQuestionResource {
 			Map<String, Object> serviceResultgenerate = dispatcher.runSync("generateQuestionsService", listTopics);
 
 			if (ServiceUtil.isError(serviceResultgenerate)) {
+				TransactionUtil.rollback();
 				result.put("status", "ERROR");
-				result.put("errorMessage", "Error in generating quetion");
+				result.put("errorMessage", ServiceUtil.getErrorMessage(serviceResultgenerate));
 				return Response.status(500).entity(result).build();
 			}
+			TransactionUtil.commit();
 
 			result.put("status", "success");
 			result.put("message", serviceResultgenerate.get("successMessage"));
@@ -108,7 +117,11 @@ public class GenerateQuestionResource {
 
 		} catch (GenericServiceException | GenericEntityException e) {
 			e.printStackTrace();
-
+			try {
+				TransactionUtil.rollback();
+			} catch (GenericTransactionException e1) {
+				e1.printStackTrace();
+			}
 			result.put("message", "Error in creating questions");
 			return Response.ok().entity(result).build();
 		}
