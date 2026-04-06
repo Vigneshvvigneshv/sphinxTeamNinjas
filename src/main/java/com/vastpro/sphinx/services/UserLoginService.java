@@ -34,7 +34,8 @@ public class UserLoginService {
 				GenericValue roleType = EntityQuery.use(delegator).from("PartyRole").where("partyId", user.get("partyId")).queryFirst();
 
 				// result.put("successMessage", "User Login Successfully");
-				result.put("role", String.valueOf(roleType.getString("roleTypeId")));
+				result.put("role", roleType.getString("roleTypeId"));
+				result.put("partyId", user.getString("partyId"));
 				return result;
 			} else {
 				error.put("password", "password is incorrect");
