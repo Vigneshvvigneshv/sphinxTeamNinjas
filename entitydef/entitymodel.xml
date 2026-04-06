@@ -175,10 +175,10 @@
 		<field name="questionId" type="numeric"></field>
 		<field name="topicId" type="id" not-null="true" />
 		<field name="questionDetail" type="very-long" not-null="true"></field>
-		<field name="optionA" type="very-long" not-null="true"></field>
-		<field name="optionB" type="very-long" not-null="true" />
-		<field name="optionC" type="very-long" not-null="true"></field>
-		<field name="optionD" type="very-long" not-null="true"></field>
+		<field name="optionA" type="very-long" ></field>
+		<field name="optionB" type="very-long"  />
+		<field name="optionC" type="very-long" ></field>
+		<field name="optionD" type="very-long" ></field>
 		<field name="answer" type="id" not-null="true"></field>
 		<field name="numAnswers" type="numeric" not-null="true" />
 		<field name="questionTypeId" type="short-varchar"
