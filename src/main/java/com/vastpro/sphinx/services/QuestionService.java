@@ -56,7 +56,7 @@ public class QuestionService {
 			Long difficultyLevel = (Long) questions.get("difficultyLevel");
 			BigDecimal answerValue = (BigDecimal) questions.get("answerValue");
 
-			// questions.put("negativeMarkValue",0.0);
+			// questions.put("negativeMarkValue", 0.0);
 
 			if (topicId == null || questionDetail == null || answer == null) {
 				return ServiceUtil.returnError("topic Id and quetionDetail and answer are required");
@@ -516,6 +516,7 @@ public class QuestionService {
 						break;
 					}
 				}
+				question.put("negativeMarkValue", 0.0);
 				questions.add(question);
 			}
 
