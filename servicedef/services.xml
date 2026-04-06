@@ -21,10 +21,12 @@
             Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
         </description>
 	</service>
-<!-- ====================== user services ================================== -->
+	<!-- ====================== user services ================================== -->
 	<!-- Get All user -->
-	<service engine="java" name="getAllUser" location="com.vastpro.sphinx.services.UserService" invoke="getAllUser">
-		<attribute name="userList" mode="OUT" type="List" optional="true"></attribute>
+	<service engine="java" name="getAllUser"
+		location="com.vastpro.sphinx.services.UserService" invoke="getAllUser">
+		<attribute name="userList" mode="OUT" type="List"
+			optional="true"></attribute>
 	</service>
 
 	<!-- UserLogin Service -->
@@ -35,12 +37,13 @@
 		<attribute name="userName" mode="IN" type="String"></attribute>
 		<attribute name="password" mode="IN" type="String"></attribute>
 		<attribute name="role" mode="OUT" type="String"></attribute>
+		<attribute name="partyId" mode="OUT" type="String"></attribute>
 		<attribute name="userName" mode="OUT" type="String"
 			optional="true"></attribute>
 		<attribute name="password" mode="OUT" type="String"
 			optional="true"></attribute>
 	</service>
-	
+
 	<!-- End of UserLogin Service -->
 
 	<!-- UserSignUP Service -->
@@ -59,49 +62,61 @@
 
 	<service name="createParty" engine="entity-auto"
 		invoke="create" default-entity-name="Party">
-		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
-		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
-	</service> 
-	
+		<auto-attributes mode="IN" include="pk"
+			optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk"
+			optional="true"></auto-attributes>
+	</service>
+
 	<service name="createPerson" engine="entity-auto"
 		invoke="create" default-entity-name="Person">
-		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
-		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
-	</service> 
-	
+		<auto-attributes mode="IN" include="pk"
+			optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk"
+			optional="true"></auto-attributes>
+	</service>
+
 	<service name="createContactMech" engine="entity-auto"
 		invoke="create" default-entity-name="ContactMech">
-		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
-		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
-	</service> 
+		<auto-attributes mode="IN" include="pk"
+			optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk"
+			optional="true"></auto-attributes>
+	</service>
 	<service name="createPartyContactMech" engine="entity-auto"
 		invoke="create" default-entity-name="PartyContactMech">
-		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
-		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
-	</service> 
+		<auto-attributes mode="IN" include="pk"
+			optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk"
+			optional="true"></auto-attributes>
+	</service>
 	<service name="createUserLogin" engine="entity-auto"
 		invoke="create" default-entity-name="UserLogin">
-		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
-		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
-	</service> 
+		<auto-attributes mode="IN" include="pk"
+			optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk"
+			optional="true"></auto-attributes>
+	</service>
 	<service name="createPartyRole" engine="entity-auto"
 		invoke="create" default-entity-name="PartyRole">
-		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
-		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
-	</service> 
-	
-<!-- End of UserSignUP Service -->
-<!-- ====================== End user services ================================== -->
+		<auto-attributes mode="IN" include="pk"
+			optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk"
+			optional="true"></auto-attributes>
+	</service>
 
-<!-- ===========================topic Service start=================================-->
-<!-- ======================================================================= -->
+	<!-- End of UserSignUP Service -->
+	<!-- ====================== End user services ================================== -->
+
+	<!-- ===========================topic Service start================================= -->
+	<!-- ======================================================================= -->
 	<!-- create topic -->
 	<service name="createTopicOwn" engine="java"
 		location="com.vastpro.sphinx.services.TopicService"
 		invoke="createTopic">
 		<attribute name="topicName" mode="IN" type="String"></attribute>
 	</service>
-	
+
 	<!-- update topic -->
 	<service name="updateTopicOwn" engine="java"
 		location="com.vastpro.sphinx.services.TopicService"
@@ -109,63 +124,79 @@
 		<attribute name="topicId" mode="IN" type="String"></attribute>
 		<attribute name="topicName" mode="IN" type="String"></attribute>
 	</service>
-	
+
 	<!-- delete topic -->
 	<service name="deleteTopicOwn" engine="java"
 		location="com.vastpro.sphinx.services.TopicService"
 		invoke="deleteTopic">
 		<attribute name="topicId" mode="IN" type="String"></attribute>
 	</service>
-	
+
 	<!-- get all topic list -->
 	<service name="getAllTopics" engine="java"
 		location="com.vastpro.sphinx.services.TopicService"
 		invoke="getAllTopics">
-		<attribute name="topicList" mode="OUT" type="List" optional="true"></attribute>
+		<attribute name="topicList" mode="OUT" type="List"
+			optional="true"></attribute>
 	</service>
-	
+
 	<!-- get topic by id -->
-	<service engine="java" name="getTopicById" location="com.vastpro.sphinx.services.TopicService" invoke="getTopicById">
+	<service engine="java" name="getTopicById"
+		location="com.vastpro.sphinx.services.TopicService"
+		invoke="getTopicById">
 		<attribute name="topicId" mode="IN" type="String"></attribute>
 		<attribute name="topicList" mode="OUT" type="GenericValue"></attribute>
 	</service>
-<!-- ======================================================================= -->
+	<!-- ======================================================================= -->
 	<!-- create topic by entity auto -->
-	<service  name="createTopic" engine="entity-auto" invoke="create" default-entity-name="topicMaster">
-		<auto-attributes include="pk" mode="OUT" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="false"/>
+	<service name="createTopic" engine="entity-auto"
+		invoke="create" default-entity-name="topicMaster">
+		<auto-attributes include="pk" mode="OUT"
+			optional="false" />
+		<auto-attributes include="nonpk" mode="IN"
+			optional="false" />
 	</service>
 	<!-- update topic by entity auto -->
-	<service  name="updateTopic" engine="entity-auto" invoke="update" default-entity-name="topicMaster">
+	<service name="updateTopic" engine="entity-auto"
+		invoke="update" default-entity-name="topicMaster">
 		<attribute name="topicId" mode="IN" type="String"></attribute>
 		<attribute name="topicName" mode="IN" type="String"></attribute>
 	</service>
 	<!-- delete topic by entity auto -->
-	<service  name="deleteTopic" engine="entity-auto" invoke="delete" default-entity-name="topicMaster">
+	<service name="deleteTopic" engine="entity-auto"
+		invoke="delete" default-entity-name="topicMaster">
 		<attribute name="topicId" mode="IN" type="String"></attribute>
 	</service>
-	
-<!-- ======================================================================= -->
-<!-- ==============================end of topic service ========================================-->
+
+	<!-- ======================================================================= -->
+	<!-- ==============================end of topic service ======================================== -->
 
 
-<!-- =========================== Start of Exam Service========================================== -->
-<!-- ======================================================================= -->
+	<!-- =========================== Start of Exam Service========================================== -->
+	<!-- ======================================================================= -->
 	<!-- Create Exam -->
-	<service engine="java" name="createExamOwn" location="com.vastpro.sphinx.services.ExamService" invoke="createExam">
+	<service engine="java" name="createExamOwn"
+		location="com.vastpro.sphinx.services.ExamService" invoke="createExam">
 		<attribute name="examName" mode="IN" type="String"></attribute>
 		<attribute name="description" mode="IN" type="String"></attribute>
 		<attribute name="noOfQuestions" mode="IN" type="String"></attribute>
 		<attribute name="duration" mode="IN" type="String"></attribute>
 		<attribute name="passPercentage" mode="IN" type="String"></attribute>
+		<!-- to create the record in the AdminPartyExamRel -->
+		<attribute name="partyId" mode="IN" type="String"></attribute>
 	</service>
+
 	<!-- delete Exam -->
-	<service engine="java" name="deleteExamOwn" location="com.vastpro.sphinx.services.ExamService" invoke="deleteExam">
+	<service engine="java" name="deleteExamOwn"
+		location="com.vastpro.sphinx.services.ExamService" invoke="deleteExam">
 		<attribute name="examId" mode="IN" type="String"></attribute>
+		<!-- to delete the record in the AdminPartyExamRel -->
+		<attribute name="partyId" mode="IN" type="String"></attribute>
 	</service>
-	
+
 	<!-- update Exam -->
-	<service engine="java" name="updateExamOwn" location="com.vastpro.sphinx.services.ExamService" invoke="updateExam">
+	<service engine="java" name="updateExamOwn"
+		location="com.vastpro.sphinx.services.ExamService" invoke="updateExam">
 		<attribute name="examId" mode="IN" type="String"></attribute>
 		<attribute name="examName" mode="IN" type="String"></attribute>
 		<attribute name="description" mode="IN" type="String"></attribute>
@@ -173,261 +204,396 @@
 		<attribute name="duration" mode="IN" type="String"></attribute>
 		<attribute name="passPercentage" mode="IN" type="String"></attribute>
 	</service>
-	
-	
+
+
 	<!-- get all Exam -->
-	<service engine="java" name="getAllExam" location="com.vastpro.sphinx.services.ExamService" invoke="getAllExam">
+	<service engine="java" name="getAllExam"
+		location="com.vastpro.sphinx.services.ExamService" invoke="getAllExam">
 		<attribute name="examList" mode="OUT" type="List"></attribute>
 	</service>
-	
+
 	<!-- get Exam by id -->
-	<service engine="java" name="getExamById" location="com.vastpro.sphinx.services.ExamService" invoke="getExamById">
+	<service engine="java" name="getExamById"
+		location="com.vastpro.sphinx.services.ExamService"
+		invoke="getExamById">
 		<attribute name="examId" mode="IN" type="String"></attribute>
 		<attribute name="examList" mode="OUT" type="GenericValue"></attribute>
 	</service>
+
+
+
+	<!-- ======================================================================= -->
+	<!-- Create Exam by entity-auto -->
+	<service name="createExam" engine="entity-auto" invoke="create"
+		default-entity-name="ExamMaster">
+		<auto-attributes mode="IN" include="pk"
+			optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk"
+			optional="true"></auto-attributes>
+	</service>
+
+	<!-- delete Exam by entity-auto -->
+	<service name="deleteExam" engine="entity-auto" invoke="delete"
+		default-entity-name="ExamMaster">
+		<attribute name="examId" mode="IN" type="String"></attribute>
+	</service>
+
+	<!-- update Exam by entity-auto -->
+	<service name="updateExam" engine="entity-auto" invoke="update"
+		default-entity-name="ExamMaster">
+		<auto-attributes mode="IN" include="pk"
+			optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk"
+			optional="true"></auto-attributes>
+	</service>
+	<!-- ======================================================================= -->
+	<!-- ===================================End of Exam Service ================================ -->
+
+	<!-- ========================Start Admin Exam Relation ================================== -->
+
+	<!-- create the admin and relation to the exam -->
+	<service engine="entity-auto" name="createAdminPartyExamRel"
+		invoke="create" default-entity-name="AdminPartyExamRel">
+		<auto-attributes mode="IN" include="pk"
+			optional="false"></auto-attributes>
+	</service>
 	
-	
-	
-<!-- ======================================================================= -->
-<!-- Create Exam by entity-auto -->
-<service name="createExam" engine="entity-auto" invoke="create" default-entity-name="ExamMaster" >
-	<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
-	<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
-</service>
+	<!-- delete the admin and relation to the exam -->
+	<service engine="entity-auto" name="deleteAdminPartyExamRel"
+		invoke="delete" default-entity-name="AdminPartyExamRel">
+		<attribute name="partyId" mode="IN" type="String"></attribute>
+		<attribute name="examId" mode="IN" type="String"></attribute>
+	</service>
+	<!-- ======================== End Admin Exam Relation ================================== -->
 
-<!-- delete Exam by entity-auto -->
-<service name="deleteExam" engine="entity-auto" invoke="delete" default-entity-name="ExamMaster" >
-	<attribute name="examId" mode="IN" type="String"></attribute>
-</service>
-
-<!-- update Exam by entity-auto -->
-<service name="updateExam" engine="entity-auto" invoke="update" default-entity-name="ExamMaster" >
-	<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
-	<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
-</service>
-<!-- ======================================================================= -->
-<!-- ===================================End of Exam Service  ================================-->
-
-
-<!-- =========================Start of Exam Assign to the user ===============================-->
-	<!-- assign exam to the user  -->
-	<service engine="java" name="assignExamOwn" location="com.vastpro.sphinx.services.ExamAssignToUserService" invoke="assignExam">
+	<!-- =========================Start of Exam Assign to the user =============================== -->
+	<!-- assign exam to the user -->
+	<service engine="java" name="assignExamOwn"
+		location="com.vastpro.sphinx.services.ExamAssignToUserService"
+		invoke="assignExam">
 		<attribute name="partyId" mode="IN" type="String"></attribute>
 		<attribute name="examId" mode="IN" type="String"></attribute>
 		<attribute name="allowedAttempts" mode="IN" type="String"></attribute>
 		<attribute name="timeoutDays" mode="IN" type="String"></attribute>
 	</service>
-	
-	<!-- remove assigned exam to the user  -->
-	<service engine="java" name="removeAssignExamOwn" location="com.vastpro.sphinx.services.ExamAssignToUserService" invoke="removeAssignedExam">
-		<attribute name="partyId" mode="IN" type="String"></attribute>
-		<attribute name="examId" mode="IN" type="String"></attribute>
-	</service>
-	
-	<service engine="java" name="increaseAttemptsOwn" location="com.vastpro.sphinx.services.ExamAssignToUserService" invoke="increaseAttempts">
-		<attribute name="partyId" mode="IN" type="String"></attribute>
-		<attribute name="examId" mode="IN" type="String"></attribute>
-	</service>
-	
-	
-	
-<!-- ======================================================================= -->
-	<!-- assign exam to the user  by entity-auto-->
- 	<service engine="entity-auto" name="assignExam" invoke="create" default-entity-name="PartyExamRelationship">
- 		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
- 		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
- 	</service>
- 	
- 	<!-- remove assigned exam to the user  by entity-auto-->
- 	<service engine="entity-auto" name="removeAssignedValue" invoke="delete" default-entity-name="PartyExamRelationship">
- 		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
- 	</service>
- 	
- 	<service engine="entity-auto" name="increaseAttempts" invoke="update" default-entity-name="PartyExamRelationship">
- 		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
- 		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
- 	</service>
- 
-<!-- ================================end of Exam Assign to the user =========================== -->
 
-<!--  -->
+	<!-- remove assigned exam to the user -->
+	<service engine="java" name="removeAssignExamOwn"
+		location="com.vastpro.sphinx.services.ExamAssignToUserService"
+		invoke="removeAssignedExam">
+		<attribute name="partyId" mode="IN" type="String"></attribute>
+		<attribute name="examId" mode="IN" type="String"></attribute>
+	</service>
+
+	<service engine="java" name="increaseAttemptsOwn"
+		location="com.vastpro.sphinx.services.ExamAssignToUserService"
+		invoke="increaseAttempts">
+		<attribute name="partyId" mode="IN" type="String"></attribute>
+		<attribute name="examId" mode="IN" type="String"></attribute>
+	</service>
+
+
+
+	<!-- ======================================================================= -->
+	<!-- assign exam to the user by entity-auto -->
+	<service engine="entity-auto" name="assignExam" invoke="create"
+		default-entity-name="PartyExamRelationship">
+		<auto-attributes mode="IN" include="pk"
+			optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk"
+			optional="true"></auto-attributes>
+	</service>
+
+	<!-- remove assigned exam to the user by entity-auto -->
+	<service engine="entity-auto" name="removeAssignedValue"
+		invoke="delete" default-entity-name="PartyExamRelationship">
+		<auto-attributes mode="IN" include="pk"
+			optional="false"></auto-attributes>
+	</service>
+
+	<service engine="entity-auto" name="increaseAttempts"
+		invoke="update" default-entity-name="PartyExamRelationship">
+		<auto-attributes mode="IN" include="pk"
+			optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk"
+			optional="true"></auto-attributes>
+	</service>
+
+	<!-- ================================end of Exam Assign to the user =========================== -->
+
+	<!-- -->
 	<service name="createQuestionService" engine="java"
 		location="com.vastpro.sphinx.services.QuestionService"
 		invoke="createQuestionService">
 		<attribute name="questionDetail" mode="IN" type="String"></attribute>
-		<attribute name="optionA" mode="IN" type="String" optional="true" />
-		<attribute name="optionB" mode="IN" type="String" optional="true" />
-		<attribute name="optionC" mode="IN" type="String" optional="true" />
-		<attribute name="optionD" mode="IN" type="String" optional="true" />
-		<attribute name="answer" mode="IN" type="String" optional="false" />
-		<attribute name="numAnswers" mode="IN" type="Long" optional="false" />
-		<attribute name="questionTypeId" mode="IN" type="String" optional="false" />
-		<attribute name="difficultyLevel" mode="IN" type="Long" optional="true" />
-		<attribute name="answerValue" mode="IN" type="BigDecimal" optional="true" />
-		<attribute name="topicId" mode="IN" type="String" optional="false" />
-		<attribute name="negativeMarkValue" mode="IN" type="BigDecimal" optional="true" />
-		<attribute name="questionId" mode="OUT" type="Long" optional="false"></attribute>
+		<attribute name="optionA" mode="IN" type="String"
+			optional="true" />
+		<attribute name="optionB" mode="IN" type="String"
+			optional="true" />
+		<attribute name="optionC" mode="IN" type="String"
+			optional="true" />
+		<attribute name="optionD" mode="IN" type="String"
+			optional="true" />
+		<attribute name="answer" mode="IN" type="String"
+			optional="false" />
+		<attribute name="numAnswers" mode="IN" type="Long"
+			optional="false" />
+		<attribute name="questionTypeId" mode="IN" type="String"
+			optional="false" />
+		<attribute name="difficultyLevel" mode="IN" type="Long"
+			optional="true" />
+		<attribute name="answerValue" mode="IN" type="BigDecimal"
+			optional="true" />
+		<attribute name="topicId" mode="IN" type="String"
+			optional="false" />
+		<attribute name="negativeMarkValue" mode="IN"
+			type="BigDecimal" optional="true" />
+		<attribute name="questionId" mode="OUT" type="Long"
+			optional="false"></attribute>
 	</service>
 
 
-	<service name="createQuestion" engine="entity-auto" invoke="create" default-entity-name="questionMaster">
-		<auto-attributes include="pk" mode="OUT" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="false"/>
+	<service name="createQuestion" engine="entity-auto"
+		invoke="create" default-entity-name="questionMaster">
+		<auto-attributes include="pk" mode="OUT"
+			optional="false" />
+		<auto-attributes include="nonpk" mode="IN"
+			optional="false" />
 	</service>
 
 
 
-<!-- UpdateQuestions Service -->
+	<!-- UpdateQuestions Service -->
 	<service name="updateQuestionMaster" engine="java"
-         location="com.vastpro.sphinx.services.QuestionService"
-         invoke="updateQuestion">
-    <description>Update an existing question in QuestionMaster</description>
-    <attribute name="questionId"        type="Long"     mode="IN"  optional="false"/> 
-    <attribute name="questionDetail"    type="String"     mode="IN"  optional="true"/>
-    <attribute name="optionA"           type="String"     mode="IN"  optional="true"/>
-    <attribute name="optionB"           type="String"     mode="IN"  optional="true"/>
-    <attribute name="optionC"           type="String"     mode="IN"  optional="true"/>
-    <attribute name="optionD"           type="String"     mode="IN"  optional="true"/>
-    <attribute name="answer"            type="String"     mode="IN"  optional="true"/>
-    <attribute name="numAnswers"        type="Long"       mode="IN"  optional="true"/>
-    <attribute name="questionTypeId"    type="String"     mode="IN"  optional="true"/>
-    <attribute name="difficultyLevel"   type="Long"       mode="IN"  optional="true"/>
-    <attribute name="answerValue"       type="BigDecimal" mode="IN"  optional="true"/>
-    <attribute name="topicId"           type="String"     mode="IN"  optional="true"/>
-    <attribute name="negativeMarkValue" type="BigDecimal" mode="IN"  optional="true"/>
-</service>
-
-<service name="updateQuestion" engine="entity-auto" invoke="update" default-entity-name="questionMaster">
-	<auto-attributes include="pk" mode ="IN" optional="false"/>
-	<auto-attributes include="nonpk" mode="IN" optional="true"/>
-</service>
-
-<!-- DeleteQuestion Service -->
-	<service name="deleteQuestionMaster" engine="java" location="com.vastpro.sphinx.services.QuestionService" invoke="deleteQuestion">
-		<attribute name="questionId" type="Long" mode="IN" optional="false"/>
-    	<attribute name="message" type="String" mode="OUT" optional="true"/>
+		location="com.vastpro.sphinx.services.QuestionService"
+		invoke="updateQuestion">
+		<description>Update an existing question in QuestionMaster</description>
+		<attribute name="questionId" type="Long" mode="IN"
+			optional="false" />
+		<attribute name="questionDetail" type="String" mode="IN"
+			optional="true" />
+		<attribute name="optionA" type="String" mode="IN"
+			optional="true" />
+		<attribute name="optionB" type="String" mode="IN"
+			optional="true" />
+		<attribute name="optionC" type="String" mode="IN"
+			optional="true" />
+		<attribute name="optionD" type="String" mode="IN"
+			optional="true" />
+		<attribute name="answer" type="String" mode="IN"
+			optional="true" />
+		<attribute name="numAnswers" type="Long" mode="IN"
+			optional="true" />
+		<attribute name="questionTypeId" type="String" mode="IN"
+			optional="true" />
+		<attribute name="difficultyLevel" type="Long" mode="IN"
+			optional="true" />
+		<attribute name="answerValue" type="BigDecimal" mode="IN"
+			optional="true" />
+		<attribute name="topicId" type="String" mode="IN"
+			optional="true" />
+		<attribute name="negativeMarkValue" type="BigDecimal"
+			mode="IN" optional="true" />
 	</service>
-	
-	<service name="deleteQuestion" engine="entity-auto" invoke="delete" default-entity-name="questionMaster">
-		<auto-attributes include="pk" mode="IN" optional="false"/>
+
+	<service name="updateQuestion" engine="entity-auto"
+		invoke="update" default-entity-name="questionMaster">
+		<auto-attributes include="pk" mode="IN"
+			optional="false" />
+		<auto-attributes include="nonpk" mode="IN"
+			optional="true" />
 	</service>
-	
-	
+
+	<!-- DeleteQuestion Service -->
+	<service name="deleteQuestionMaster" engine="java"
+		location="com.vastpro.sphinx.services.QuestionService"
+		invoke="deleteQuestion">
+		<attribute name="questionId" type="Long" mode="IN"
+			optional="false" />
+		<attribute name="message" type="String" mode="OUT"
+			optional="true" />
+	</service>
+
+	<service name="deleteQuestion" engine="entity-auto"
+		invoke="delete" default-entity-name="questionMaster">
+		<auto-attributes include="pk" mode="IN"
+			optional="false" />
+	</service>
+
+
 	<!-- GetQuestionsBY Topic -->
-	
-	<service name="getQuestionsByTopic" engine="java" location="com.vastpro.sphinx.services.QuestionService" invoke="getQuestionsByTopic">
-		<attribute name="topicId" mode="IN" type="String" optional="false"/>
-		<attribute name="topicName" type="String" mode="OUT" optional="false"/>
-		<attribute name="totalCount" type="Integer" mode="OUT" optional="false"/>
-		
-		
-		<attribute name="pageNo" mode ="IN" type="Integer" optional="true"/>
-		<attribute name="pageSize" mode ="IN" type="Integer" optional="true"/>
-		
-		
-		<attribute name="questionList" mode="OUT" type="List" optional="false"/>
-		<attribute name="topicId" mode="OUT" type="String" optional="false"/>
-		<attribute name="pageNo" mode="OUT" type="Integer" optional="false"/>
-		<attribute name="pageSize" mode="OUT" type="Integer" optional="false"/>
-		<attribute name="totalPages" mode="OUT" type="Integer" optional="false"/>
-		<attribute name="hasNext" mode="OUT" type="Boolean" optional="false"/>
-		<attribute name="hasPrevious" mode="OUT" type="Boolean" optional="false"/>
+
+	<service name="getQuestionsByTopic" engine="java"
+		location="com.vastpro.sphinx.services.QuestionService"
+		invoke="getQuestionsByTopic">
+		<attribute name="topicId" mode="IN" type="String"
+			optional="false" />
+		<attribute name="topicName" type="String" mode="OUT"
+			optional="false" />
+		<attribute name="totalCount" type="Integer" mode="OUT"
+			optional="false" />
+
+
+		<attribute name="pageNo" mode="IN" type="Integer"
+			optional="true" />
+		<attribute name="pageSize" mode="IN" type="Integer"
+			optional="true" />
+
+
+		<attribute name="questionList" mode="OUT" type="List"
+			optional="false" />
+		<attribute name="topicId" mode="OUT" type="String"
+			optional="false" />
+		<attribute name="pageNo" mode="OUT" type="Integer"
+			optional="false" />
+		<attribute name="pageSize" mode="OUT" type="Integer"
+			optional="false" />
+		<attribute name="totalPages" mode="OUT" type="Integer"
+			optional="false" />
+		<attribute name="hasNext" mode="OUT" type="Boolean"
+			optional="false" />
+		<attribute name="hasPrevious" mode="OUT" type="Boolean"
+			optional="false" />
 	</service>
-	
+
 	<!-- GetQuestion by question id -->
-	
-	<service name="getQuestionById" engine="java" location="com.vastpro.sphinx.services.QuestionService" invoke="getQuestionById">
-	
+
+	<service name="getQuestionById" engine="java"
+		location="com.vastpro.sphinx.services.QuestionService"
+		invoke="getQuestionById">
+
 		<attribute name="questionId" mode="IN" type="Long"></attribute>
 		<attribute name="question" mode="OUT" type="Map"></attribute>
 	</service>
-	
-	<!-- upload questions -->
-	
-	<service name="downloadTemplateDocument" engine="java" location="com.vastpro.sphinx.services.QuestionService" invoke="getTemplateDocument">
-        <attribute name="bytes" mode="OUT" type="Byte []" optional="true" />
-    </service>
-    
-    
-	 <service name="uploadBulkQuestion" engine="java" location="com.vastpro.sphinx.services.QuestionService" invoke="uploadBulkQuestion">
-        <attribute name="file" mode="IN" type="java.nio.ByteBuffer" optional="true" />
-    </service>
-    
-    				
-	<!-- Creating the topic in exam  -->
-	<service  name="createExamTopic" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="createExamTopicService">
-		<attribute name="examId" mode="IN" type="String" optional="false"/>
-		<attribute name="topicId" mode="IN" type="String" optional="false"/>
-		<attribute name="percentage" mode="IN" type="String" optional="false"/>
-		<attribute name="topicPassPercentage" mode="IN" type="String" optional="false"/>
-		<attribute name="message" mode="OUT" type="String" optional="true"/>
-	</service>
-	
-	<service name="createExamTopicService" engine="entity-auto" invoke="create" default-entity-name="ExamTopicMapping">
-		<auto-attributes include="pk" mode="IN" optional="false"/>
-		<auto-attributes include ="nonpk" mode="IN" optional="false"/>
-	</service>
-	
-	<!-- Update the examtopic -->
-	<service  name="updateExamTopic" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="updateExamTopicService">
-		<attribute name="examId" mode="IN" type="String" optional="true"/>
-		<attribute name="topicId" mode="IN" type="String" optional="true"/>
-		<attribute name="percentage" mode="IN" type="String" optional="true"/>
-		<attribute name="topicPassPercentage" mode="IN" type="String" optional="true"/>
-		<attribute name="message" mode="OUT" type="String" optional="true"/>
-	</service>
-	
-	<service name="updateExamTopicService" engine="entity-auto" invoke="update" default-entity-name="ExamTopicMapping">
-		<auto-attributes include="pk" mode="IN" optional="false"/>
-		<auto-attributes include ="nonpk" mode="IN" optional="false"/>
-	</service>
-	
-	
-	
-	
-	
-	
-	
-	<!-- Getting topic list by Exam id -->
-	<service name="getTopicByExamId" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="getTopicByExamIdService">
-		<attribute name="examId" mode="IN" type="String" optional="false"/>	
-		<attribute name="message" mode="OUT" type="String" optional="true"/>
-		
-		<attribute name="examId" mode="OUT" type="String" optional="true"/>
-		<attribute name="examName" mode="OUT" type="String" optional="true"/>
-		<attribute name="topicList" mode="OUT" type="List" optional="true"/>	
-	</service>
-	
-	
 
-	
+	<!-- upload questions -->
+
+	<service name="downloadTemplateDocument" engine="java"
+		location="com.vastpro.sphinx.services.QuestionService"
+		invoke="getTemplateDocument">
+		<attribute name="bytes" mode="OUT" type="Byte []"
+			optional="true" />
+	</service>
+
+
+	<service name="uploadBulkQuestion" engine="java"
+		location="com.vastpro.sphinx.services.QuestionService"
+		invoke="uploadBulkQuestion">
+		<attribute name="file" mode="IN" type="java.nio.ByteBuffer"
+			optional="true" />
+	</service>
+
+
+	<!-- Creating the topic in exam -->
+	<service name="createExamTopic" engine="java"
+		location="com.vastpro.sphinx.services.ExamTopicService"
+		invoke="createExamTopicService">
+		<attribute name="examId" mode="IN" type="String"
+			optional="false" />
+		<attribute name="topicId" mode="IN" type="String"
+			optional="false" />
+		<attribute name="percentage" mode="IN" type="String"
+			optional="false" />
+		<attribute name="topicPassPercentage" mode="IN"
+			type="String" optional="false" />
+		<attribute name="message" mode="OUT" type="String"
+			optional="true" />
+	</service>
+
+	<service name="createExamTopicService" engine="entity-auto"
+		invoke="create" default-entity-name="ExamTopicMapping">
+		<auto-attributes include="pk" mode="IN"
+			optional="false" />
+		<auto-attributes include="nonpk" mode="IN"
+			optional="false" />
+	</service>
+
+	<!-- Update the examtopic -->
+	<service name="updateExamTopic" engine="java"
+		location="com.vastpro.sphinx.services.ExamTopicService"
+		invoke="updateExamTopicService">
+		<attribute name="examId" mode="IN" type="String"
+			optional="true" />
+		<attribute name="topicId" mode="IN" type="String"
+			optional="true" />
+		<attribute name="percentage" mode="IN" type="String"
+			optional="true" />
+		<attribute name="topicPassPercentage" mode="IN"
+			type="String" optional="true" />
+		<attribute name="message" mode="OUT" type="String"
+			optional="true" />
+	</service>
+
+	<service name="updateExamTopicService" engine="entity-auto"
+		invoke="update" default-entity-name="ExamTopicMapping">
+		<auto-attributes include="pk" mode="IN"
+			optional="false" />
+		<auto-attributes include="nonpk" mode="IN"
+			optional="false" />
+	</service>
+
+
+
+
+
+
+
+	<!-- Getting topic list by Exam id -->
+	<service name="getTopicByExamId" engine="java"
+		location="com.vastpro.sphinx.services.ExamTopicService"
+		invoke="getTopicByExamIdService">
+		<attribute name="examId" mode="IN" type="String"
+			optional="false" />
+		<attribute name="message" mode="OUT" type="String"
+			optional="true" />
+
+		<attribute name="examId" mode="OUT" type="String"
+			optional="true" />
+		<attribute name="examName" mode="OUT" type="String"
+			optional="true" />
+		<attribute name="topicList" mode="OUT" type="List"
+			optional="true" />
+	</service>
+
+
+
+
 	<!-- delete topic in examTopicMappin -->
-	<service name="deleteTopicInExamTopic" engine="java" location="com.vastpro.sphinx.services.ExamTopicService" invoke="deleteTopicInExamTopic">
-		<attribute name="topicId" mode="IN" type="String" optional="false"/>
-		<attribute name="examId" mode="IN" type="String" optional="false"/>
-		<attribute name="message" mode="OUT" type="String" optional="true"/>	
+	<service name="deleteTopicInExamTopic" engine="java"
+		location="com.vastpro.sphinx.services.ExamTopicService"
+		invoke="deleteTopicInExamTopic">
+		<attribute name="topicId" mode="IN" type="String"
+			optional="false" />
+		<attribute name="examId" mode="IN" type="String"
+			optional="false" />
+		<attribute name="message" mode="OUT" type="String"
+			optional="true" />
 	</service>
-	
-	<service name="deleteTopicInExamTopicDB" engine="entity-auto" invoke="delete" default-entity-name="ExamTopicMapping">
-		<auto-attributes include="pk" mode="IN"/>
+
+	<service name="deleteTopicInExamTopicDB" engine="entity-auto"
+		invoke="delete" default-entity-name="ExamTopicMapping">
+		<auto-attributes include="pk" mode="IN" />
 	</service>
-	 
-	<!-- Delete the examTopic based on the examId
-	
-	<service name="deleteTopicInExamTopicMaster" engine="entity-auto" invoke="delete" default-entity-name="ExamTopicMapping">
-		<auto-attributes include="pk" mode="IN" optional="true"/>
-	</service>  -->
-	
+
+	<!-- Delete the examTopic based on the examId <service name="deleteTopicInExamTopicMaster" 
+		engine="entity-auto" invoke="delete" default-entity-name="ExamTopicMapping"> 
+		<auto-attributes include="pk" mode="IN" optional="true"/> </service> -->
+
 	<!-- generating question by topic percentage -->
-	<service name="generateQuestionsService" engine="java" location="com.vastpro.sphinx.services.GenerateQuestionsMasterBService" invoke="generateQuestionsService">
-		<attribute name="examId" mode="IN" type="String"/>
-		<attribute name="TopicList" mode="IN" type="List"/>
+	<service name="generateQuestionsService" engine="java"
+		location="com.vastpro.sphinx.services.GenerateQuestionsMasterBService"
+		invoke="generateQuestionsService">
+		<attribute name="examId" mode="IN" type="String" />
+		<attribute name="TopicList" mode="IN" type="List" />
 	</service>
-	
-	
-  <service name="addQuestionInMasterB" engine="entity-auto" invoke="create" default-entity-name="QuestionBankMasterB">
-	<auto-attributes include="pk" mode ="IN" optional="false"/>
-	<auto-attributes include="nonpk" mode="IN" optional="true"/>
- </service>
-	
+
+
+	<service name="addQuestionInMasterB" engine="entity-auto"
+		invoke="create" default-entity-name="QuestionBankMasterB">
+		<auto-attributes include="pk" mode="IN"
+			optional="false" />
+		<auto-attributes include="nonpk" mode="IN"
+			optional="true" />
+	</service>
+
 </services>

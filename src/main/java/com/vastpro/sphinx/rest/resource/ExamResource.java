@@ -38,6 +38,7 @@ public class ExamResource {
 		
 		try {
 			Map<String,Object> input= new HashMap<String, Object>();
+			input.put("partyId",request.getAttribute("partyId"));
 			input.put("examName",request.getAttribute("examName"));
 			input.put("description",request.getAttribute("description"));
 			input.put("noOfQuestions",request.getAttribute("noOfQuestions"));
@@ -68,6 +69,7 @@ public class ExamResource {
 		try {
 			Map<String,Object> input= new HashMap<String, Object>();
 			input.put("examId",request.getAttribute("examId"));
+			input.put("partyId",request.getAttribute("partyId"));
 			
 			Map<String,Object> result=dispatcher.runSync("deleteExamOwn", input);
 			return Response.ok(result).build();
