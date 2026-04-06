@@ -60,6 +60,7 @@ public class ExamService {
 
 			// call the entity-auto service it will create the record
 			Map<String, Object> result = dispatcher.runSync("createExam", createMap);
+			
 
 			// from the entity-auto service return the map the map contain success or error
 			// to add the data
@@ -68,6 +69,21 @@ public class ExamService {
 			if (ServiceUtil.isError(result)) {
 				return ServiceUtil.returnError("Error, occur during creating the Exam");
 			}
+			
+			//this statement is create the relation between admin and exam 
+			//it create the relation when the admin create the exam
+			Map<String, Object> result1 = dispatcher.runSync("createAdminPartyExamRel", Map.of("partyId",input.get("partyId"),"examId", examId));
+			
+
+			// from the entity-auto service return the map the map contain success or error
+			// to add the data
+			// we validate the it gives the error or success and show the message id it is
+			// error
+			if (ServiceUtil.isError(result1)) {
+				return ServiceUtil.returnError("Error, occur during creating the Exam");
+			}
+			
+			
 			// if success then return the success message
 			return ServiceUtil.returnSuccess("Exam create successfully");
 
@@ -110,13 +126,27 @@ public class ExamService {
 					data.remove();
 				}
 			}
+			
+			//this statement is delete the relation between admin and exam 
+			//it remove the relation when the admin delete the exam
+			Map<String, Object> result1 = dispatcher.runSync("deleteAdminPartyExamRel", Map.of("partyId", input.get("partyId"),"examId", examId.getString("examId")));
+			
+
+			// from the entity-auto service return the map the map contain success or error
+			// to add the data
+			// we validate the it gives the error or success and show the message id it is
+			// error
+			if (ServiceUtil.isError(result1)) {
+//				return ServiceUtil.returnError("Error, occur during delete the Exam");
+				return ServiceUtil.returnError((String) result1.get("errorMessage"));
+			}
 
 			Map<String, Object> result = dispatcher.runSync("deleteExam", input);
 
 			if (ServiceUtil.isError(result)) {
 				return ServiceUtil.returnError((String) result.get("errorMessage"));
 			}
-
+			
 			return ServiceUtil.returnSuccess("Exam deleted successfully");
 		} catch (GenericServiceException |
 

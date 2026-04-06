@@ -200,8 +200,8 @@
 	  <!-- This entity holds relationship between Admins and exams.
 		Any admin listed here can manage the associated exam  -->
     <entity entity-name="AdminPartyExamRel" package-name="in.vastpro.sphinx">
-		<field name="partyId" type="id-ne"></field>
-		<field name="examId" type="id-ne"></field>
+		<field name="partyId" type="id"></field>
+		<field name="examId" type="id"></field>
 <!--Date threshold to control from when to when an Admin can manage the exam -->		
 		<field name="fromDate" type="date-time"></field>
 		<field name="thruDate" type="date-time"></field>
