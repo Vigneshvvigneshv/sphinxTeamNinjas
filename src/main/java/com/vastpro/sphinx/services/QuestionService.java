@@ -483,17 +483,17 @@ public class QuestionService {
 
 						case "numAnswers":
 						case "difficultyLevel":
-							question.put(col.field, (long) numVal); // ✅ Long
+							question.put(col.field, (long) numVal); // Long
 							break;
 
 						case "answerValue":
 						case "negativeMarkValue":
-							question.put(col.field, Double.valueOf(numVal)); // ✅ BigDecimal
+							question.put(col.field, Double.valueOf(numVal)); //  BigDecimal
 							break;
 
 						default:
 
-							question.put(col.field, String.valueOf((long) numVal)); // ✅ String
+							question.put(col.field, String.valueOf((long) numVal)); // String
 							break;
 						}
 
@@ -550,4 +550,11 @@ public class QuestionService {
 		}
 
 	}
+	/**
+	 * this method is used to get the all the question for the exam
+	 */
+	public static Map<String,Object> getAllQuestion(){
+		
+	}
+	
 }
