@@ -271,10 +271,12 @@
 	<service engine="java" name="assignExamOwn"
 		location="com.vastpro.sphinx.services.ExamAssignToUserService"
 		invoke="assignExam">
-		<attribute name="partyId" mode="IN" type="String"></attribute>
+	<!-- 	<attribute name="partyId" mode="IN" type="String"></attribute>
 		<attribute name="examId" mode="IN" type="String"></attribute>
 		<attribute name="allowedAttempts" mode="IN" type="String"></attribute>
-		<attribute name="timeoutDays" mode="IN" type="String"></attribute>
+		<attribute name="timeoutDays" mode="IN" type="String"></attribute> -->
+		
+		<attribute name="assignedUserList" mode="IN" type="List"></attribute>
 	</service>
 
 	<!-- remove assigned exam to the user -->
