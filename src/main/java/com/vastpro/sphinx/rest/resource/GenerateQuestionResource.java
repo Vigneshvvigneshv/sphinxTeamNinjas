@@ -112,7 +112,8 @@ public class GenerateQuestionResource {
 
 			result.put("status", "success");
 			result.put("message", serviceResultgenerate.get("successMessage"));
-			result.put("responseMessage", "successfully Created question");
+			result.put("responseMessage", "Successfully created question");
+			result.put("successMessage", "success");
 			return Response.ok().entity(result).build();
 
 		} catch (GenericServiceException | GenericEntityException e) {
