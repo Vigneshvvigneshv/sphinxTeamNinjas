@@ -7,6 +7,7 @@ import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.transaction.GenericTransactionException;
 import org.apache.ofbiz.entity.transaction.TransactionUtil;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.DispatchContext;
@@ -21,45 +22,59 @@ public class ExamAssignToUserService {
 		Delegator delegator = context.getDelegator();
 		List<Map<String, Object>> assignedUser = (List<Map<String, Object>>) input.get("assignedUserList");
 		if (assignedUser!=null && assignedUser.size() > 0) {
+			try {
+			TransactionUtil.begin();
 			for (Map<String, Object> userMap : assignedUser) {
 
 				try {
 					GenericValue partyIdAlreadyExits = EntityQuery.use(delegator).from("UserLogin").where("partyId", userMap.get("partyId"))
 									.queryFirst();
 					if (partyIdAlreadyExits == null) {
+						rollBackTransaction();
 						return ServiceUtil.returnError("User not found");
 					}
 					GenericValue examIdAlreadyExits = EntityQuery.use(delegator).from("ExamMaster").where("examId", userMap.get("examId"))
 									.queryFirst();
 					if (examIdAlreadyExits == null) {
+						rollBackTransaction();
 						return ServiceUtil.returnError("Exam not found");
 					}
 					try {
 						userMap.put("allowedAttempts", Long.valueOf((String) userMap.get("allowedAttempts")));
 					} catch (NumberFormatException e) {
+						rollBackTransaction();
 						return ServiceUtil.returnError("Attempts should be number");
 					}
 
 					try {
 						userMap.put("timeoutDays", Long.valueOf((String) userMap.get("timeoutDays")));
 					} catch (NumberFormatException e) {
+						rollBackTransaction();
 						return ServiceUtil.returnError("Days should be number");
 					}
 					userMap.put("noOfAttempts", 0);
 					Map<String, Object> result = dispatcher.runSync("assignExam", userMap);
 
 					if (ServiceUtil.isError(result)) {
-						return ServiceUtil.returnError("Error, occur during assing the Exam");
+						rollBackTransaction();
+						return ServiceUtil.returnError("Error, occur during assing the Exam to the user");
 					}
 					
 
 				} catch (GenericEntityException | GenericServiceException e) {
 					// TODO Auto-generated catch block
 					// e.printStackTrace();
+					rollBackTransaction();
 					Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
-					return ServiceUtil.returnError("Error, occur during assing the Exam" + e.getMessage());
+					return ServiceUtil.returnError("Error, occur during assing the Exam to the user" + e.getMessage());
 				}
 				
+			}
+			TransactionUtil.commit();
+			}catch(GenericTransactionException e) {
+				rollBackTransaction();
+				Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
+				return ServiceUtil.returnError("Users can't assign to the exam, Please Try again later");
 			}
 			return ServiceUtil.returnSuccess("Users Assigned to the exam successfully");
 		} 
@@ -146,6 +161,13 @@ public class ExamAssignToUserService {
 		} catch (GenericEntityException | GenericServiceException e) {
 			Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
 			return ServiceUtil.returnError("Error, occur during launch the exam");
+		}
+	}
+	private static void rollBackTransaction() {
+		try {
+			TransactionUtil.rollback();
+		}catch(GenericTransactionException e) {
+			Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
 		}
 	}
 }
