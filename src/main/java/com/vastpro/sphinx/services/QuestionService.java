@@ -297,6 +297,7 @@ public class QuestionService {
 				qMap.put("difficultyLevel", q.getString("difficultyLevel"));
 				qMap.put("topicId", q.getString("topicId"));
 				qMap.put("negativeMarkValue", q.getBigDecimal("negativeMarkValue"));
+				qMap.put("answer", q.getString("answer"));
 
 				questionList.add(qMap);
 			}

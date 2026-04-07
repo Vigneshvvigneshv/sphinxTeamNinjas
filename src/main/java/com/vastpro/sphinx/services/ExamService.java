@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
@@ -61,11 +62,9 @@ public class ExamService {
 			createMap.put("duration", Long.valueOf((String) input.get("duration")));
 			createMap.put("passPercentage", Long.valueOf((String) input.get("passPercentage")));
 
-			
 			TransactionUtil.begin();
 			// call the entity-auto service it will create the record
 			Map<String, Object> result = dispatcher.runSync("createExam", createMap);
-			
 
 			// from the entity-auto service return the map the map contain success or error
 			// to add the data
@@ -75,11 +74,11 @@ public class ExamService {
 				TransactionUtil.rollback();
 				return ServiceUtil.returnError("Error, occur during creating the Exam");
 			}
-			
-			//this statement is create the relation between admin and exam 
-			//it create the relation when the admin create the exam
-			Map<String, Object> result1 = dispatcher.runSync("createAdminPartyExamRel", Map.of("partyId",input.get("partyId"),"examId", examId));
-			
+
+			// this statement is create the relation between admin and exam
+			// it create the relation when the admin create the exam
+			Map<String, Object> result1 = dispatcher.runSync("createAdminPartyExamRel",
+							Map.of("partyId", input.get("partyId"), "examId", examId));
 
 			// from the entity-auto service return the map the map contain success or error
 			// to add the data
@@ -89,17 +88,17 @@ public class ExamService {
 				TransactionUtil.rollback();
 				return ServiceUtil.returnError("Error, occur during creating the Exam");
 			}
-			
-			TransactionUtil.commit();			// if success then return the success message
+
+			TransactionUtil.commit(); // if success then return the success message
 			return ServiceUtil.returnSuccess("Exam create successfully");
 
 		} catch (GenericServiceException | GenericEntityException e) {
-//			e.printStackTrace();
+			// e.printStackTrace();
 			try {
 				TransactionUtil.rollback();
 			} catch (GenericTransactionException e1) {
 				// TODO Auto-generated catch block
-//				e1.printStackTrace();
+				// e1.printStackTrace();
 				Debug.logError(e1.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Error, occur during creating exam" + e1.getMessage());
 			}
@@ -141,11 +140,13 @@ public class ExamService {
 					data.remove();
 				}
 			}
+			delegator.removeByAnd("QuestionBankMasterB", UtilMisc.toMap("examId", input.get("examId")));
+
 			TransactionUtil.begin();
-			//this statement is delete the relation between admin and exam 
-			//it remove the relation when the admin delete the exam
-			Map<String, Object> result1 = dispatcher.runSync("deleteAdminPartyExamRel", Map.of("partyId", input.get("partyId"),"examId", examId.getString("examId")));
-			
+			// this statement is delete the relation between admin and exam
+			// it remove the relation when the admin delete the exam
+			Map<String, Object> result1 = dispatcher.runSync("deleteAdminPartyExamRel",
+							Map.of("partyId", input.get("partyId"), "examId", examId.getString("examId")));
 
 			// from the entity-auto service return the map the map contain success or error
 			// to add the data
@@ -154,7 +155,7 @@ public class ExamService {
 			if (ServiceUtil.isError(result1)) {
 				TransactionUtil.rollback();
 				return ServiceUtil.returnError("Error, occur during delete the Exam");
-//				return ServiceUtil.returnError((String) result1.get("errorMessage"));
+				// return ServiceUtil.returnError((String) result1.get("errorMessage"));
 			}
 
 			Map<String, Object> result = dispatcher.runSync("deleteExam", input);
@@ -162,18 +163,18 @@ public class ExamService {
 			if (ServiceUtil.isError(result)) {
 				TransactionUtil.rollback();
 				return ServiceUtil.returnError("Error, occur during delete the Exam");
-//				return ServiceUtil.returnError((String) result.get("errorMessage"));
+				// return ServiceUtil.returnError((String) result.get("errorMessage"));
 			}
 			TransactionUtil.commit();
 			return ServiceUtil.returnSuccess("Exam deleted successfully");
-		} catch (GenericServiceException |GenericEntityException e) {
+		} catch (GenericServiceException | GenericEntityException e) {
 			// TODO Auto-generated catch block
-//			e.printStackTrace();
+			// e.printStackTrace();
 			try {
 				TransactionUtil.rollback();
 			} catch (GenericTransactionException e1) {
 				// TODO Auto-generated catch block
-//				e1.printStackTrace();
+				// e1.printStackTrace();
 				Debug.logError(e1.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Error, occur during delete exam" + e1.getMessage());
 			}
@@ -219,7 +220,7 @@ public class ExamService {
 			return ServiceUtil.returnSuccess("Exam update successfully");
 
 		} catch (GenericServiceException | GenericEntityException e) {
-//			e.printStackTrace();
+			// e.printStackTrace();
 			Debug.logError(e.getMessage(), ExamService.class.getName());
 			return ServiceUtil.returnError("Error, occur during update exam" + e.getMessage());
 		}
