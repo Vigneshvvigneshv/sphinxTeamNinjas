@@ -31,10 +31,11 @@ public class ExamAssignToUserResource {
 		LocalDispatcher dispatcher=(LocalDispatcher) request.getAttribute("dispatcher");
 		try {
 			Map<String,Object> input=new HashMap<String, Object>();
-			input.put("partyId", request.getAttribute("partyId"));
-			input.put("examId", request.getAttribute("examId"));
-			input.put("allowedAttempts", request.getAttribute("allowedAttempts"));
-			input.put("timeoutDays", request.getAttribute("timeoutDays"));
+//			input.put("partyId", request.getAttribute("partyId"));
+//			input.put("examId", request.getAttribute("examId"));
+//			input.put("allowedAttempts", request.getAttribute("allowedAttempts"));
+//			input.put("timeoutDays", request.getAttribute("timeoutDays"));
+			input.put("assignedUserList", request.getAttribute("assignedUserList"));
 			Map<String,Object> result=dispatcher.runSync("assignExamOwn",input);
 			return Response.ok(result).build();
 		}catch(Exception e) {
