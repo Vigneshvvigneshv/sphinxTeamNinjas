@@ -127,12 +127,12 @@ public class QuestionResource {
 			Map<String, Object> serviceResult = dispatcher.runSync("updateQuestionMaster", input);
 
 			if (ServiceUtil.isError(serviceResult)) {
-				result.put("responseMessage", "ERROR");
+				result.put("errorMessage", "ERROR");
 				result.put("message", ServiceUtil.getErrorMessage(serviceResult));
 				return Response.status(500).entity(result).build();
 			}
 
-			result.put("responseMessage", "SUCCESS");
+			result.put("successMessage", "SUCCESS");
 			result.put("message", "Question updated successfully");
 			return Response.ok(result).build();
 
@@ -291,6 +291,7 @@ public class QuestionResource {
 								.build();
 			}
 
+			// file name
 			String fileName = filePart.getSubmittedFileName();
 
 			if (!fileName.endsWith(".xlsx")) {
@@ -374,5 +375,10 @@ public class QuestionResource {
 			return Response.ok().entity(result).build();
 
 		}
+
+	}
+
+	public Response getAllQuestions(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+		return null;
 	}
 }

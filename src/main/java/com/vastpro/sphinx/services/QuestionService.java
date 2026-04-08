@@ -51,10 +51,7 @@ public class QuestionService {
 			String optionB = (String) questions.get("optionB");
 			String optionC = (String) questions.get("optionC");
 			String optionD = (String) questions.get("optionD");
-			Long numAnswers = (Long) questions.get("numAnswers");
 			String questionTypeId = (String) questions.get("questionTypeId");
-			Long difficultyLevel = (Long) questions.get("difficultyLevel");
-			BigDecimal answerValue = (BigDecimal) questions.get("answerValue");
 
 			// questions.put("negativeMarkValue", 0.0);
 
@@ -104,12 +101,13 @@ public class QuestionService {
 			Map<String, Object> result = ServiceUtil.returnSuccess("Question created Successfully");
 
 			if (ServiceUtil.isError(serviceResult)) {
-				result.put("responseMesage", "Failed to create questions");
+				result.put("message", "Failed to create questions");
+				result.put("errorMessage", "ERROR");
 				result.put("questionId", questionId);
 				return result;
 			}
 
-			result.put("responseMessage", "Question created Successfully");
+			result.put("message", "Question created Successfully");
 			result.put("questionId", questionId);
 			return result;
 		} catch (GenericEntityException | GenericServiceException e) {
@@ -139,7 +137,7 @@ public class QuestionService {
 				return ServiceUtil.returnError("Question not found for questionId: " + questionId);
 			}
 
-			// get all fields from context
+			// getting all fields from context
 			String questionDetail = (String) context.get("questionDetail");
 			String optionA = (String) context.get("optionA");
 			String optionB = (String) context.get("optionB");
