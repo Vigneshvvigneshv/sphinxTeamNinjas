@@ -99,11 +99,11 @@ public class TopicService {
 				return ServiceUtil.returnError("Topic already exits");
 			}
 
-			Map<String, Object> updateMap = new HashMap<String, Object>();
-			updateMap.put("topicId", topicId);
-			updateMap.put("topicName", topicName);
+//			Map<String, Object> updateMap = new HashMap<String, Object>();
+//			updateMap.put("topicId", topicId);
+//			updateMap.put("topicName", topicName);
 			// update the topic by using the entity-auto
-			Map<String, Object> result = dispatcher.runSync("updateTopic", updateMap);
+			Map<String, Object> result = dispatcher.runSync("updateTopic", params);
 			// if the service return the error then return the error message
 			if (ServiceUtil.isError(result)) {
 				return ServiceUtil.returnError("Error, occur during update the topic");
@@ -140,10 +140,10 @@ public class TopicService {
 			if (topicMaster == null) {
 				return ServiceUtil.returnError("Topic with ID " + topicId + " not found.");
 			}
-			Map<String, Object> deleteMap = new HashMap<String, Object>();
-			deleteMap.put("topicId", topicId);
+//			Map<String, Object> deleteMap = new HashMap<String, Object>();
+//			deleteMap.put("topicId", topicId);
 			// the deleteTopic is delete the record based on the topicId in the topicMaster Table
-			Map<String, Object> result = dispatcher.runSync("deleteTopic", deleteMap);
+			Map<String, Object> result = dispatcher.runSync("deleteTopic", params);
 			// if the entity-auto return the error then return the error message
 			if (ServiceUtil.isError(result)) {
 				return ServiceUtil.returnError("Error, occur during delete the topic");
