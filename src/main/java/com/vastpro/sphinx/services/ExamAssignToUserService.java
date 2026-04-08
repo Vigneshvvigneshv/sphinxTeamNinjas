@@ -14,9 +14,17 @@ import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
-
+/**
+ * this class is used to assign the user to the exam 
+ */
 public class ExamAssignToUserService {
 
+	/**
+	 * this method is used to assign the exam to the user
+	 * @param context (used to get the delegator and dispatcher)
+	 * @param input (it contain the examId and list of Map, Map contain the user details like timeoutDays, noOfAttempts, allowedAttempts)
+	 * @return error and success
+	 */
 	public static Map<String, Object> assignExam(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
 		String examId = (String) input.get("examId");
@@ -80,9 +88,9 @@ public class ExamAssignToUserService {
 			return ServiceUtil.returnSuccess("Users Assigned to the exam successfully");
 		}
 		return ServiceUtil.returnError("Select the user to assign to the exam");
-
 	}
-
+	
+	
 	public static Map<String, Object> removeAssignedExam(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
 		Delegator delegator = context.getDelegator();
@@ -115,7 +123,6 @@ public class ExamAssignToUserService {
 			return ServiceUtil.returnSuccess("Exam removed successfully");
 
 		} catch (GenericEntityException | GenericServiceException e) {
-			// e.printStackTrace();
 			Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
 			return ServiceUtil.returnError("Error, occur during remove the assigned Exam" + e.getMessage());
 		}
