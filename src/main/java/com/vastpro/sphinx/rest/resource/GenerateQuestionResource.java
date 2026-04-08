@@ -53,7 +53,11 @@ public class GenerateQuestionResource {
 
 			for (Map<String, Object> topic : topicList) {
 				String percentageStr = String.valueOf(topic.get("percentage"));
+				String passPercentageStr = String.valueOf(topic.get("topicPassPercentage"));
 
+				if (passPercentageStr.trim().isEmpty() || passPercentageStr == null) {
+					return Response.status(400).entity(ServiceUtil.returnError("Passpercentage cannot be empty")).build();
+				}
 				// checking same topic exist and
 				if (!sameTopicCheck.contains(String.valueOf((topic.get("topicId"))))) {
 
@@ -61,7 +65,7 @@ public class GenerateQuestionResource {
 
 					currentPercentage += Integer.parseInt(percentageStr);
 				} else {
-					return Response.status(400).entity(ServiceUtil.returnError("Topic Can not be same")).build();
+					return Response.status(400).entity(ServiceUtil.returnError("Topic cannot be same")).build();
 				}
 			}
 
