@@ -1,5 +1,6 @@
 package com.vastpro.sphinx.rest.resource;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,11 +49,20 @@ public class GenerateQuestionResource {
 			List<Map<String, Object>> topicList = (List<Map<String, Object>>) request.getAttribute("topics");
 
 			int currentPercentage = 0;
+			List<String> sameTopicCheck = new ArrayList<>();
 
 			for (Map<String, Object> topic : topicList) {
 				String percentageStr = String.valueOf(topic.get("percentage"));
 
-				currentPercentage += Integer.parseInt(percentageStr);
+				// checking same topic exist and
+				if (!sameTopicCheck.contains(String.valueOf((topic.get("topicId"))))) {
+
+					sameTopicCheck.add(String.valueOf((topic.get("topicId"))));
+
+					currentPercentage += Integer.parseInt(percentageStr);
+				} else {
+					return Response.status(400).entity(ServiceUtil.returnError("Topic Can not be same")).build();
+				}
 			}
 
 			if (currentPercentage != 100) {

@@ -197,6 +197,7 @@ public class QuestionService {
 				question.set("questionTypeId", questionTypeId);
 			}
 
+			// updating the question in entity-auto
 			Map<String, Object> result = dispatcher.runSync("updateQuestion", updateQuestion);
 
 			if (ServiceUtil.isError(result)) {
