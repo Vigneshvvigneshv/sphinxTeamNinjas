@@ -121,7 +121,7 @@
 		<field name="lastPerformanceDate" type="date-time"></field>
 		<field name="certificatePrinted" type="numeric"/>
 		<field name="timeoutDays" type="numeric" not-null="true"></field>
-		<field name="passwordChangesAuto" type="numeric"></field>
+		<field name="passwordChangesAuto" type="long-varchar"></field>
 		<field name="canSplitExams" type="numeric"/>
 		<field name="canSeeDetailedResults" type="numeric"></field>
 		<field name="maxSplitAttempts" type="numeric"></field>
