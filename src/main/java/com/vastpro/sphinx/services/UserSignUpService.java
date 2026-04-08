@@ -1,5 +1,6 @@
 package com.vastpro.sphinx.services;
 
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -136,10 +137,26 @@ public class UserSignUpService {
 			if (ServiceUtil.isError(personResult))
 				return handleTransaction();
 
+		       //create user login
+		        Map<String, Object> userLoginInput = new HashMap<>();
+		        userLoginInput.put("userLoginId", username);
+		        
+		        if("SPHINX_ADMIN".equals(role)&&password!=null) {
+		        	userLoginInput.put("currentPassword",password);
+		        }else {
+		        	userLoginInput.put("currentPassword",generatePassword());
+		        }
+		        
+		        userLoginInput.put("enabled", "N");
+		        userLoginInput.put("partyId", partyId);
+		        Map<String, Object> userLoginResult = dispatcher.runSync("createUserLogin", userLoginInput);
+		        if (ServiceUtil.isError(userLoginResult)) return handleTransaction();
+
 			GenericValue naRole = EntityQuery.use(delegator).from("PartyRole").where("partyId", partyId, "roleTypeId", "_NA_").queryOne();
 			if (naRole != null) {
 				naRole.remove();
 			}
+
 
 			// create contact
 			Map<String, Object> contactMechInput = new HashMap<>();
@@ -158,20 +175,10 @@ public class UserSignUpService {
 			if (ServiceUtil.isError(partyContactMechResult))
 				return handleTransaction();
 
-			// create user login
-			Map<String, Object> userLoginInput = new HashMap<>();
-			userLoginInput.put("userLoginId", username);
-			userLoginInput.put("currentPassword", PasswordHashing.encryptPassword(password));
-			userLoginInput.put("enabled", "N");
-			userLoginInput.put("partyId", partyId);
-			Map<String, Object> userLoginResult = dispatcher.runSync("createUserLogin", userLoginInput);
-			if (ServiceUtil.isError(userLoginResult))
-				return handleTransaction();
-
-			result.put("message", "Registration Successfull");
+			
 			TransactionUtil.commit();
 			// result.put("partyId", partyId);
-
+			return ServiceUtil.returnSuccess("Registration Successfull");
 		} catch (GenericEntityException | GenericServiceException e) {
 
 			try {
@@ -184,8 +191,6 @@ public class UserSignUpService {
 			Debug.logError(e.getMessage(), UserSignUpService.class.getName());
 			return ServiceUtil.returnError("Error, Occur during create user");
 		}
-
-		return result;
 	}
 
 	private static Map<String, Object> handleTransaction() {
@@ -196,5 +201,15 @@ public class UserSignUpService {
 		}
 		return ServiceUtil.returnError("Unexcepted error during create the user");
 		// return ServiceUtil.returnError((String)input.get("errorMessage"));
+	}
+	
+	private static String generatePassword() {
+		SecureRandom random=new SecureRandom();
+		String passwordChar="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+		StringBuilder passwordBuilder=new StringBuilder();
+		for(int i=0;i<6;i++) {
+			passwordBuilder.append(passwordChar.charAt(random.nextInt(passwordChar.length())));
+		}
+		return String.valueOf(passwordBuilder);
 	}
 }

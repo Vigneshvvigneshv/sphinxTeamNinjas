@@ -14,15 +14,19 @@ import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
+
 /**
- * this class is used to assign the user to the exam 
+ * this class is used to assign the user to the exam
  */
 public class ExamAssignToUserService {
 
 	/**
 	 * this method is used to assign the exam to the user
-	 * @param context (used to get the delegator and dispatcher)
-	 * @param input (it contain the examId and list of Map, Map contain the user details like timeoutDays, noOfAttempts, allowedAttempts)
+	 * 
+	 * @param context
+	 *            (used to get the delegator and dispatcher)
+	 * @param input
+	 *            (it contain the examId and list of Map, Map contain the user details like timeoutDays, noOfAttempts, allowedAttempts)
 	 * @return error and success
 	 */
 	public static Map<String, Object> assignExam(DispatchContext context, Map<String, Object> input) {
@@ -89,8 +93,7 @@ public class ExamAssignToUserService {
 		}
 		return ServiceUtil.returnError("Select the user to assign to the exam");
 	}
-	
-	
+
 	public static Map<String, Object> removeAssignedExam(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
 		Delegator delegator = context.getDelegator();
@@ -130,7 +133,7 @@ public class ExamAssignToUserService {
 
 	// update assigned exam
 	public static Map<String, Object> updateAssignedExam(DispatchContext context, Map<String, Object> input) {
-		LocalDispatcher dispatcher = (LocalDispatcher) context.getDispatcher();
+		LocalDispatcher dispatcher = context.getDispatcher();
 		try {
 			String partyId = (String) input.get("partyId");
 			String examId = (String) input.get("examId");
@@ -165,7 +168,7 @@ public class ExamAssignToUserService {
 			return ServiceUtil.returnError("Error, occur during update the assigned user");
 		}
 	}
-	
+
 	public static Map<String, Object> increaseAttempts(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
 		Delegator delegator = context.getDelegator();

@@ -53,7 +53,7 @@
 		invoke="signUpService">
 
 		<attribute name="userName" mode="IN" type="String"></attribute>
-		<attribute name="password" mode="IN" type="String"></attribute>
+		<attribute name="password" mode="IN" type="String" optional="true"></attribute>
 		<attribute name="firstName" mode="IN" type="String"></attribute>
 		<attribute name="lastName" mode="IN" type="String"></attribute>
 		<attribute name="email" mode="IN" type="String"></attribute>
