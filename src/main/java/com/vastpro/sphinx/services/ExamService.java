@@ -58,9 +58,26 @@ public class ExamService {
 			createMap.put("examId", examId);
 			createMap.put("examName", input.get("examName"));
 			createMap.put("description", input.get("description"));
-			createMap.put("noOfQuestions", Long.valueOf((String) input.get("noOfQuestions")));
-			createMap.put("duration", Long.valueOf((String) input.get("duration")));
-			createMap.put("passPercentage", Long.valueOf((String) input.get("passPercentage")));
+			try {
+				createMap.put("noOfQuestions", Long.valueOf((String) input.get("noOfQuestions")));
+			}catch(NumberFormatException e) {
+				Debug.logError(e.getMessage(),ExamService.class.getName());
+				return ServiceUtil.returnError("Number of question should be in number");
+			}
+			try {
+				createMap.put("duration", Long.valueOf((String) input.get("duration")));
+			}catch(NumberFormatException e) {
+				Debug.logError(e.getMessage(),ExamService.class.getName());
+				return ServiceUtil.returnError("Duration should be in number");
+			}
+			try {
+				createMap.put("passPercentage", Long.valueOf((String) input.get("passPercentage")));
+			}catch(NumberFormatException e) {
+				Debug.logError(e.getMessage(),ExamService.class.getName());
+				return ServiceUtil.returnError("Pass Percentage should be in number");
+			}
+			
+			
 
 			TransactionUtil.begin();
 			// call the entity-auto service it will create the record
@@ -207,9 +224,24 @@ public class ExamService {
 			createMap.put("examId", input.get("examId"));
 			createMap.put("examName", input.get("examName"));
 			createMap.put("description", input.get("description"));
-			createMap.put("noOfQuestions", Long.valueOf((String) input.get("noOfQuestions")));
-			createMap.put("duration", Long.valueOf((String) input.get("duration")));
-			createMap.put("passPercentage", Long.valueOf((String) input.get("passPercentage")));
+			try {
+				createMap.put("noOfQuestions", Long.valueOf((String) input.get("noOfQuestions")));
+			}catch(NumberFormatException e) {
+				Debug.logError(e.getMessage(),ExamService.class.getName());
+				return ServiceUtil.returnError("Number of question should be in number");
+			}
+			try {
+				createMap.put("duration", Long.valueOf((String) input.get("duration")));
+			}catch(NumberFormatException e) {
+				Debug.logError(e.getMessage(),ExamService.class.getName());
+				return ServiceUtil.returnError("Duration should be in number");
+			}
+			try {
+				createMap.put("passPercentage", Long.valueOf((String) input.get("passPercentage")));
+			}catch(NumberFormatException e) {
+				Debug.logError(e.getMessage(),ExamService.class.getName());
+				return ServiceUtil.returnError("Pass Percentage should be in number");
+			}
 
 			Map<String, Object> result = dispatcher.runSync("updateExam", createMap);
 

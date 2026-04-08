@@ -1,6 +1,7 @@
 package com.vastpro.sphinx.services;
 
 
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -175,7 +176,13 @@ public class UserSignUpService {
 		       //create user login
 		        Map<String, Object> userLoginInput = new HashMap<>();
 		        userLoginInput.put("userLoginId", username);
-		        userLoginInput.put("currentPassword", PasswordHashing.encryptPassword(password));
+		        
+		        if("SPHINX_ADMIN".equals(role)&&password!=null) {
+		        	userLoginInput.put("currentPassword",password);
+		        }else {
+		        	userLoginInput.put("currentPassword",generatePassword());
+		        }
+		        
 		        userLoginInput.put("enabled", "N");
 		        userLoginInput.put("partyId", partyId);
 		        Map<String, Object> userLoginResult = dispatcher.runSync("createUserLogin", userLoginInput);
@@ -211,6 +218,16 @@ public class UserSignUpService {
 		}
 		return ServiceUtil.returnError("Unexcepted error during create the user");
 //		return ServiceUtil.returnError((String)input.get("errorMessage"));
+	}
+	
+	private static String generatePassword() {
+		SecureRandom random=new SecureRandom();
+		String passwordChar="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+		StringBuilder passwordBuilder=new StringBuilder();
+		for(int i=0;i<6;i++) {
+			passwordBuilder.append(passwordChar.charAt(random.nextInt(passwordChar.length())));
+		}
+		return String.valueOf(passwordBuilder);
 	}
 }
 
