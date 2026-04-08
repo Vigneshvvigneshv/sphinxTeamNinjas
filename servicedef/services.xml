@@ -354,31 +354,19 @@
 	<service name="createQuestionService" engine="java"
 		location="com.vastpro.sphinx.services.QuestionService"
 		invoke="createQuestionService">
-		<attribute name="questionDetail" mode="IN" type="String"></attribute>
-		<attribute name="optionA" mode="IN" type="String"
-			optional="true" />
-		<attribute name="optionB" mode="IN" type="String"
-			optional="true" />
-		<attribute name="optionC" mode="IN" type="String"
-			optional="true" />
-		<attribute name="optionD" mode="IN" type="String"
-			optional="true" />
-		<attribute name="answer" mode="IN" type="String"
-			optional="false" />
-		<attribute name="numAnswers" mode="IN" type="Long"
-			optional="false" />
-		<attribute name="questionTypeId" mode="IN" type="String"
-			optional="false" />
-		<attribute name="difficultyLevel" mode="IN" type="Long"
-			optional="true" />
-		<attribute name="answerValue" mode="IN" type="BigDecimal"
-			optional="true" />
-		<attribute name="topicId" mode="IN" type="String"
-			optional="false" />
-		<attribute name="negativeMarkValue" mode="IN"
-			type="BigDecimal" optional="true" />
-		<attribute name="questionId" mode="OUT" type="Long"
-			optional="false"></attribute>
+		<attribute name="questionDetail" mode="IN" type="String"/>
+		<attribute name="optionA" mode="IN" type="String" optional="true" />
+		<attribute name="optionB" mode="IN" type="String" optional="true" />
+		<attribute name="optionC" mode="IN" type="String" optional="true" />
+		<attribute name="optionD" mode="IN" type="String" optional="true" />
+		<attribute name="answer" mode="IN" type="String" optional="false" />
+		<attribute name="numAnswers" mode="IN" type="Long" optional="false" />
+		<attribute name="questionTypeId" mode="IN" type="String" optional="false" />
+		<attribute name="difficultyLevel" mode="IN" type="Long" optional="true" />
+		<attribute name="answerValue" mode="IN" type="BigDecimal" optional="true" />
+		<attribute name="topicId" mode="IN" type="String" optional="false" />
+		<attribute name="negativeMarkValue" mode="IN" type="BigDecimal" optional="true" />
+		<attribute name="questionId" mode="OUT" type="Long" optional="false"/>	
 	</service>
 
 
