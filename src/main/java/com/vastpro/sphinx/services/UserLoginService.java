@@ -27,7 +27,6 @@ public class UserLoginService {
 		try {
 			GenericValue user = delegator.findOne("UserLogin", true, Map.of("userLoginId", context.get("userName")));
 			if (user == null) {
-				error.put("userName", "Username is incorrect");
 				return error;
 			}
 
@@ -39,7 +38,6 @@ public class UserLoginService {
 				result.put("partyId", user.getString("partyId"));
 				return result;
 			} else {
-				error.put("password", "password is incorrect");
 				return error;
 			}
 

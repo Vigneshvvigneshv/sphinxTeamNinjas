@@ -38,10 +38,6 @@
 		<attribute name="password" mode="IN" type="String"></attribute>
 		<attribute name="role" mode="OUT" type="String"></attribute>
 		<attribute name="partyId" mode="OUT" type="String"></attribute>
-		<attribute name="userName" mode="OUT" type="String"
-			optional="true"></attribute>
-		<attribute name="password" mode="OUT" type="String"
-			optional="true"></attribute>
 	</service>
 
 	<!-- End of UserLogin Service -->
