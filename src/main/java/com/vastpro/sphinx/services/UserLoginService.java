@@ -2,6 +2,7 @@ package com.vastpro.sphinx.services;
 
 import java.util.Map;
 
+import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
@@ -16,7 +17,7 @@ public class UserLoginService {
 	public static Map<String, Object> validateUserLoginService(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Map<String, Object> result = ServiceUtil.returnSuccess("User Login Successfully");
 
-		Map<String, Object> error = ServiceUtil.returnError("Login Failed");
+		Map<String, Object> error = ServiceUtil.returnError("Invalid credentials");
 		// { "responseMessage": "success",
 		// "successMessage": "User Login Successfully"}
 
@@ -43,8 +44,9 @@ public class UserLoginService {
 			}
 
 		} catch (GenericEntityException e) {
-			e.printStackTrace();
-			return error;
+//			e.printStackTrace();
+			Debug.logError(e.getMessage(),UserLoginService.class.getName());
+			return ServiceUtil.returnError("Login Failed, Try Again");
 		}
 
 	}
