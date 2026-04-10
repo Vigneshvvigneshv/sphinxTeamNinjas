@@ -25,12 +25,12 @@ import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceContainer;
 import org.apache.ofbiz.service.ServiceUtil;
 
-@Path("/examtopic")
+@Path("/exam-topic")
 public class ExamTopicResource {
 	
 	
 	@GET
-	@Path("/gettopicbyexamid")
+	@Path("/get-topicby-examid")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getTopicByExamId(@Context HttpServletRequest request,@QueryParam("examId") String examId ) {
@@ -81,7 +81,7 @@ public class ExamTopicResource {
 	//Delete Topic in ExamTopic
 	
 	@DELETE
-	@Path("/deletetopicinexamtopic")
+	@Path("/delete-topic-in-exam-topic")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteTopicinExamTopic(@Context HttpServletRequest request,@Context HttpServletResponse response) {

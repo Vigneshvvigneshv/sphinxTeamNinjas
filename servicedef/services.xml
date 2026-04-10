@@ -362,75 +362,56 @@
 		<attribute name="answerValue" mode="IN" type="BigDecimal" optional="true" />
 		<attribute name="topicId" mode="IN" type="String" optional="false" />
 		<attribute name="negativeMarkValue" mode="IN" type="BigDecimal" optional="true" />
-		<attribute name="questionId" mode="OUT" type="Long" optional="false"/>	
+		<attribute name="questionId" mode="OUT" type="Long" optional="true"/>	
 	</service>
 
 
 	<service name="createQuestion" engine="entity-auto"
 		invoke="create" default-entity-name="questionMaster">
-		<auto-attributes include="pk" mode="OUT"
-			optional="false" />
-		<auto-attributes include="nonpk" mode="IN"
-			optional="false" />
+		<auto-attributes include="pk" mode="OUT" optional="false" />
+		<auto-attributes include="nonpk" mode="IN" optional="false" />
 	</service>
 
 
 
 	<!-- UpdateQuestions Service -->
 	<service name="updateQuestionMaster" engine="java"
-		location="com.vastpro.sphinx.services.QuestionService"
-		invoke="updateQuestion">
+		location="com.vastpro.sphinx.services.QuestionService" invoke="updateQuestion">
 		<description>Update an existing question in QuestionMaster</description>
-		<attribute name="questionId" type="Long" mode="IN"
-			optional="false" />
-		<attribute name="questionDetail" type="String" mode="IN"
-			optional="true" />
-		<attribute name="optionA" type="String" mode="IN"
-			optional="true" />
-		<attribute name="optionB" type="String" mode="IN"
-			optional="true" />
-		<attribute name="optionC" type="String" mode="IN"
-			optional="true" />
-		<attribute name="optionD" type="String" mode="IN"
-			optional="true" />
-		<attribute name="answer" type="String" mode="IN"
-			optional="true" />
-		<attribute name="numAnswers" type="Long" mode="IN"
-			optional="true" />
-		<attribute name="questionTypeId" type="String" mode="IN"
-			optional="true" />
-		<attribute name="difficultyLevel" type="Long" mode="IN"
-			optional="true" />
-		<attribute name="answerValue" type="BigDecimal" mode="IN"
-			optional="true" />
-		<attribute name="topicId" type="String" mode="IN"
-			optional="true" />
-		<attribute name="negativeMarkValue" type="BigDecimal"
-			mode="IN" optional="true" />
+		<attribute name="questionId" type="Long" mode="IN" optional="false" />
+		<attribute name="questionDetail" type="String" mode="IN" optional="true" />
+		<attribute name="optionA" type="String" mode="IN" optional="true" />
+		<attribute name="optionB" type="String" mode="IN" optional="true" />
+		<attribute name="optionC" type="String" mode="IN" optional="true" />
+		<attribute name="optionD" type="String" mode="IN" optional="true" />
+		<attribute name="answer" type="String" mode="IN"  optional="true" />
+		<attribute name="numAnswers" type="Long" mode="IN" optional="true" />
+		<attribute name="questionTypeId" type="String" mode="IN" optional="true" />
+		<attribute name="difficultyLevel" type="Long" mode="IN" optional="true" />
+		<attribute name="answerValue" type="BigDecimal" mode="IN" optional="true" />
+		<attribute name="topicId" type="String" mode="IN" optional="true" />
+		<attribute name="negativeMarkValue" type="BigDecimal" mode="IN" optional="true" />
 	</service>
 
 	<service name="updateQuestion" engine="entity-auto"
 		invoke="update" default-entity-name="questionMaster">
-		<auto-attributes include="pk" mode="IN"
-			optional="false" />
-		<auto-attributes include="nonpk" mode="IN"
-			optional="true" />
+		<auto-attributes include="pk" mode="IN" optional="false" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
 	</service>
 
 	<!-- DeleteQuestion Service -->
 	<service name="deleteQuestionMaster" engine="java"
-		location="com.vastpro.sphinx.services.QuestionService"
-		invoke="deleteQuestion">
-		<attribute name="questionId" type="Long" mode="IN"
-			optional="false" />
-		<attribute name="message" type="String" mode="OUT"
-			optional="true" />
+		location="com.vastpro.sphinx.services.QuestionService" invoke="deleteQuestion" transaction-timeout="300">
+		<attribute name="questionIds" type="List" mode="IN" optional="false" />
+		<attribute name="message" type="String" mode="OUT" optional="true" />
+		<attribute name="deletedCount" type="Integer" mode="OUT" optional="false"/>
+		<attribute name="failedIds" type="List" mode="OUT" optional="false"/>
+		<attribute name="errors" type="Map" mode="OUT" optional="false"/>
 	</service>
 
 	<service name="deleteQuestion" engine="entity-auto"
 		invoke="delete" default-entity-name="questionMaster">
-		<auto-attributes include="pk" mode="IN"
-			optional="false" />
+		<auto-attributes include="pk" mode="IN" optional="false" />
 	</service>
 
 
@@ -518,7 +499,7 @@
 		<auto-attributes include="pk" mode="IN"
 			optional="false" />
 		<auto-attributes include="nonpk" mode="IN"
-			optional="false" />
+			optional="false"/>
 	</service>
 
 	<!-- Update the examtopic -->
@@ -608,5 +589,12 @@
 		<auto-attributes include="nonpk" mode="IN"
 			optional="true" />
 	</service>
+	
+	<!-- Service for  -->
+	<!-- <service name="emailService" engine="auto" location="com.vastpro.sphinx.services.EmailServiceOwn" invoke="emailService">
+		<attribute name="examId" mode="IN" type="String"/>
+		<attribute name="partyId" mode="IN" type="String"/>
+		
+	</service> -->
 
 </services>

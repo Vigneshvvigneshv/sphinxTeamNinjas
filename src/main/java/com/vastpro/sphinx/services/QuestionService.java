@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
@@ -59,12 +60,13 @@ public class QuestionService {
 				return ServiceUtil.returnError("topic Id and quetionDetail and answer are required");
 			}
 
-			if (questionTypeId.trim().equals("SINGLE_CHOICE") || questionTypeId.trim().equals("MULTI_CHOICE")) {
+			String type=questionTypeId.trim();
+			if ("SINGLE_CHOICE".equals(type) ||"MULTI_CHOICE".equals(type)) {
 				if (optionA.isEmpty() || optionB.isEmpty() || optionC.isEmpty() || optionD.isEmpty()) {
 					return ServiceUtil.returnError("options can not be empty for SINGLE_CHOICE and Multi Choice Question");
 				}
 
-			} else if (questionTypeId.trim().equals("TRUE_FALSE")) {
+			} else if ("TRUE_FALSE".equals(type)) {
 				if (optionA.isEmpty() || optionB.isEmpty() || optionA.trim() == null || optionB.trim() == null) {
 					return ServiceUtil.returnError("options can not be empty for True_FALSE");
 				}
@@ -77,8 +79,11 @@ public class QuestionService {
 				return ServiceUtil.returnError("Topic not Found");
 			}
 
+			
+			//creating the next sequecence id
 			String questionId = delegator.getNextSeqId("questionMaster");
 
+			questions.put("questionId", questionId);
 			// GenericValue question =delegator.makeValue("questionMaster");
 			// question.set("questionId", questionId);
 			// question.set("questionDetail", questionDetail);
@@ -103,7 +108,6 @@ public class QuestionService {
 			if (ServiceUtil.isError(serviceResult)) {
 				result.put("message", "Failed to create questions");
 				result.put("errorMessage", "ERROR");
-				result.put("questionId", questionId);
 				return result;
 			}
 
@@ -151,16 +155,21 @@ public class QuestionService {
 			String topicId = (String) context.get("topicId");
 			BigDecimal negativeMarkValue = (BigDecimal) context.get("negativeMarkValue");
 
-			if (questionTypeId.trim().equals("SINGLE_CHOICE") || questionTypeId.trim().equals("MULTI_CHOICE")) {
-				if (optionA.isEmpty() || optionB.isEmpty() || optionC.isEmpty() || optionD.isEmpty()) {
-					return ServiceUtil.returnError("options can not be empty for SINGLE_CHOICE and Multi Choice Question");
-				}
-
-			} else if (questionTypeId.trim().equals("TRUE_FALSE")) {
-				if (optionA.isEmpty() || optionB.isEmpty() || optionA.trim() == null || optionB.trim() == null) {
-					return ServiceUtil.returnError("options can not be empty for True_FALSE");
+			if(questionTypeId == null) {
+				return ServiceUtil.returnError("QuestionTypeId is null");
+			}else {
+				if (questionTypeId.trim().equals("SINGLE_CHOICE") || questionTypeId.trim().equals("MULTI_CHOICE")) {
+					if (optionA == null || optionA.isEmpty()  ||optionB == null || optionB.isEmpty() ||optionC == null || optionC.isEmpty() ||optionD == null || optionD.isEmpty()) {
+						return ServiceUtil.returnError("options can not be empty for SINGLE_CHOICE and Multi Choice Question");
+					}
+					
+				}else if (questionTypeId.trim().equals("TRUE_FALSE")) {
+					if ( optionA == null || optionB == null||optionA.isEmpty() || optionB.isEmpty() ) {
+						return ServiceUtil.returnError("options can not be empty for True_FALSE");
+					}
 				}
 			}
+			
 
 			Map<String, Object> updateQuestion = new HashMap<>();
 
@@ -214,32 +223,83 @@ public class QuestionService {
 	public static Map<String, Object> deleteQuestion(DispatchContext dctx, Map<String, Object> context) {
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Delegator delegator = dctx.getDelegator();
+		
+		//getting the list of questionIds
+		List<Long> questionIds = (List<Long>) context.get("questionIds");
+		
+		if (questionIds == null || questionIds.isEmpty()) {
+			return ServiceUtil.returnError("questionIds list is required");
+		}
+		
+		List<Long>failedIds = new ArrayList<>();
+		Map<Long, String> errors = new HashMap<>();
+		int deletedCount = 0;
 		try {
-			Long questionId = (Long) context.get("questionId");
-
-			if (questionId == null) {
-				return ServiceUtil.returnError("questionId is required");
-			}
-
-			GenericValue question = EntityQuery.use(delegator).from("questionMaster").where("questionId", questionId).queryOne();
+			TransactionUtil.begin();
+			 
+			
+			for (Long questionId : questionIds) {
+	            if (questionId == null) {
+	                continue; 
+	            }
+	        
+	            
+	            
+	    try {   
+			GenericValue question = EntityQuery.use(delegator).
+										from("questionMaster").
+										where("questionId", questionId).queryOne();
 
 			if (question == null) {
-				return ServiceUtil.returnError("Question not found for questionId: ");
+				 failedIds.add(questionId);
+				 errors.put(questionId, "Question not found for questionId: " + questionId);
+				 continue;
 			}
 
-			Map<String, Object> result = dispatcher.runSync("deleteQuestion", context);
-
-			if (ServiceUtil.isError(result)) {
-				return ServiceUtil.returnError((String) result.get("errorMessage"));
+			Map<String, Object> serviceResult = dispatcher.runSync("deleteQuestion", UtilMisc.toMap("questionId", questionId));
+			
+			if(ServiceUtil.isSuccess(serviceResult)) {	
+				deletedCount++;
+			}else {
+				failedIds.add(questionId);
+				errors.put(questionId, "Delete failed: " + ServiceUtil.getErrorMessage(serviceResult));
 			}
-
-			return ServiceUtil.returnSuccess("Question deleted successfully");
-
+					
 		} catch (GenericEntityException | GenericServiceException e) {
-			return ServiceUtil.returnError("Error deleting question: " + e.getMessage());
+			failedIds.add(questionId);
+			errors.put(questionId, "Delete failed: " + e.getMessage());
+			}	    
+	}
+			
+			
+			//checking All deleted question if no question deleted rollback
+		    if (deletedCount == 0 && !failedIds.isEmpty()) {
+	            TransactionUtil.rollback();
+	            Map<String, Object> errorResult = ServiceUtil.returnError("All deletes failed — transaction rolled back");
+	            errorResult.put("deletedCount", 0);
+	            errorResult.put("failedIds", failedIds);
+	            errorResult.put("errors", errors);
+	            return errorResult;
+	        }
+		    
+		    //partially deleted or fully deleted
+		    TransactionUtil.commit();
+		    Map<String, Object> result = ServiceUtil.returnSuccess(deletedCount + " question(s) deleted successfully");
+		            result.put("deletedCount", deletedCount);
+		            result.put("failedIds", failedIds);
+		            result.put("errors", errors);
+		            return result;
+		     
+		}catch(GenericTransactionException e) {
+			e.printStackTrace();
+			  try { TransactionUtil.rollback(); } catch (Exception ignore) {}
+			  return ServiceUtil.returnError("Transaction error during bulk delete: " + e.getMessage());
 		}
 	}
-
+	
+	
+	
+	//getQuestionByTopic service
 	public static Map<String, Object> getQuestionsByTopic(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 
@@ -488,7 +548,7 @@ public class QuestionService {
 
 						case "answerValue":
 						case "negativeMarkValue":
-							question.put(col.field, Double.valueOf(numVal)); // BigDecimal
+							question.put(col.field, BigDecimal.valueOf(numVal)); // BigDecimal
 							break;
 
 						default:
