@@ -102,21 +102,27 @@ public class ExamAssignToUserService {
 
 			String partyId = (String) input.get("partyId");
 			String examId = (String) input.get("examId");
-			GenericValue partyIdAlreadyExits = EntityQuery.use(delegator).from("PartyExamRelationship").where("partyId", partyId)
-							.queryFirst();
-			if (partyIdAlreadyExits == null) {
-				return ServiceUtil.returnError("User not found");
+			if (partyId == null || partyId.isEmpty()) {
+				return ServiceUtil.returnError("user cannot be empty");
 			}
-			GenericValue examIdAlreadyExits = EntityQuery.use(delegator).from("PartyExamRelationship").where("examId", examId).queryFirst();
-			if (examIdAlreadyExits == null) {
-				return ServiceUtil.returnError("Exam not found");
+			if (examId == null || examId.isEmpty()) {
+				return ServiceUtil.returnError("exam cannot be empty");
 			}
-
-			GenericValue examAssignId = EntityQuery.use(delegator).from("PartyExamRelationship").where("partyId", partyId, "examId", examId)
-							.queryFirst();
-			if (examAssignId == null) {
-				return ServiceUtil.returnError("Exam is already not assigned to the user");
-			}
+//			GenericValue partyIdAlreadyExits = EntityQuery.use(delegator).from("PartyExamRelationship").where("partyId", partyId)
+//							.queryFirst();
+//			if (partyIdAlreadyExits == null) {
+//				return ServiceUtil.returnError("User not found");
+//			}
+//			GenericValue examIdAlreadyExits = EntityQuery.use(delegator).from("PartyExamRelationship").where("examId", examId).queryFirst();
+//			if (examIdAlreadyExits == null) {
+//				return ServiceUtil.returnError("Exam not found");
+//			}
+//
+//			GenericValue examAssignId = EntityQuery.use(delegator).from("PartyExamRelationship").where("partyId", partyId, "examId", examId)
+//							.queryFirst();
+//			if (examAssignId == null) {
+//				return ServiceUtil.returnError("Exam is already not assigned to the user");
+//			}
 			Map<String, Object> result = dispatcher.runSync("removeAssignedValue", input);
 
 			if (ServiceUtil.isError(result)) {
@@ -125,7 +131,7 @@ public class ExamAssignToUserService {
 			}
 			return ServiceUtil.returnSuccess("Exam removed successfully");
 
-		} catch (GenericEntityException | GenericServiceException e) {
+		} catch ( GenericServiceException e) {
 			Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
 			return ServiceUtil.returnError("Error, occur during remove the assigned Exam" + e.getMessage());
 		}
@@ -174,17 +180,17 @@ public class ExamAssignToUserService {
 		Delegator delegator = context.getDelegator();
 
 		try {
-			GenericValue partyIdAlreadyExits = EntityQuery.use(delegator).from("PartyExamRelationship")
-							.where("partyId", input.get("partyId")).queryFirst();
-			if (partyIdAlreadyExits == null) {
-				return ServiceUtil.returnError("User not found");
-			}
-			GenericValue examIdAlreadyExits = EntityQuery.use(delegator).from("PartyExamRelationship").where("examId", input.get("examId"))
-							.queryFirst();
-			if (examIdAlreadyExits == null) {
-				return ServiceUtil.returnError("Exam not found");
-			}
-
+//			GenericValue partyIdAlreadyExits = EntityQuery.use(delegator).from("PartyExamRelationship")
+//							.where("partyId", input.get("partyId")).queryFirst();
+//			if (partyIdAlreadyExits == null) {
+//				return ServiceUtil.returnError("User not found");
+//			}
+//			GenericValue examIdAlreadyExits = EntityQuery.use(delegator).from("PartyExamRelationship").where("examId", input.get("examId"))
+//							.queryFirst();
+//			if (examIdAlreadyExits == null) {
+//				return ServiceUtil.returnError("Exam not found");
+//			}
+//
 			GenericValue getRecords = EntityQuery.use(delegator).from("PartyExamRelationship")
 							.where("partyId", input.get("partyId"), "examId", input.get("examId")).queryFirst();
 			if (getRecords == null) {

@@ -237,4 +237,22 @@
             <key-map field-name="partyId"/>
         </view-link>
     </view-entity>
+    
+    
+    <view-entity entity-name="ExamNotAssignedUser" package-name="">
+        <member-entity entity-alias="PPI" entity-name="PartyPersonalInfo"/>
+        <member-entity entity-alias="PER" entity-name="PartyExamRelationship"/>
+        
+        <alias entity-alias="PPI" name="roleTypeId"/>
+        <alias entity-alias="PPI" name="partyId"/>
+        <alias entity-alias="PPI" name="partyTypeId"/>
+        <alias entity-alias="PPI" name="statusId"/>
+        <alias entity-alias="PPI" name="firstName"/>
+        <alias entity-alias="PPI" name="lastName"/> 
+        
+      <entity-condition>
+        <condition-expr entity-alias="PER" field-name="partyId" operator="not-equals" value=""/>
+    </entity-condition>
+    
+    </view-entity>
 </entitymodel>
