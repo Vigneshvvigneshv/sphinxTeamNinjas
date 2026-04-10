@@ -25,7 +25,7 @@ import org.apache.ofbiz.service.ServiceContainer;
 @Path("/exam")
 public class ExamResource {
 	@POST
-	@Path("/createexam")
+	@Path("/create-exam")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 //	public Response createExam(Map<String,Object> input,@Context HttpServletRequest request,@Context HttpServletResponse response) {
@@ -55,7 +55,7 @@ public class ExamResource {
 	
 	
 	@DELETE
-	@Path("/deleteexam")
+	@Path("/delete-exam")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 //	public Response deleteExam(Map<String,Object> input,@Context HttpServletRequest request,@Context HttpServletResponse response) {
@@ -81,7 +81,7 @@ public class ExamResource {
 	
 	
 	@PUT
-	@Path("/updateexam")
+	@Path("/update-exam")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateExam(@Context HttpServletRequest request,@Context HttpServletResponse response){
@@ -104,7 +104,7 @@ public class ExamResource {
 	
 	
 	@GET
-	@Path("/getallexam")
+	@Path("/get-all-exam")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getAllExam(@Context HttpServletRequest request,@Context HttpServletResponse response){

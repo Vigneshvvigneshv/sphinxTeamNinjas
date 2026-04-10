@@ -26,11 +26,11 @@ import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceContainer;
 import org.apache.ofbiz.service.ServiceUtil;
 
-@Path("/generatequestions")
+@Path("/generate-questions")
 public class GenerateQuestionResource {
 
 	@POST
-	@Path("/generatequestion")
+	@Path("/generate-question")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response generateQuestionsByTopic(@Context HttpServletRequest request, @Context HttpServletResponse reponse) {

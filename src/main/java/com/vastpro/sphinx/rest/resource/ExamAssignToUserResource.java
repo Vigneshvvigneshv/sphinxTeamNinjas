@@ -21,11 +21,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 
-@Path("/examassign")
+@Path("/exam-assign")
 public class ExamAssignToUserResource {
 	
 	@POST
-	@Path("/assignexam")
+	@Path("/assign-exam")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response assignExam(@Context HttpServletRequest request) {
@@ -46,7 +46,7 @@ public class ExamAssignToUserResource {
 	}
 	
 	@DELETE
-	@Path("/removeassignedexam")
+	@Path("/remove-assigned-exam")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response removeAssignedExam(@Context HttpServletRequest request) {
@@ -62,7 +62,7 @@ public class ExamAssignToUserResource {
 		}
 	}
 	@PUT
-	@Path("/updateassignedexam")
+	@Path("/update-assigned-exam")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateAssignedExam(@Context HttpServletRequest request,@Context HttpServletResponse response) {
@@ -84,7 +84,7 @@ public class ExamAssignToUserResource {
 	
 	
 	@PUT
-	@Path("/increaseattempts")
+	@Path("/increase-attempts")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response increaseAttempts(@Context HttpServletRequest request,@Context HttpServletResponse response){
@@ -103,7 +103,7 @@ public class ExamAssignToUserResource {
 	} 
 	
 	@GET
-	@Path("/getassigneduser")
+	@Path("/get-assigned-user")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAssignedUser(@Context HttpServletRequest request) {

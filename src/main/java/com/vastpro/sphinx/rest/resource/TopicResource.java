@@ -28,7 +28,7 @@ import com.vastpro.sphinx.dto.TopicDTO;
 @Consumes(MediaType.APPLICATION_JSON)
 public class TopicResource {
 	@POST
-	@Path("/createtopic")
+	@Path("/create-topic")
 	public  Response createTopic(@Context HttpServletRequest request) {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		if (dispatcher == null) {
@@ -50,7 +50,7 @@ public class TopicResource {
 	}
 	
 	@PUT
-	@Path("/updatetopic")
+	@Path("/update-topic")
 	public  Response updateTopic(@Context HttpServletRequest request) {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		if (dispatcher == null) {
@@ -73,7 +73,7 @@ public class TopicResource {
 	}
 	
 	@DELETE
-	@Path("/deletetopic")
+	@Path("/delete-topic")
 	public  Response deleteTopic(@Context HttpServletRequest request) {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		if (dispatcher == null) {
@@ -96,7 +96,7 @@ public class TopicResource {
 	
 	
 	@GET
-	@Path("/getalltopic")
+	@Path("/get-all-topic")
 	public  Response getTopic(@Context HttpServletRequest request) {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		if (dispatcher == null) {

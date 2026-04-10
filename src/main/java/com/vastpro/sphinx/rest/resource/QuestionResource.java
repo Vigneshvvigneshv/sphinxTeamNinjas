@@ -3,7 +3,9 @@ package com.vastpro.sphinx.rest.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -42,7 +44,7 @@ public class QuestionResource {
 	private ServletContext servletContext;
 
 	@POST
-	@Path("/createquestion")
+	@Path("/create-question")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createQuestion(@Context HttpServletRequest request, @Context HttpServletResponse response) {
@@ -80,7 +82,7 @@ public class QuestionResource {
 	}
 
 	@PUT
-	@Path("/updatequestion")
+	@Path("/update-question")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateQuestion(@Context HttpServletRequest request, @Context HttpServletResponse response) {
@@ -94,7 +96,7 @@ public class QuestionResource {
 		Map<String, Object> result = new HashMap<>();
 		try {
 
-			// questionId must be sent by frontend
+		
 			String questionIdStr = (String) request.getAttribute("questionId");
 			if (questionIdStr == null) {
 				result.put("status", "ERROR");
@@ -144,11 +146,11 @@ public class QuestionResource {
 	}
 
 	@DELETE
-	@Path("/deletequestion")
+	@Path("/delete-question")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteQuestion(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-		Map<String, Object> result = ServiceUtil.returnSuccess();
+		Map<String, Object> result = new HashMap<>();
 
 		// getting dispatcher from request
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -157,41 +159,82 @@ public class QuestionResource {
 		}
 
 		try {
-			String questionIdStr = String.valueOf(request.getAttribute("questionId"));
+			
+			List<String> questionIdList =(List<String>)request.getAttribute("questionIds");
 
-			if (questionIdStr == null || questionIdStr.trim().isEmpty()) {
+			if (questionIdList == null || questionIdList.isEmpty()) {
 				result.put("responseMessage", "ERROR");
-				result.put("message", "questionId is required");
+				result.put("message", "questionIds is required and must not be empty");
 				return Response.status(400).entity(result).build();
 			}
 
-			Long questionId = Long.valueOf(questionIdStr);
+			 List<Long> questionIds = new ArrayList<>();
+			 
+			 for(String question:questionIdList) {
+				 if (question == null) {
+					 continue;
+				 }
+				 try {
+		                questionIds.add(Long.valueOf(question.toString()));
+		            } catch (NumberFormatException e) {
+		                result.put("responseMessage", "ERROR");
+		                result.put("message", "Invalid questionId value: " + question);
+		                return Response.status(400).entity(result).build();
+		            }
+			 }
+		
+			 if (questionIds.isEmpty()) {
+		            result.put("responseMessage", "ERROR");
+		            result.put("message", "No valid questionIds provided");
+		            return Response.status(400).entity(result).build();
+		        }
 
+			 
+			//Call Service
 			Map<String, Object> input = new HashMap<String, Object>();
-			input.put("questionId", questionId);
+			input.put("questionIds", questionIds);
 
 			// Call service
 			Map<String, Object> serviceResult = dispatcher.runSync("deleteQuestionMaster", input);
 
 			if (ServiceUtil.isError(serviceResult)) {
 				result.put("responseMessage", "ERROR");
-
+				result.put("message", ServiceUtil.getErrorMessage(serviceResult));
 				return Response.status(500).entity(result).build();
 			}
 
-			result.put("responseMessage", "SUCCESS");
-			result.put("message", "question deleted Successfully");
-			return Response.ok(result).build();
+			 List<Long> failedIds = (List<Long>) serviceResult.get("failedIds");
+			 int deletedCount = ((Number) serviceResult.get("deletedCount")).intValue();
+			 
+			 
+			 //partialy questions deleted successfully
+			 if (failedIds != null && !failedIds.isEmpty()) {
+		            result.put("responseMessage", "PARTIAL");
+		            result.put("message", deletedCount + " question(s) deleted; "+ failedIds.size() + " failed");
+		            result.put("deletedCount", deletedCount);
+		            result.put("failedIds", failedIds);
+		            result.put("errors", serviceResult.get("errors"));
+		            return Response.status(207).entity(result).build(); // 207 Multi-Status
+		        }
+			 
+			 //all questions deleted successfully
+		        result.put("responseMessage", "SUCCESS");
+		        result.put("message", deletedCount + " question(s) deleted successfully");
+		        result.put("deletedCount", deletedCount);
+		        result.put("failedIds", List.of());
+		        return Response.ok(result).build();
+			
 
-		} catch (Exception e) {
+		} catch (GenericServiceException e) {
+			e.printStackTrace();
 			result.put("responseMessage", "ERROR");
-			result.put("message", e.getMessage());
+			result.put("message","Unexpected Error "+ e.getMessage());
 			return Response.status(500).entity(result).build();
 		}
 	}
 
 	@GET
-	@Path("/getquestionsbytopic")
+	@Path("/getquestions-by-topic")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getQuestionsByTopic(@Context HttpServletRequest request, @QueryParam("topicId") String topicId,
@@ -252,7 +295,7 @@ public class QuestionResource {
 	}
 
 	@GET
-	@Path("/downloadTemplate")
+	@Path("/download-Template")
 	@Produces("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 	public Response downloadTemplate() {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
@@ -331,7 +374,7 @@ public class QuestionResource {
 	}
 
 	@GET
-	@Path("/getquestionbyid")
+	@Path("/getquestion-by-id")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getQuetionsById(@QueryParam("questionId") String questionIdStr, @Context HttpServletRequest request,
