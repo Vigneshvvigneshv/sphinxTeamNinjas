@@ -60,24 +60,22 @@ public class ExamService {
 			createMap.put("description", input.get("description"));
 			try {
 				createMap.put("noOfQuestions", Long.valueOf((String) input.get("noOfQuestions")));
-			}catch(NumberFormatException e) {
-				Debug.logError(e.getMessage(),ExamService.class.getName());
+			} catch (NumberFormatException e) {
+				Debug.logError(e.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Number of question should be in number");
 			}
 			try {
 				createMap.put("duration", Long.valueOf((String) input.get("duration")));
-			}catch(NumberFormatException e) {
-				Debug.logError(e.getMessage(),ExamService.class.getName());
+			} catch (NumberFormatException e) {
+				Debug.logError(e.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Duration should be in number");
 			}
 			try {
 				createMap.put("passPercentage", Long.valueOf((String) input.get("passPercentage")));
-			}catch(NumberFormatException e) {
-				Debug.logError(e.getMessage(),ExamService.class.getName());
+			} catch (NumberFormatException e) {
+				Debug.logError(e.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Pass Percentage should be in number");
 			}
-			
-			
 
 			TransactionUtil.begin();
 			// call the entity-auto service it will create the record
@@ -134,70 +132,77 @@ public class ExamService {
 	 * @return map(map contains the success and error message)
 	 */
 
-	public static Map<String, Object> deleteExam(DispatchContext context, Map<String, Object> input) {
+	public static Map<String, Object> deleteExam(DispatchContext context, Map<String, Object> param) {
 		LocalDispatcher dispatcher = context.getDispatcher();
 		Delegator delegator = context.getDelegator();
-		try {
-			// before update we check the examId is present or not
-			GenericValue examId = EntityQuery.use(delegator).from("ExamMaster").where("examId", input.get("examId")).queryFirst();
-
-			if (examId == null) {
-				return ServiceUtil.returnSuccess("Exam not found");
-			}
-
-			List<GenericValue> examPresentInExamTopic = EntityQuery.use(delegator).from("ExamTopicMapping")
-							.where("examId", input.get("examId")).queryList();
-
-			if (examPresentInExamTopic.size() > 0) {
-				// Map<String, Object> result1 = dispatcher.runSync("deleteTopicInExamTopicMaster", input);
-				// if (ServiceUtil.isError(result1)) {
-				// return ServiceUtil.returnError((String) result1.get("errorMessage"));
-				// }
-				for (GenericValue data : examPresentInExamTopic) {
-					data.remove();
-				}
-			}
-			delegator.removeByAnd("QuestionBankMasterB", UtilMisc.toMap("examId", input.get("examId")));
-
-			TransactionUtil.begin();
-			// this statement is delete the relation between admin and exam
-			// it remove the relation when the admin delete the exam
-			Map<String, Object> result1 = dispatcher.runSync("deleteAdminPartyExamRel",
-							Map.of("partyId", input.get("partyId"), "examId", examId.getString("examId")));
-
-			// from the entity-auto service return the map the map contain success or error
-			// to add the data
-			// we validate the it gives the error or success and show the message id it is
-			// error
-			if (ServiceUtil.isError(result1)) {
-				TransactionUtil.rollback();
-				return ServiceUtil.returnError("Error, occur during delete the Exam");
-				// return ServiceUtil.returnError((String) result1.get("errorMessage"));
-			}
-
-			Map<String, Object> result = dispatcher.runSync("deleteExam", input);
-
-			if (ServiceUtil.isError(result)) {
-				TransactionUtil.rollback();
-				return ServiceUtil.returnError("Error, occur during delete the Exam");
-				// return ServiceUtil.returnError((String) result.get("errorMessage"));
-			}
-			TransactionUtil.commit();
-			return ServiceUtil.returnSuccess("Exam deleted successfully");
-		} catch (GenericServiceException | GenericEntityException e) {
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
+		String partyId=(String) param.get("partyId");
+		List<String> deleteList = (List<String>) param.get("deleteList");
+		for (String input : deleteList) {
 			try {
-				TransactionUtil.rollback();
-			} catch (GenericTransactionException e1) {
+				// before update we check the examId is present or not
+				// GenericValue examId = EntityQuery.use(delegator).from("ExamMaster").where("examId", input.get("examId")).queryFirst();
+				//
+				// if (examId == null) {
+				// return ServiceUtil.returnSuccess("Exam not found");
+				// }
+
+				// List<GenericValue> examPresentInExamTopic = EntityQuery.use(delegator).from("ExamTopicMapping")
+				// .where("examId", input.get("examId")).queryList();
+				//
+				// if (examPresentInExamTopic.size() > 0) {
+				// // Map<String, Object> result1 = dispatcher.runSync("deleteTopicInExamTopicMaster", input);
+				// // if (ServiceUtil.isError(result1)) {
+				// // return ServiceUtil.returnError((String) result1.get("errorMessage"));
+				// // }
+				// for (GenericValue data : examPresentInExamTopic) {
+				// data.remove();
+				// }
+				// }
+
+				TransactionUtil.begin();
+
+				delegator.removeByAnd("ExamTopicMapping", UtilMisc.toMap("examId", input));
+				delegator.removeByAnd("QuestionBankMasterB", UtilMisc.toMap("examId", input));
+				// this statement is delete the relation between admin and exam
+				// it remove the relation when the admin delete the exam
+				Map<String, Object> result1 = dispatcher.runSync("deleteAdminPartyExamRel",
+								Map.of("partyId", partyId, "examId", input));
+
+				// from the entity-auto service return the map the map contain success or error
+				// to add the data
+				// we validate the it gives the error or success and show the message id it is
+				// error
+				if (ServiceUtil.isError(result1)) {
+					TransactionUtil.rollback();
+					return ServiceUtil.returnError("Error, occur during delete the Exam");
+					// return ServiceUtil.returnError((String) result1.get("errorMessage"));
+				}
+
+				Map<String, Object> result = dispatcher.runSync("deleteExam", UtilMisc.toMap("examId", input));
+
+				if (ServiceUtil.isError(result)) {
+					TransactionUtil.rollback();
+					return ServiceUtil.returnError("Error, occur during delete the Exam");
+					// return ServiceUtil.returnError((String) result.get("errorMessage"));
+				}
+				TransactionUtil.commit();
+
+			} catch (GenericServiceException | GenericEntityException e) {
 				// TODO Auto-generated catch block
-				// e1.printStackTrace();
-				Debug.logError(e1.getMessage(), ExamService.class.getName());
-				return ServiceUtil.returnError("Error, occur during delete exam" + e1.getMessage());
+				// e.printStackTrace();
+				try {
+					TransactionUtil.rollback();
+				} catch (GenericTransactionException e1) {
+					// TODO Auto-generated catch block
+					// e1.printStackTrace();
+					Debug.logError(e1.getMessage(), ExamService.class.getName());
+					return ServiceUtil.returnError("Error, occur during delete exam" + e1.getMessage());
+				}
+				Debug.logError(e.getMessage(), ExamService.class.getName());
+				return ServiceUtil.returnError("Error, occur during delete exam" + e.getMessage());
 			}
-			Debug.logError(e.getMessage(), ExamService.class.getName());
-			return ServiceUtil.returnError("Error, occur during delete exam" + e.getMessage());
 		}
+		return ServiceUtil.returnSuccess("Exam deleted successfully");
 	}
 
 	/**
@@ -226,20 +231,20 @@ public class ExamService {
 			createMap.put("description", input.get("description"));
 			try {
 				createMap.put("noOfQuestions", Long.valueOf((String) input.get("noOfQuestions")));
-			}catch(NumberFormatException e) {
-				Debug.logError(e.getMessage(),ExamService.class.getName());
+			} catch (NumberFormatException e) {
+				Debug.logError(e.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Number of question should be in number");
 			}
 			try {
 				createMap.put("duration", Long.valueOf((String) input.get("duration")));
-			}catch(NumberFormatException e) {
-				Debug.logError(e.getMessage(),ExamService.class.getName());
+			} catch (NumberFormatException e) {
+				Debug.logError(e.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Duration should be in number");
 			}
 			try {
 				createMap.put("passPercentage", Long.valueOf((String) input.get("passPercentage")));
-			}catch(NumberFormatException e) {
-				Debug.logError(e.getMessage(),ExamService.class.getName());
+			} catch (NumberFormatException e) {
+				Debug.logError(e.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Pass Percentage should be in number");
 			}
 

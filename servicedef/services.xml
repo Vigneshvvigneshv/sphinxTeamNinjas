@@ -185,7 +185,7 @@
 	<!-- delete Exam -->
 	<service engine="java" name="deleteExamOwn"
 		location="com.vastpro.sphinx.services.ExamService" invoke="deleteExam">
-		<attribute name="examId" mode="IN" type="String"></attribute>
+		<attribute name="deleteList" mode="IN" type="List"></attribute>
 		<!-- to delete the record in the AdminPartyExamRel -->
 		<attribute name="partyId" mode="IN" type="String"></attribute>
 	</service>

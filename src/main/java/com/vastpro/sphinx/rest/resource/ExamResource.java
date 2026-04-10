@@ -68,7 +68,7 @@ public class ExamResource {
 		
 		try {
 			Map<String,Object> input= new HashMap<String, Object>();
-			input.put("examId",request.getAttribute("examId"));
+			input.put("deleteList",request.getAttribute("deleteList"));
 			input.put("partyId",request.getAttribute("partyId"));
 			
 			Map<String,Object> result=dispatcher.runSync("deleteExamOwn", input);
