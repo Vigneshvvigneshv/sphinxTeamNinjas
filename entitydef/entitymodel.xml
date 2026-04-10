@@ -238,6 +238,25 @@
         </view-link>
     </view-entity>
     
+        <!-- Admin , Exam Join -->
+       <view-entity entity-name="AdminExamRelationInfo" package-name="">
+        <member-entity entity-alias="EM" entity-name="ExamMaster"/>
+        <member-entity entity-alias="APER" entity-name="AdminPartyExamRel"/>
+        
+        
+        <alias entity-alias="EM" name="examId"/>
+        <alias entity-alias="EM" name="examName"/>
+        <alias entity-alias="EM" name="description"/>
+        <alias entity-alias="EM" name="noOfQuestions"/>
+        <alias entity-alias="EM" name="duration"/>
+        <alias entity-alias="EM" name="passPercentage"/> 
+        
+        <view-link entity-alias="APER" rel-entity-alias="EM">
+            <key-map field-name="examId"/>
+        </view-link>
+        
+    </view-entity>
+    
     
     <view-entity entity-name="ExamNotAssignedUser" package-name="">
         <member-entity entity-alias="PPI" entity-name="PartyPersonalInfo"/>
@@ -253,6 +272,5 @@
       <entity-condition>
         <condition-expr entity-alias="PER" field-name="partyId" operator="not-equals" value=""/>
     </entity-condition>
-    
     </view-entity>
 </entitymodel>

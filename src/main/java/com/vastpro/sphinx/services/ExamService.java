@@ -276,7 +276,7 @@ public class ExamService {
 		Delegator delegator = context.getDelegator();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		try {
-			List<GenericValue> examList = EntityQuery.use(delegator).from("ExamMaster").where("partyId",input.get("PartyId")).queryList();
+			List<GenericValue> examList = EntityQuery.use(delegator).from("AdminExamRelationInfo").where("partyId",input.get("partyId")).queryList();
 			result.put("examList", examList);
 			return result;
 
