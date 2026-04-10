@@ -93,7 +93,7 @@ public class UserResource {
 	}
 
 	@GET
-	@Path("/getalluser")
+	@Path("/getall-user")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllUser(@Context HttpServletRequest request) {

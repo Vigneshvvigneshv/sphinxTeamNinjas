@@ -104,7 +104,7 @@ public class ExamResource {
 	
 	
 	@GET
-	@Path("/get-all-exam")
+	@Path("/getall-exam")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getAllExam(@Context HttpServletRequest request,@Context HttpServletResponse response){

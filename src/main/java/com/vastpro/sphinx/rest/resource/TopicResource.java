@@ -96,7 +96,7 @@ public class TopicResource {
 	
 	
 	@GET
-	@Path("/get-all-topic")
+	@Path("/getall-topic")
 	public  Response getTopic(@Context HttpServletRequest request) {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		if (dispatcher == null) {
