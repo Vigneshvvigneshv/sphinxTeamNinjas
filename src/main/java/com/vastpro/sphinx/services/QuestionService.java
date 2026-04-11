@@ -299,6 +299,75 @@ public class QuestionService {
 	
 	
 	
+	public Map<String,Object>getAllQuestion(DispatchContext dctx,Map<String,Object>context){
+		Delegator delegator = dctx.getDelegator();
+		Map<String,Object>result=ServiceUtil.returnSuccess("");
+		try {
+			Integer pageNo = (Integer) context.get("pageNo");
+			Integer pageSize = (Integer) context.get("pageSize");
+			
+			if (pageNo == null || pageNo < 1) {
+				pageNo = 1;
+			}
+			if (pageSize == null || pageSize < 1) {
+				pageSize = 10;
+			}
+			
+			
+			long totalCount=EntityQuery.use(delegator).from("questionMaster").queryCount();
+			
+			
+			int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+			int offset = (pageNo - 1) * pageSize;
+			
+			if(totalCount==0) {
+				return ServiceUtil.returnError("No Question Availbale");
+			}
+			
+			List<GenericValue> questions = EntityQuery.use(delegator).from("questionMaster").orderBy("questionId")
+							.cursorScrollInsensitive().offset(offset)
+						    .limit(pageSize).queryList();
+
+			
+			List<Map<String,Object>>questionList=new ArrayList<Map<String,Object>>();
+			
+			for(GenericValue q:questions) {
+				Map<String, Object> qMap = new HashMap<>();
+
+				GenericValue topicName=EntityQuery.use(delegator).from("topicMaster").where("topicId",q.getString("topicId")).queryOne();
+				qMap.put("topicName", topicName.getString("topicName"));
+				qMap.put("questionId", q.getLong("questionId"));
+				qMap.put("questionDetail", q.getString("questionDetail"));
+				qMap.put("optionA", q.getString("optionA"));
+				qMap.put("optionB", q.getString("optionB"));
+				qMap.put("optionC", q.getString("optionC"));
+				qMap.put("optionD", q.getString("optionD"));
+				qMap.put("numAnswers", q.getLong("numAnswers"));
+				qMap.put("questionTypeId", q.getString("questionTypeId"));
+				qMap.put("difficultyLevel", q.getString("difficultyLevel"));
+				qMap.put("topicId", q.getString("topicId"));
+				qMap.put("negativeMarkValue", q.getBigDecimal("negativeMarkValue"));
+				qMap.put("answer", q.getString("answer"));
+				
+				questionList.add(qMap);
+			}
+			result.put("totalCount", totalCount);
+			result.put("questionList", questionList);
+
+			result.put("pageNo", pageNo);
+			result.put("pageSize", pageSize);
+			result.put("totalPages", totalPages);
+			result.put("hasNext", pageNo < totalPages);
+			result.put("hasPrevious", pageNo > 1);
+			
+			return result;
+		}catch(Exception e) {
+			e.printStackTrace();
+			result.put("error", e.getMessage());
+			return result;
+		}
+	}
+	
 	//getQuestionByTopic service
 	public static Map<String, Object> getQuestionsByTopic(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();

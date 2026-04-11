@@ -160,7 +160,7 @@ public class QuestionResource {
 
 		try {
 			
-			List<String> questionIdList =(List<String>)request.getAttribute("questionIds");
+			List<Integer> questionIdList =(List<Integer>)request.getAttribute("questionIds");
 
 			if (questionIdList == null || questionIdList.isEmpty()) {
 				result.put("responseMessage", "ERROR");
@@ -170,8 +170,8 @@ public class QuestionResource {
 
 			 List<Long> questionIds = new ArrayList<>();
 			 
-			 for(String question:questionIdList) {
-				 if (question == null) {
+			 for(Integer question:questionIdList) {
+				 if (question < 0) {
 					 continue;
 				 }
 				 try {
@@ -421,7 +421,40 @@ public class QuestionResource {
 
 	}
 
+	
+	@GET
+	@Path("/getall-questions")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllQuestions(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-		return null;
+		
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		if (dispatcher == null) {
+			dispatcher = ServiceContainer.getLocalDispatcher("sphinx", (Delegator) request.getAttribute("delegator"));
+		}
+
+		try {
+			String pageNo=(String)request.getParameter("pageNo");
+			
+			Map<String,Object>input=new HashMap<>();
+			input.put("pageNo",pageNo);
+			
+			Map<String, Object> ServiceResult = dispatcher.runSync("getallquestion",input);
+			
+			
+			
+			
+			if(ServiceUtil.isError(ServiceResult)){
+				return Response.status(400).entity(ServiceUtil.getErrorMessage(ServiceResult)).build();
+			}
+			
+			
+			return Response.ok().entity(ServiceResult).build();
+			
+			}catch(GenericServiceException e) {
+			e.printStackTrace();
+			return Response.status(500).entity(Map.of("error",e.getMessage())).build();
+		}
+		
 	}
 }
