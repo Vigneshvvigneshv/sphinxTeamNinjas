@@ -221,6 +221,8 @@
         <member-entity entity-alias="PY" entity-name="Party"/>
         <member-entity entity-alias="PN" entity-name="Person"/>
         <member-entity entity-alias="PR" entity-name="PartyRole"/>
+        <member-entity entity-alias="UL" entity-name="UserLogin"/>
+        
         
         <alias entity-alias="PR" name="roleTypeId"/>
         <alias entity-alias="PY" name="partyId"/>
@@ -228,12 +230,16 @@
         <alias entity-alias="PY" name="statusId"/>
         <alias entity-alias="PN" name="firstName"/>
         <alias entity-alias="PN" name="lastName"/> 
+        <alias entity-alias="UL" name="userLoginId"/> 
         
         <view-link entity-alias="PY" rel-entity-alias="PN">
             <key-map field-name="partyId"/>
         </view-link>
         
         <view-link entity-alias="PY" rel-entity-alias="PR">
+            <key-map field-name="partyId"/>
+        </view-link>
+          <view-link entity-alias="PY" rel-entity-alias="UL">
             <key-map field-name="partyId"/>
         </view-link>
     </view-entity>
@@ -250,12 +256,35 @@
         <alias entity-alias="EM" name="noOfQuestions"/>
         <alias entity-alias="EM" name="duration"/>
         <alias entity-alias="EM" name="passPercentage"/> 
-        
+        <alias entity-alias="APER" name="partyId"/> 
         <view-link entity-alias="APER" rel-entity-alias="EM">
             <key-map field-name="examId"/>
         </view-link>
         
     </view-entity>
+    
+    <!-- exam and party Relationship -->
+     <view-entity entity-name="ExamPartyRelationInfo" package-name="">
+        <member-entity entity-alias="EM" entity-name="ExamMaster"/>
+        <member-entity entity-alias="PER" entity-name="PartyExamRelationship"/>
+        
+        
+        <alias entity-alias="EM" name="examId"/>
+        <alias entity-alias="EM" name="examName"/>
+        <alias entity-alias="EM" name="description"/>
+        <alias entity-alias="EM" name="noOfQuestions"/>
+        <alias entity-alias="EM" name="duration"/>
+        <alias entity-alias="EM" name="passPercentage"/> 
+        <alias entity-alias="PER" name="partyId"/> 
+        <view-link entity-alias="PER" rel-entity-alias="EM">
+            <key-map field-name="examId"/>
+        </view-link>
+        
+    </view-entity>
+    
+    
+    
+    
     
     
     <view-entity entity-name="ExamNotAssignedUser" package-name="">

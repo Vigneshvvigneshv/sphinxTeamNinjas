@@ -313,4 +313,19 @@ public class ExamService {
 			return ServiceUtil.returnError("Error, occur during get exam by id" + e.getMessage());
 		}
 	}
+	//get the exam by the user(using the partyId)
+	public static Map<String, Object> getExamByPartyId(DispatchContext context, Map<String, Object> input) {
+		Delegator delegator = context.getDelegator();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		try {
+			// before update we check the examId is present or not
+			List<GenericValue> examData = EntityQuery.use(delegator).from("ExamPartyRelationInfo").where("partyId", input.get("partyId")).queryList();
+			result.put("examList", examData);
+			return result;
+		} catch (GenericEntityException e) {
+			Debug.logError(e.getMessage(), ExamService.class.getName());
+			return ServiceUtil.returnError("Error, occur during get exam by id" + e.getMessage());
+		}
+	}
+	
 }

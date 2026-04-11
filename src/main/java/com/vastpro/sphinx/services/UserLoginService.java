@@ -31,6 +31,7 @@ public class UserLoginService {
 			}
 
 			if (PasswordHashing.checkPassword(String.valueOf(context.get("password")), user.getString("currentPassword"))) {
+				// if (String.valueOf(context.get("password")).equals(user.getString("currentPassword"))) {
 				GenericValue roleType = EntityQuery.use(delegator).from("PartyRole").where("partyId", user.get("partyId")).queryFirst();
 
 				// result.put("successMessage", "User Login Successfully");
@@ -41,9 +42,11 @@ public class UserLoginService {
 				return error;
 			}
 
-		} catch (GenericEntityException e) {
-//			e.printStackTrace();
-			Debug.logError(e.getMessage(),UserLoginService.class.getName());
+		} catch (
+
+		GenericEntityException e) {
+			// e.printStackTrace();
+			Debug.logError(e.getMessage(), UserLoginService.class.getName());
 			return ServiceUtil.returnError("Login Failed, Try Again");
 		}
 

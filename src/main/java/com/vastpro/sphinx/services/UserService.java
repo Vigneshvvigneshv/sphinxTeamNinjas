@@ -3,11 +3,14 @@ package com.vastpro.sphinx.services;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.DispatchContext;
+import org.apache.ofbiz.service.GenericServiceException;
+import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
 
 public class UserService {
@@ -19,14 +22,31 @@ public class UserService {
 			List<GenericValue> userList = EntityQuery.use(delegator).from("PartyPersonalInfo")
 							.where("partyTypeId", "PERSON", "statusId", "PARTY_ENABLED", "roleTypeId", "SPHINX_USER").queryList();
 			// List<GenericValue> userList=EntityQuery.use(delegator).from("UserLogin").queryList();
-
-			if (!(userList.size() > 0)) {
-				return ServiceUtil.returnSuccess("No user Found");
-			}
+//
+//			if (!(userList.size() > 0)) {
+//				return ServiceUtil.returnSuccess("No user Found");
+//			}
 			result.put("userList", userList);
 			return result;
 		} catch (GenericEntityException e) {
+			Debug.logError(e.getMessage(), UserService.class.getName());
 			return ServiceUtil.returnError("Error,Occur during get the user records" + e.getMessage());
+		}
+	}
+
+	// this method is used to disable the user
+	public static Map<String, Object> disableUser(DispatchContext context, Map<String, Object> input) {
+		LocalDispatcher dispatcher = context.getDispatcher();
+		try {
+			input.put("statusId","PARTY_DISABLED");
+			Map<String, Object> result =dispatcher.runSync("disableUser", input);
+			if(ServiceUtil.isError(result)) {
+				return ServiceUtil.returnError("Error,Occur during delete the user");
+			}
+			return ServiceUtil.returnSuccess("User deleted");
+		}catch (GenericServiceException e) {
+			Debug.logError(e.getMessage(), UserService.class.getName());
+			return ServiceUtil.returnError("Error,Occur during delete the user");
 		}
 	}
 }

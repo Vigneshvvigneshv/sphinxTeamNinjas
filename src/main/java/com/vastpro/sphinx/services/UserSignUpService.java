@@ -18,7 +18,6 @@ import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
 
 import com.vastpro.sphinx.util.FormValidation;
-import com.vastpro.sphinx.util.PasswordHashing;
 
 public class UserSignUpService {
 	public static Map<String, Object> signUpService(DispatchContext dctx, Map<String, Object> params) {
@@ -41,9 +40,11 @@ public class UserSignUpService {
 			if (!FormValidation.validateEmail(email)) {
 				return ServiceUtil.returnError("Enter a valid email");
 			}
+			if ("SPHINX_ADMIN".equals(role)) {
 
-			if (!FormValidation.validatePassword(password)) {
-				return ServiceUtil.returnError("Password must be strong (8+ chars, upper, lower, number, special)");
+				if (!FormValidation.validatePassword(password)) {
+					return ServiceUtil.returnError("Password must be strong (8+ chars, upper, lower, number, special)");
+				}
 			}
 
 			if (!FormValidation.validateFirstName(firstName)) {
@@ -58,7 +59,7 @@ public class UserSignUpService {
 			}
 
 			// Check if username already exists
-			GenericValue existingUser = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", username).queryOne();
+			GenericValue existingUser = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", username).queryFirst();
 
 			if (existingUser != null) {
 				return ServiceUtil.returnError("Username already exists");
@@ -137,26 +138,26 @@ public class UserSignUpService {
 			if (ServiceUtil.isError(personResult))
 				return handleTransaction();
 
-		       //create user login
-		        Map<String, Object> userLoginInput = new HashMap<>();
-		        userLoginInput.put("userLoginId", username);
-		        
-		        if("SPHINX_ADMIN".equals(role)&&password!=null) {
-		        	userLoginInput.put("currentPassword",password);
-		        }else {
-		        	userLoginInput.put("currentPassword",generatePassword());
-		        }
-		        
-		        userLoginInput.put("enabled", "N");
-		        userLoginInput.put("partyId", partyId);
-		        Map<String, Object> userLoginResult = dispatcher.runSync("createUserLogin", userLoginInput);
-		        if (ServiceUtil.isError(userLoginResult)) return handleTransaction();
+			// create user login
+			Map<String, Object> userLoginInput = new HashMap<>();
+			userLoginInput.put("userLoginId", username);
+
+			if ("SPHINX_ADMIN".equals(role) && password != null) {
+				userLoginInput.put("currentPassword", password);
+			} else {
+				userLoginInput.put("currentPassword", generatePassword());
+			}
+
+			userLoginInput.put("enabled", "N");
+			userLoginInput.put("partyId", partyId);
+			Map<String, Object> userLoginResult = dispatcher.runSync("createUserLogin", userLoginInput);
+			if (ServiceUtil.isError(userLoginResult))
+				return handleTransaction();
 
 			GenericValue naRole = EntityQuery.use(delegator).from("PartyRole").where("partyId", partyId, "roleTypeId", "_NA_").queryOne();
 			if (naRole != null) {
 				naRole.remove();
 			}
-
 
 			// create contact
 			Map<String, Object> contactMechInput = new HashMap<>();
@@ -175,7 +176,6 @@ public class UserSignUpService {
 			if (ServiceUtil.isError(partyContactMechResult))
 				return handleTransaction();
 
-			
 			TransactionUtil.commit();
 			// result.put("partyId", partyId);
 			return ServiceUtil.returnSuccess("Registration Successfull");
@@ -202,12 +202,12 @@ public class UserSignUpService {
 		return ServiceUtil.returnError("Unexcepted error during create the user");
 		// return ServiceUtil.returnError((String)input.get("errorMessage"));
 	}
-	
+
 	private static String generatePassword() {
-		SecureRandom random=new SecureRandom();
-		String passwordChar="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
-		StringBuilder passwordBuilder=new StringBuilder();
-		for(int i=0;i<6;i++) {
+		SecureRandom random = new SecureRandom();
+		String passwordChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+		StringBuilder passwordBuilder = new StringBuilder();
+		for (int i = 0; i < 6; i++) {
 			passwordBuilder.append(passwordChar.charAt(random.nextInt(passwordChar.length())));
 		}
 		return String.valueOf(passwordBuilder);

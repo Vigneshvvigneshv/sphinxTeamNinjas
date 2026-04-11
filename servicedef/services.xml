@@ -22,6 +22,21 @@
         </description>
 	</service>
 	<!-- ====================== user services ================================== -->
+	
+	<!-- Disable the user own  -->
+		<service engine="java" name="disableUserOwn"
+		location="com.vastpro.sphinx.services.UserService" invoke="disableUser">
+		<attribute name="partyId" mode="IN" type="String"
+			optional="false"></attribute>
+	</service>
+	
+	<!-- Disable the user own  -->
+		<service engine="entity-auto" name="disableUser"
+		 invoke="update" default-entity-name="Party">
+		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+	</service>
+	
 	<!-- Get All user -->
 	<service engine="java" name="getAllUser"
 		location="com.vastpro.sphinx.services.UserService" invoke="getAllUser">
@@ -217,6 +232,13 @@
 		<attribute name="examList" mode="OUT" type="GenericValue"></attribute>
 	</service>
 
+	<!-- get Exam by PartyId (for user) -->
+	<service engine="java" name="getExamByPartyId"
+		location="com.vastpro.sphinx.services.ExamService"
+		invoke="getExamByPartyId">
+		<attribute name="partyId" mode="IN" type="String"></attribute>
+		<attribute name="examList" mode="OUT" type="List"></attribute>
+	</service>
 
 
 	<!-- ======================================================================= -->

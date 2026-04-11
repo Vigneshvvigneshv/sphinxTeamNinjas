@@ -7,6 +7,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -14,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.DelegatorFactory;
 import org.apache.ofbiz.entity.GenericEntityException;
@@ -100,6 +102,20 @@ public class UserResource {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		try {
 			Map<String, Object> result = dispatcher.runSync("getAllUser", new HashMap<String, Object>());
+			return Response.ok(result).build();
+		} catch (Exception e) {
+			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
+		}
+	}
+	
+	@DELETE
+	@Path("/delete-user")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteUser(@Context HttpServletRequest request) {
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		try {
+			Map<String, Object> result = dispatcher.runSync("disableUserOwn", UtilMisc.toMap("partyId",request.getAttribute("partyId")));
 			return Response.ok(result).build();
 		} catch (Exception e) {
 			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
