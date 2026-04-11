@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.PathParam;
 
+import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceContainer;
@@ -110,7 +111,8 @@ public class ExamResource {
 	public Response getAllExam(@Context HttpServletRequest request,@Context HttpServletResponse response){
 		LocalDispatcher dispatcher=(LocalDispatcher)request.getAttribute("dispatcher");
 		try {
-			Map<String,Object> result=dispatcher.runSync("getAllExam", new HashMap<String, Object>());
+			String partyId=(String)request.getAttribute("partyId");
+			Map<String,Object> result=dispatcher.runSync("getAllExam", UtilMisc.toMap("partyId",partyId));
 			return Response.ok(result).build();
 		}catch(Exception e) {
 			return Response.status(500).entity(Map.of("error", e.getMessage())).build();

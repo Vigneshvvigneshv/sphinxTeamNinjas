@@ -205,6 +205,7 @@
 	<!-- get all Exam -->
 	<service engine="java" name="getAllExam"
 		location="com.vastpro.sphinx.services.ExamService" invoke="getAllExam">
+		<attribute name="partyId" mode="IN" type="String"></attribute>
 		<attribute name="examList" mode="OUT" type="List"></attribute>
 	</service>
 
