@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -103,18 +104,35 @@ public class ExamAssignToUserResource {
 	} 
 	
 	@GET
-	@Path("/get-assigned-user")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/get-assigned-user/{examId}")
+//	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAssignedUser(@Context HttpServletRequest request) {
+	public Response getAssignedUser(@PathParam("examId") String examId,@Context HttpServletRequest request) {
 		LocalDispatcher dispatcher=(LocalDispatcher) request.getAttribute("dispatcher");
 		try {
 			Map<String,Object> input=new HashMap<String, Object>();
-			input.put("examId", request.getAttribute("examId"));
+			input.put("examId", examId);
 			Map<String,Object> result=dispatcher.runSync("getAssignedUser",input);
 			return Response.ok(result).build();
 		}catch(Exception e) {
 			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
 		}
 	}
+	@GET
+	@Path("/get-unassigned-user/{examId}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUnassignedUser(@PathParam("examId") String examId,@Context HttpServletRequest request) {
+		LocalDispatcher dispatcher=(LocalDispatcher) request.getAttribute("dispatcher");
+		try {
+			Map<String,Object> input=new HashMap<String, Object>();
+			input.put("examId", examId);
+			Map<String,Object> result=dispatcher.runSync("getUnassignedUser",input);
+			return Response.ok(result).build();
+		}catch(Exception e) {
+			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
+		}
+	}
+	
+	
 }

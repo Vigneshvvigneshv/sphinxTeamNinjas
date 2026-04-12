@@ -1,5 +1,6 @@
 package com.vastpro.sphinx.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,8 @@ import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
-
+import org.apache.ofbiz.entity.condition.EntityCondition;
+import org.apache.ofbiz.entity.condition.EntityOperator;
 /**
  * this class is used to assign the user to the exam
  */
@@ -31,6 +33,7 @@ public class ExamAssignToUserService {
 	 */
 	public static Map<String, Object> assignExam(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
+		Delegator delegator=context.getDelegator();
 		String examId = (String) input.get("examId");
 
 		List<Map<String, Object>> assignedUser = (List<Map<String, Object>>) input.get("assignedUserList");
@@ -54,16 +57,32 @@ public class ExamAssignToUserService {
 						// rollBackTransaction();
 						// return ServiceUtil.returnError("Exam not found");
 						// }
+						
+						 GenericValue examAlreadyAssigned = EntityQuery.use(delegator).from("PartyExamRelationship").where("examId",
+						examId,"partyId",userMap.get("partyId"))
+						 .queryFirst();
+						 
+						 if(examAlreadyAssigned!=null) {
+							 continue;
+						 }
+						
 						userMap.put("examId", examId);
+						String attempts=(String) userMap.get("allowedAttempts");
+						if(attempts!=null && attempts.isEmpty()) {
+							return ServiceUtil.returnError("Allowed attempts cannot be empty");
+						} 
 						try {
-							userMap.put("allowedAttempts", Long.valueOf((String) userMap.get("allowedAttempts")));
+							userMap.put("allowedAttempts", Long.valueOf(attempts));
 						} catch (NumberFormatException e) {
 							rollBackTransaction();
 							return ServiceUtil.returnError("Attempts should be number");
 						}
-
+						String days=(String) userMap.get("timeoutDays");
+						if(days!=null && days.isEmpty()) {
+							return ServiceUtil.returnError("Allowed attempts cannot be empty");
+						} 
 						try {
-							userMap.put("timeoutDays", Long.valueOf((String) userMap.get("timeoutDays")));
+							userMap.put("timeoutDays", Long.valueOf(days));
 						} catch (NumberFormatException e) {
 							rollBackTransaction();
 							return ServiceUtil.returnError("Days should be number");
@@ -76,7 +95,7 @@ public class ExamAssignToUserService {
 							return ServiceUtil.returnError("Error, occur during assing the Exam to the user");
 						}
 
-					} catch (GenericServiceException e) {
+					} catch (GenericEntityException |GenericServiceException e) {
 
 						rollBackTransaction();
 						Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
@@ -222,12 +241,50 @@ public class ExamAssignToUserService {
 		Delegator delegator = context.getDelegator();
 		Map<String, Object> result = ServiceUtil.returnSuccess("User getted successfully");
 		try {
-			List<GenericValue> assignedUserList = EntityQuery.use(delegator).from("PartyExamRelationship")
+			List<GenericValue> assignedUserList = EntityQuery.use(delegator).from("ExamAssignedUser")
 							.where("examId", input.get("examId")).queryList();
-			if (assignedUserList.size() > 0) {
-				return ServiceUtil.returnError("No user assigned to the exam");
-			}
+//			if (assignedUserList.size() > 0) {
+//				return ServiceUtil.returnError("No user assigned to the exam");
+//			}
 			result.put("assignedUsers", assignedUserList);
+		} catch (GenericEntityException e) {
+			Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
+			return ServiceUtil.returnError("Error, occur during getting the assigned user");
+		}
+		return result;
+	}
+	
+	public static Map<String, Object> getUnassignedUser(DispatchContext context, Map<String, Object> input) {
+		Delegator delegator = context.getDelegator();
+		Map<String, Object> result = ServiceUtil.returnSuccess("User getted successfully");
+		try {
+			List<EntityCondition> conditions = new ArrayList<>();
+
+			// Fixed filters from PPI table
+			conditions.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS, "PERSON"));
+			conditions.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PARTY_ENABLED"));
+			conditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SPHINX_USER"));
+
+			// examId OR null check
+			conditions.add(
+			    EntityCondition.makeCondition(
+			        EntityCondition.makeCondition("examId", EntityOperator.EQUALS, input.get("examId")),
+			        EntityOperator.OR,
+			        EntityCondition.makeCondition("examId", EntityOperator.EQUALS, null)
+			    )
+			);
+
+			// NULL on PER side = unassigned
+			conditions.add(EntityCondition.makeCondition("examPartyId", EntityOperator.EQUALS, null));
+
+			List<GenericValue> unassignedUserList = EntityQuery.use(delegator)
+			        .from("ExamUnassignedUser")
+			        .where(EntityCondition.makeCondition(conditions, EntityOperator.AND))
+			        .queryList();
+//			if (assignedUserList.size() > 0) {
+//				return ServiceUtil.returnError("No user assigned to the exam");
+//			}
+			result.put("unassignedUsers", unassignedUserList);
 		} catch (GenericEntityException e) {
 			Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
 			return ServiceUtil.returnError("Error, occur during getting the assigned user");

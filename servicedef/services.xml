@@ -323,6 +323,14 @@
 		<attribute name="examId" mode="IN" type="String"></attribute>
 		<attribute name="assignedUsers" mode="OUT" type="List" optional="true"></attribute>
 	</service>
+	
+		<!-- get the unassigned user to the Exam -->
+	<service engine="java" name="getUnassignedUser"
+		location="com.vastpro.sphinx.services.ExamAssignToUserService"
+		invoke="getUnassignedUser">
+		<attribute name="examId" mode="IN" type="String"></attribute>
+		<attribute name="unassignedUsers" mode="OUT" type="List" optional="true"></attribute>
+	</service>
 
 	<service engine="java" name="increaseAttemptsOwn"
 		location="com.vastpro.sphinx.services.ExamAssignToUserService"

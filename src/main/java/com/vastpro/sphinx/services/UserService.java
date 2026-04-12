@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
@@ -37,14 +38,17 @@ public class UserService {
 	// this method is used to disable the user
 	public static Map<String, Object> disableUser(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
+		Delegator delegator=context.getDelegator();
 		try {
 			input.put("statusId","PARTY_DISABLED");
 			Map<String, Object> result =dispatcher.runSync("disableUser", input);
 			if(ServiceUtil.isError(result)) {
 				return ServiceUtil.returnError("Error,Occur during delete the user");
 			}
+			// delete the assigned exam delete the user
+			delegator.removeByAnd("PartyExamRelationship", UtilMisc.toMap("partyId",input.get("partyId")));
 			return ServiceUtil.returnSuccess("User deleted");
-		}catch (GenericServiceException e) {
+		}catch (GenericEntityException | GenericServiceException e) {
 			Debug.logError(e.getMessage(), UserService.class.getName());
 			return ServiceUtil.returnError("Error,Occur during delete the user");
 		}

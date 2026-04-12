@@ -284,22 +284,43 @@
     
     
     
-    
-    
-    
-    <view-entity entity-name="ExamNotAssignedUser" package-name="">
+    <!-- get the Exam assigned user -->
+    <view-entity entity-name="ExamAssignedUser" package-name="">
         <member-entity entity-alias="PPI" entity-name="PartyPersonalInfo"/>
         <member-entity entity-alias="PER" entity-name="PartyExamRelationship"/>
         
         <alias entity-alias="PPI" name="roleTypeId"/>
-        <alias entity-alias="PPI" name="partyId"/>
         <alias entity-alias="PPI" name="partyTypeId"/>
         <alias entity-alias="PPI" name="statusId"/>
         <alias entity-alias="PPI" name="firstName"/>
-        <alias entity-alias="PPI" name="lastName"/> 
+        <alias entity-alias="PPI" name="lastName"/>
+        <alias entity-alias="PPI" name="partyId"/>
+        <alias entity-alias="PER" name="examId"/>
         
-      <entity-condition>
-        <condition-expr entity-alias="PER" field-name="partyId" operator="not-equals" value=""/>
-    </entity-condition>
+        <view-link entity-alias="PPI" rel-entity-alias="PER">
+            <key-map field-name="partyId"/>
+        </view-link>
     </view-entity>
+    
+    <!-- getting the unassigned user to the exam -->
+<view-entity entity-name="ExamUnassignedUser" package-name="">
+    <member-entity entity-alias="PPI" entity-name="PartyPersonalInfo"/>
+    <member-entity entity-alias="PER" entity-name="PartyExamRelationship"/>
+
+    <alias entity-alias="PPI" name="partyId"/>
+    <alias entity-alias="PPI" name="firstName"/>
+    <alias entity-alias="PPI" name="lastName"/>
+    <alias entity-alias="PPI" name="roleTypeId"/>
+    <alias entity-alias="PPI" name="statusId"/>
+    <alias entity-alias="PPI" name="partyTypeId"/>
+    <alias entity-alias="PER" name="examId"/>
+	<alias entity-alias="PPI" name="userLoginId"/>
+    <!-- ✅ Map PER.partyId to a different name to avoid conflict -->
+    <alias entity-alias="PER" field="partyId" name="examPartyId"/>
+
+    <view-link entity-alias="PPI" rel-entity-alias="PER" rel-optional="true">
+        <key-map field-name="partyId"/>
+    </view-link>
+</view-entity>
+
 </entitymodel>
