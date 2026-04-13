@@ -18,6 +18,7 @@ import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
 
 import com.vastpro.sphinx.util.FormValidation;
+import com.vastpro.sphinx.util.PasswordHashing;
 
 public class UserSignUpService {
 	public static Map<String, Object> signUpService(DispatchContext dctx, Map<String, Object> params) {
@@ -143,7 +144,7 @@ public class UserSignUpService {
 			userLoginInput.put("userLoginId", username);
 
 			if ("SPHINX_ADMIN".equals(role) && password != null) {
-				userLoginInput.put("currentPassword", password);
+				userLoginInput.put("currentPassword", PasswordHashing.encryptPassword(password));
 			} else {
 				userLoginInput.put("currentPassword", generatePassword());
 			}

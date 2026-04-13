@@ -289,12 +289,15 @@
         <member-entity entity-alias="PPI" entity-name="PartyPersonalInfo"/>
         <member-entity entity-alias="PER" entity-name="PartyExamRelationship"/>
         
+        <alias entity-alias="PPI" name="userLoginId"/>
         <alias entity-alias="PPI" name="roleTypeId"/>
         <alias entity-alias="PPI" name="partyTypeId"/>
         <alias entity-alias="PPI" name="statusId"/>
         <alias entity-alias="PPI" name="firstName"/>
         <alias entity-alias="PPI" name="lastName"/>
         <alias entity-alias="PPI" name="partyId"/>
+        <alias entity-alias="PER" name="allowedAttempts"/>
+        <alias entity-alias="PER" name="timeoutDays"/>
         <alias entity-alias="PER" name="examId"/>
         
         <view-link entity-alias="PPI" rel-entity-alias="PER">
@@ -307,6 +310,7 @@
     <member-entity entity-alias="PPI" entity-name="PartyPersonalInfo"/>
     <member-entity entity-alias="PER" entity-name="PartyExamRelationship"/>
 
+	<alias entity-alias="PPI" name="userLoginId"/>
     <alias entity-alias="PPI" name="partyId"/>
     <alias entity-alias="PPI" name="firstName"/>
     <alias entity-alias="PPI" name="lastName"/>
@@ -315,7 +319,8 @@
     <alias entity-alias="PPI" name="partyTypeId"/>
     <alias entity-alias="PER" name="examId"/>
 	<alias entity-alias="PPI" name="userLoginId"/>
-    <!-- ✅ Map PER.partyId to a different name to avoid conflict -->
+	<alias entity-alias="PER" name="allowedAttempts"/>
+    <alias entity-alias="PER" name="timeoutDays"/>
     <alias entity-alias="PER" field="partyId" name="examPartyId"/>
 
     <view-link entity-alias="PPI" rel-entity-alias="PER" rel-optional="true">
