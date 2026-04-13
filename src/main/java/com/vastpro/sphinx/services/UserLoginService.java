@@ -12,6 +12,7 @@ import org.apache.ofbiz.service.ServiceUtil;
 
 import com.vastpro.sphinx.util.PasswordHashing;
 
+
 public class UserLoginService {
 
 	public static Map<String, Object> validateUserLoginService(DispatchContext dctx, Map<String, ? extends Object> context) {
