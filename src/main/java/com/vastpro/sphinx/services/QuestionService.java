@@ -334,6 +334,7 @@ public class QuestionService {
 			for(GenericValue q:questions) {
 				Map<String, Object> qMap = new HashMap<>();
 
+				//getting topic Name
 				GenericValue topicName=EntityQuery.use(delegator).from("topicMaster").where("topicId",q.getString("topicId")).queryOne();
 				qMap.put("topicName", topicName.getString("topicName"));
 				qMap.put("questionId", q.getLong("questionId"));

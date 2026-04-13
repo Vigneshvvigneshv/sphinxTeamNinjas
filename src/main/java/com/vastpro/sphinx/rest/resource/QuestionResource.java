@@ -441,9 +441,7 @@ public class QuestionResource {
 			
 			Map<String, Object> ServiceResult = dispatcher.runSync("getallquestion",input);
 			
-			
-			
-			
+		
 			if(ServiceUtil.isError(ServiceResult)){
 				return Response.status(400).entity(ServiceUtil.getErrorMessage(ServiceResult)).build();
 			}

@@ -33,6 +33,10 @@ public class ExamTopicService {
 			if (exam == null) {
 				return ServiceUtil.returnError("exam not found");
 			}
+			
+			if(topicId.trim().isEmpty()) {
+				return ServiceUtil.returnError("Topic is Empty");
+			}
 			GenericValue topic = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId).queryOne();
 
 			if (topic == null) {
@@ -179,6 +183,7 @@ public class ExamTopicService {
 	public static Map<String, Object> deleteTopicInExamTopic(DispatchContext dctx, Map<String, Object> context) {
 
 		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Delegator delegator=dctx.getDelegator();
 		try {
 			String topicId = (String) context.get("topicId");
 			String examId = (String) context.get("examId");
@@ -186,7 +191,8 @@ public class ExamTopicService {
 			if (topicId == null || topicId.trim().isEmpty() || examId == null || examId.trim().isEmpty()) {
 				return ServiceUtil.returnError("topicId and examId is required");
 			}
-
+			
+			
 			Map<String, Object> result = dispatcher.runSync("deleteTopicInExamTopicDB", context);
 
 			if (ServiceUtil.isError(result)) {

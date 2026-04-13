@@ -105,12 +105,12 @@ public class ExamTopicResource {
   			Map<String,Object>serviceResult=dispatcher.runSync("deleteTopicInExamTopic",input);
   			
   			if(ServiceUtil.isError(serviceResult)) {
-  				result.put("status", "ERROR");
+  				result.put("responseMessge", "ERROR");
   				result.put("message", ServiceUtil.getErrorMessage(serviceResult));	
   				return Response.status(500).entity(result).build();
   			}
   			
-  			result.put("status", "success");
+  			result.put("responseMessage", "success");
   			result.put("message","Topic Deleted SuccesFully");
   			
   			return Response.ok().entity(result).build();
