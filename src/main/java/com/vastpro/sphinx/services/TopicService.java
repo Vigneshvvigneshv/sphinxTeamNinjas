@@ -1,6 +1,5 @@
 package com.vastpro.sphinx.services;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,7 +95,7 @@ public class TopicService {
 			// validate the topicName is already exits if it is exits then return the error message
 			GenericValue topicNameAlreadyExits = EntityQuery.use(delegator).from("topicMaster").where("topicName", topicName).queryOne();
 			if (topicNameAlreadyExits != null) {
-				return ServiceUtil.returnError("Topic already exits");
+				return ServiceUtil.returnError("Topid name should not be same as previous one");
 			}
 
 //			Map<String, Object> updateMap = new HashMap<String, Object>();
