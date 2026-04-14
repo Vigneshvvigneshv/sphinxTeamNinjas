@@ -160,9 +160,11 @@ public class ExamService {
 				// }
 
 				TransactionUtil.begin();
-
+				
+				//when the exam delete, delete the records from the another table that are related to the exam(deleted exam)
 				delegator.removeByAnd("ExamTopicMapping", UtilMisc.toMap("examId", input));
 				delegator.removeByAnd("QuestionBankMasterB", UtilMisc.toMap("examId", input));
+				delegator.removeByAnd("PartyExamRelationship", UtilMisc.toMap("examId", input));
 				// this statement is delete the relation between admin and exam
 				// it remove the relation when the admin delete the exam
 				Map<String, Object> result1 = dispatcher.runSync("deleteAdminPartyExamRel",
@@ -230,19 +232,33 @@ public class ExamService {
 			createMap.put("examName", input.get("examName"));
 			createMap.put("description", input.get("description"));
 			try {
-				createMap.put("noOfQuestions", Long.valueOf((String) input.get("noOfQuestions")));
+				Long noOfQuestions =Long.valueOf((String) input.get("noOfQuestions"));
+				if(noOfQuestions<0) {
+					return ServiceUtil.returnError("Number of question should be in greater than 0");
+				}
+				createMap.put("noOfQuestions", noOfQuestions);
 			} catch (NumberFormatException e) {
 				Debug.logError(e.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Number of question should be in number");
 			}
 			try {
-				createMap.put("duration", Long.valueOf((String) input.get("duration")));
+				Long duration =Long.valueOf((String) input.get("duration"));
+				if(duration<0) {
+					return ServiceUtil.returnError("duration of question should be in greater than 0");
+				}
+				createMap.put("duration", duration);
 			} catch (NumberFormatException e) {
 				Debug.logError(e.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Duration should be in number");
 			}
 			try {
-				createMap.put("passPercentage", Long.valueOf((String) input.get("passPercentage")));
+				
+				Long passPercentage =Long.valueOf((String) input.get("passPercentage"));
+				if(passPercentage<0) {
+					return ServiceUtil.returnError("passPercentage of question should be in greater than 0");
+				}
+				createMap.put("passPercentage", passPercentage);
+			
 			} catch (NumberFormatException e) {
 				Debug.logError(e.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Pass Percentage should be in number");

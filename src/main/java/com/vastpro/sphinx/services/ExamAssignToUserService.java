@@ -3,6 +3,7 @@ package com.vastpro.sphinx.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.entity.Delegator;
@@ -65,27 +66,36 @@ public class ExamAssignToUserService {
 						 if(examAlreadyAssigned!=null) {
 							 continue;
 						 }
-						
+						 String userName = EntityQuery.use(delegator).from("UserLogin").where("partyId",userMap.get("partyId"))
+											 .queryFirst().getString("userLoginId");
 						userMap.put("examId", examId);
 						String attempts=(String) userMap.get("allowedAttempts");
 						if(attempts!=null && attempts.isEmpty()) {
-							return ServiceUtil.returnError("Allowed attempts cannot be empty");
+							return ServiceUtil.returnError("Allowed attempts cannot be empty in "+userName);
 						} 
 						try {
-							userMap.put("allowedAttempts", Long.valueOf(attempts));
+							Long allowedAttempts= Long.valueOf(attempts);
+							if(allowedAttempts<0) {
+								return ServiceUtil.returnError("Attempts should be greate than 0 in "+userName);
+							}
+							input.put("allowedAttempts",allowedAttempts );
 						} catch (NumberFormatException e) {
 							rollBackTransaction();
-							return ServiceUtil.returnError("Attempts should be number");
+							return ServiceUtil.returnError("Attempts should be number in "+userName);
 						}
 						String days=(String) userMap.get("timeoutDays");
 						if(days!=null && days.isEmpty()) {
-							return ServiceUtil.returnError("Allowed attempts cannot be empty");
+							return ServiceUtil.returnError("Allowed attempts cannot be empty in "+userName);
 						} 
 						try {
-							userMap.put("timeoutDays", Long.valueOf(days));
+							Long timeoutDays= Long.valueOf(days);
+							if(timeoutDays<0) {
+								return ServiceUtil.returnError("Days should be greate than 0 in "+userName);
+							}
+							input.put("timeoutDays",timeoutDays );
 						} catch (NumberFormatException e) {
 							rollBackTransaction();
-							return ServiceUtil.returnError("Days should be number");
+							return ServiceUtil.returnError("Days should be number in "+userName);
 						}
 						userMap.put("noOfAttempts", 0);
 						Map<String, Object> result = dispatcher.runSync("assignExam", userMap);
@@ -162,6 +172,7 @@ public class ExamAssignToUserService {
 		try {
 			String partyId = (String) input.get("partyId");
 			String examId = (String) input.get("examId");
+			
 			if (partyId == null || partyId.isEmpty()) {
 				return ServiceUtil.returnError("user cannot be empty");
 			}
@@ -169,15 +180,31 @@ public class ExamAssignToUserService {
 				return ServiceUtil.returnError("exam cannot be empty");
 			}
 
+			String attempts=(String) input.get("allowedAttempts");
+			if(attempts!=null && attempts.isEmpty()) {
+				return ServiceUtil.returnError("Allowed attempts cannot be empty");
+			} 
 			try {
-				input.put("allowedAttempts", Long.valueOf((String) input.get("allowedAttempts")));
+				Long allowedAttempts= Long.valueOf(attempts);
+				if(allowedAttempts<0) {
+					return ServiceUtil.returnError("Attempts should be greate than 0");
+				}
+				input.put("allowedAttempts",allowedAttempts );
 			} catch (NumberFormatException e) {
 				rollBackTransaction();
 				return ServiceUtil.returnError("Attempts should be number");
 			}
 
+			String days=(String) input.get("timeoutDays");
+			if(days!=null && days.isEmpty()) {
+				return ServiceUtil.returnError("Allowed attempts cannot be empty");
+			} 
 			try {
-				input.put("timeoutDays", Long.valueOf((String) input.get("timeoutDays")));
+				Long timeoutDays= Long.valueOf(days);
+				if(timeoutDays<0) {
+					return ServiceUtil.returnError("Days should be greate than 0");
+				}
+				input.put("timeoutDays",timeoutDays );
 			} catch (NumberFormatException e) {
 				rollBackTransaction();
 				return ServiceUtil.returnError("Days should be number");
@@ -255,41 +282,48 @@ public class ExamAssignToUserService {
 	}
 	
 	public static Map<String, Object> getUnassignedUser(DispatchContext context, Map<String, Object> input) {
-		Delegator delegator = context.getDelegator();
-		Map<String, Object> result = ServiceUtil.returnSuccess("User getted successfully");
-		try {
-			List<EntityCondition> conditions = new ArrayList<>();
+	    Delegator delegator = context.getDelegator();
+	    Map<String, Object> result = ServiceUtil.returnSuccess("User fetched successfully");
+	    try {
+	        String examId = (String) input.get("examId");
 
-			// Fixed filters from PPI table
-			conditions.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS, "PERSON"));
-			conditions.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PARTY_ENABLED"));
-			conditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SPHINX_USER"));
+	        // Step 1: Get all partyIds already assigned to THIS specific exam
+	        List<GenericValue> assignedList = EntityQuery.use(delegator)
+	                .from("PartyExamRelationship")
+	                .where("examId", examId)
+	                .queryList();
 
-			// examId OR null check
-			conditions.add(
-			    EntityCondition.makeCondition(
-			        EntityCondition.makeCondition("examId", EntityOperator.EQUALS, input.get("examId")),
-			        EntityOperator.OR,
-			        EntityCondition.makeCondition("examId", EntityOperator.EQUALS, null)
-			    )
-			);
+	        List<String> assignedPartyIds = assignedList.stream()
+	                .map(gv -> gv.getString("partyId"))
+	                .collect(Collectors.toList());
 
-			// NULL on PER side = unassigned
-			conditions.add(EntityCondition.makeCondition("examPartyId", EntityOperator.EQUALS, null));
+	        // Step 2: Build conditions for unassigned users
+	        List<EntityCondition> conditions = new ArrayList<>();
 
-			List<GenericValue> unassignedUserList = EntityQuery.use(delegator)
-			        .from("ExamUnassignedUser")
-			        .where(EntityCondition.makeCondition(conditions, EntityOperator.AND))
-			        .queryList();
-//			if (assignedUserList.size() > 0) {
-//				return ServiceUtil.returnError("No user assigned to the exam");
-//			}
-			result.put("unassignedUsers", unassignedUserList);
-		} catch (GenericEntityException e) {
-			Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
-			return ServiceUtil.returnError("Error, occur during getting the assigned user");
-		}
-		return result;
+	        conditions.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS, "PERSON"));
+	        conditions.add(EntityCondition.makeCondition("statusId",    EntityOperator.EQUALS, "PARTY_ENABLED"));
+	        conditions.add(EntityCondition.makeCondition("roleTypeId",  EntityOperator.EQUALS, "SPHINX_USER"));
+
+	        // Step 3: Exclude already assigned partyIds
+	        if (!assignedPartyIds.isEmpty()) {
+	            conditions.add(EntityCondition.makeCondition(
+	                "partyId", EntityOperator.NOT_IN, assignedPartyIds
+	            ));
+	        }
+
+	        // Step 4: Query PartyPersonalInfo directly (no LEFT JOIN needed)
+	        List<GenericValue> unassignedUserList = EntityQuery.use(delegator)
+	                .from("PartyPersonalInfo")
+	                .where(EntityCondition.makeCondition(conditions, EntityOperator.AND))
+	                .queryList();
+
+	        result.put("unassignedUsers", unassignedUserList);
+
+	    } catch (GenericEntityException e) {
+	        Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
+	        return ServiceUtil.returnError("Error occurred while getting unassigned users");
+	    }
+	    return result;
 	}
 
 	private static void rollBackTransaction() {
