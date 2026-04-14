@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.entity.Delegator;
+import org.apache.ofbiz.entity.GenericEntity;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.transaction.GenericTransactionException;
@@ -66,11 +67,7 @@ public class QuestionService {
 					return ServiceUtil.returnError("options can not be empty for SINGLE_CHOICE and Multi Choice Question");
 				}
 
-			} else if ("TRUE_FALSE".equals(type)) {
-				if (optionA.isEmpty() || optionB.isEmpty() || optionA.trim() == null || optionB.trim() == null) {
-					return ServiceUtil.returnError("options can not be empty for True_FALSE");
-				}
-			}
+			} 
 
 			// check topic exists
 			GenericValue topic = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId).queryOne();
@@ -402,7 +399,9 @@ public class QuestionService {
 			int offset = (pageNo - 1) * pageSize;
 
 			List<GenericValue> questions = EntityQuery.use(delegator).from("questionMaster").where("topicId", topicId).orderBy("questionId")
-							.cursorScrollInsensitive().maxRows(pageSize).queryList();
+							.cursorScrollInsensitive()
+						    .maxRows(offset + pageSize)
+						    .queryList();
 
 			if (offset > questions.size()) {
 				questions = new ArrayList<>();
@@ -555,6 +554,7 @@ public class QuestionService {
 
 		// process the excel file
 
+		Delegator delegator=dctx.getDelegator();
 		try {
 
 			ByteBuffer buffer = (ByteBuffer) context.get("file");
@@ -654,6 +654,16 @@ public class QuestionService {
 			TransactionUtil.begin();
 
 			for (Map<String, ? extends Object> question : questions) {
+				
+				
+				GenericEntity entity = (GenericEntity) question;
+				String topicId = entity.getString("topicId");
+				
+				
+				if(topicId==null) {
+					continue;
+				}
+				
 
 				Map<String, Object> serviceResult = dctx.getDispatcher().runSync("createQuestionService", question);
 
@@ -675,18 +685,12 @@ public class QuestionService {
 
 			return result;
 
-		} catch (EncryptedDocumentException | IOException | GenericServiceException | GenericTransactionException e) {
+		} catch (EncryptedDocumentException | IOException | GenericServiceException | GenericEntityException e) {
 			e.printStackTrace();
 			return ServiceUtil.returnError("Unexpected error occured , try again after sometime!");
 		}
 
 	}
 
-	/**
-	 * this method is used to get the all the question for the exam
-	 */
-	public static Map<String, Object> getAllQuestion() {
-		return null;
-	}
-
+	
 }

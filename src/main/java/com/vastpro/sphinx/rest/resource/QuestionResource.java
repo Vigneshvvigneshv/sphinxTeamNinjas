@@ -435,10 +435,11 @@ public class QuestionResource {
 
 		try {
 			String pageNo=(String)request.getParameter("pageNo");
+			String pageSize=(String)request.getParameter("pageSize");
 			
 			Map<String,Object>input=new HashMap<>();
 			input.put("pageNo",pageNo);
-			
+			input.put("pageSize",pageSize);
 			Map<String, Object> ServiceResult = dispatcher.runSync("getallquestion",input);
 			
 		
