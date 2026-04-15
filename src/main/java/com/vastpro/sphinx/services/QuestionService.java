@@ -126,7 +126,7 @@ public class QuestionService {
 		try {
 			// get questionId from context (sent by frontend)
 			Long questionId = (Long) context.get("questionId");
-
+			
 			if (questionId == null) {
 				return ServiceUtil.returnError("questionId is required for update");
 			}
@@ -333,6 +333,7 @@ public class QuestionService {
 
 				//getting topic Name
 				GenericValue topicName=EntityQuery.use(delegator).from("topicMaster").where("topicId",q.getString("topicId")).queryOne();
+				
 				qMap.put("topicName", topicName.getString("topicName"));
 				qMap.put("questionId", q.getLong("questionId"));
 				qMap.put("questionDetail", q.getString("questionDetail"));
