@@ -656,13 +656,13 @@ public class QuestionService {
 			for (Map<String, ? extends Object> question : questions) {
 				
 				
-				GenericEntity entity = (GenericEntity) question;
-				String topicId = entity.getString("topicId");
-				
-				
-				if(topicId==null) {
-					continue;
-				}
+//				GenericEntity entity = (GenericEntity) question;
+//				String topicId = entity.getString("topicId");
+//				
+//				
+//				if(topicId==null) {
+//					continue;
+//				}
 				
 
 				Map<String, Object> serviceResult = dctx.getDispatcher().runSync("createQuestionService", question);
