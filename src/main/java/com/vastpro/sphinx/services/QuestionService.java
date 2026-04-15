@@ -333,6 +333,8 @@ public class QuestionService {
 
 				//getting topic Name
 				GenericValue topicName=EntityQuery.use(delegator).from("topicMaster").where("topicId",q.getString("topicId")).queryOne();
+				
+				
 				qMap.put("topicName", topicName.getString("topicName"));
 				qMap.put("questionId", q.getLong("questionId"));
 				qMap.put("questionDetail", q.getString("questionDetail"));
