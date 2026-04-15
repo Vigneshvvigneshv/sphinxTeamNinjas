@@ -59,23 +59,38 @@ public class ExamService {
 			createMap.put("examName", input.get("examName"));
 			createMap.put("description", input.get("description"));
 			try {
-				createMap.put("noOfQuestions", Long.valueOf((String) input.get("noOfQuestions")));
+				Long noOfQuestions =Long.valueOf((String) input.get("noOfQuestions"));
+				if(noOfQuestions<0) {
+					return ServiceUtil.returnError("Number of question should be in greater than 0");
+				}
+				createMap.put("noOfQuestions", noOfQuestions);
 			} catch (NumberFormatException e) {
 				Debug.logError(e.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Number of question should be in number");
 			}
 			try {
-				createMap.put("duration", Long.valueOf((String) input.get("duration")));
+				Long duration =Long.valueOf((String) input.get("duration"));
+				if(duration<=0 && duration>180 ) {
+					return ServiceUtil.returnError("duration of question should be betweet 1 to 180");
+				}
+				createMap.put("duration", duration);
 			} catch (NumberFormatException e) {
 				Debug.logError(e.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Duration should be in number");
 			}
 			try {
-				createMap.put("passPercentage", Long.valueOf((String) input.get("passPercentage")));
+				
+				Long passPercentage =Long.valueOf((String) input.get("passPercentage"));
+				if(passPercentage<20 && passPercentage>100 ) {
+					return ServiceUtil.returnError("passPercentage of question should be between 20 to 100");
+				}
+				createMap.put("passPercentage", passPercentage);
+			
 			} catch (NumberFormatException e) {
 				Debug.logError(e.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Pass Percentage should be in number");
 			}
+
 
 			TransactionUtil.begin();
 			// call the entity-auto service it will create the record
@@ -243,8 +258,8 @@ public class ExamService {
 			}
 			try {
 				Long duration =Long.valueOf((String) input.get("duration"));
-				if(duration<0) {
-					return ServiceUtil.returnError("duration of question should be in greater than 0");
+				if(duration<=0 && duration>180 ) {
+					return ServiceUtil.returnError("duration of question should be betweet 1 to 180");
 				}
 				createMap.put("duration", duration);
 			} catch (NumberFormatException e) {
@@ -254,8 +269,8 @@ public class ExamService {
 			try {
 				
 				Long passPercentage =Long.valueOf((String) input.get("passPercentage"));
-				if(passPercentage<0) {
-					return ServiceUtil.returnError("passPercentage of question should be in greater than 0");
+				if(passPercentage<20 && passPercentage>100 ) {
+					return ServiceUtil.returnError("passPercentage of question should be between 20 to 100");
 				}
 				createMap.put("passPercentage", passPercentage);
 			
