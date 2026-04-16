@@ -98,17 +98,22 @@ public class QuestionResource {
 
 		
 			String questionIdStr = (String) request.getAttribute("questionId");
-			if (questionIdStr == null) {
+			String topicIdStr=(String)request.getAttribute("topicId");
+			
+			if (questionIdStr == null || topicIdStr==null ) {
 				result.put("status", "ERROR");
-				result.put("message", "questionId is required");
+				result.put("message", "questionId and topicId is required");
 				return Response.status(400).entity(result).build();
 			}
+			
+			
 
 			Long questionId = Long.valueOf(questionIdStr);
-
+			
 			Map<String, Object> input = new HashMap<String, Object>();
 
 			input.put("questionId", questionId);
+			input.put("topicId", topicIdStr);
 			input.put("questionDetail", request.getAttribute("questionDetail"));
 			input.put("optionA", request.getAttribute("optionA"));
 			input.put("optionB", request.getAttribute("optionB"));
