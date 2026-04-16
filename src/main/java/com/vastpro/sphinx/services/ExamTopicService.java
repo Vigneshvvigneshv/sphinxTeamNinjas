@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.transaction.TransactionUtil;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
@@ -40,7 +41,7 @@ public class ExamTopicService {
 			GenericValue topic = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId).queryOne();
 
 			if (topic == null) {
-				return ServiceUtil.returnError("Topic Not Found");
+				return ServiceUtil.returnError("Topic Not Available");
 			}
 
 			if (percentageStr == null || topicPassPercentageStr == null) {
@@ -57,6 +58,25 @@ public class ExamTopicService {
 			input.put("percentage", percentage);
 			input.put("topicPassPercentage", topicPassPercentage);
 
+			
+			//TopicQuestionPercentage
+			List<GenericValue> examMapping=EntityQuery.use(delegator)
+											.from("ExamTopicMapping")
+											.where("examId",examId)
+											.queryList();
+			
+			double totalPercentage=0;
+			for(GenericValue e:examMapping) {
+				double topicPercentage=e.getDouble("percentage");
+				totalPercentage=totalPercentage+topicPercentage;
+			}
+			
+			
+			if((totalPercentage+percentage)>=100) {
+				return ServiceUtil.returnError("Total Question Percentage Should not be more than 100");
+			}
+			
+			
 			Map<String, Object> serviceResult = dispatcher.runSync("createExamTopicService", input);
 
 			if (ServiceUtil.isError(serviceResult)) {
@@ -66,6 +86,7 @@ public class ExamTopicService {
 			return ServiceUtil.returnSuccess("Exam TopicMaster Created SuccessFully");
 
 		} catch (GenericServiceException | GenericEntityException e) {
+			e.printStackTrace();
 			return ServiceUtil.returnError("Error Occured in Creating Exam Topic");
 		}
 	}
@@ -105,6 +126,24 @@ public class ExamTopicService {
 			input.put("percentage", percentage);
 			input.put("topicPassPercentage", topicPassPercentage);
 
+			
+			
+			//TopicQuestionPercentage
+			List<GenericValue> examMapping=EntityQuery.use(delegator)
+											.from("ExamTopicMapping")
+											.where("examId",examId)
+											.queryList();
+			
+			double totalPercentage=0;
+			for(GenericValue e:examMapping) {
+				double topicPercentage=e.getDouble("percentage");
+				totalPercentage=totalPercentage+topicPercentage;
+			}
+			
+			
+			if(totalPercentage>=100) {
+				return ServiceUtil.returnError("Total Question Percentage Should not be more than 100");
+			}
 			Map<String, Object> serviceResult = dispatcher.runSync("updateExamTopicService", input);
 
 			if (ServiceUtil.isError(serviceResult)) {

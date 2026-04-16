@@ -328,4 +328,20 @@
     </view-link>
 </view-entity>
 
+
+<!-- <view-entity entity-name="ListExamForUser" package-name="">
+	<member-entity entity-alias="PER" entity-name="PartyExamRelationship"></member-entity>
+	<member-entity entity-alias="UL" entity-name="UserLogin"></member-entity>
+	<member-entity entity-alias="EM" entity-name="ExamMaster"></member-entity>
+	
+	<view-link entity-alias="UL" rel-entity-alias="PER">
+        <key-map field-name="partyId"/>
+    </view-link>
+    
+    <view-link rel-entity-alias="" entity-alias="">
+    	
+    </view-link>
+</view-entity> -->
+
+
 </entitymodel>
