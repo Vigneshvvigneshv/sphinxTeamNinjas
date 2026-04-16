@@ -139,6 +139,7 @@ public class ExamTopicService {
 				return ServiceUtil.returnError("Exam not Found");
 			}
 
+			
 			List<GenericValue> exam1 = EntityQuery.use(delegator).from("ExamTopicMapping").where("examId", examId).queryList();
 
 			List<Map<String, Object>> topicList = new ArrayList<>();
@@ -147,6 +148,8 @@ public class ExamTopicService {
 
 				Map<String, Object> tMap = new HashMap<>();
 				String topicId = e.getString("topicId");
+				
+				//for returning topicPassPercentage
 				GenericValue topic = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId).queryOne();
 
 				GenericValue topicPercentage = EntityQuery.use(delegator).from("ExamTopicMapping")
@@ -183,7 +186,6 @@ public class ExamTopicService {
 	public static Map<String, Object> deleteTopicInExamTopic(DispatchContext dctx, Map<String, Object> context) {
 
 		LocalDispatcher dispatcher = dctx.getDispatcher();
-		Delegator delegator=dctx.getDelegator();
 		try {
 			String topicId = (String) context.get("topicId");
 			String examId = (String) context.get("examId");
@@ -202,7 +204,6 @@ public class ExamTopicService {
 			return ServiceUtil.returnSuccess("Topic Deleted Successfully");
 		} catch (GenericServiceException e) {
 			e.printStackTrace();
-
 			return ServiceUtil.returnError("Failed to Delete Topic");
 		}
 	}
