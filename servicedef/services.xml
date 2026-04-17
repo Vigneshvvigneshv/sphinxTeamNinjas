@@ -477,6 +477,7 @@
 		<attribute name="totalPages" mode="OUT" type="Integer" optional="false" />
 		<attribute name="hasNext" mode="OUT" type="Boolean" optional="false"/>
 		<attribute name="hasPrevious" mode="OUT" type="Boolean" optional="false"/>
+		<attribute name="totalCount" type="Integer" mode="OUT" optional="false" />
 	</service>
 
 	<!-- GetQuestion by question id -->

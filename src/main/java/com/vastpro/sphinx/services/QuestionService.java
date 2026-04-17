@@ -321,7 +321,7 @@ public class QuestionService {
 				return ServiceUtil.returnError("No Question Availbale");
 			}
 			
-			List<GenericValue> questions = EntityQuery.use(delegator).from("questionMaster").orderBy("questionId")
+			List<GenericValue> questions = EntityQuery.use(delegator).from("questionMaster").orderBy("questionDetail")
 							.cursorScrollInsensitive().offset(offset)
 						    .limit(pageSize).queryList();
 
@@ -358,6 +358,7 @@ public class QuestionService {
 			result.put("totalPages", totalPages);
 			result.put("hasNext", pageNo < totalPages);
 			result.put("hasPrevious", pageNo > 1);
+			result.put("totalCount", totalCount);		
 			
 			return result;
 		}catch(Exception e) {
@@ -399,7 +400,7 @@ public class QuestionService {
 			int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 			int offset = (pageNo - 1) * pageSize;
 
-			List<GenericValue> questions = EntityQuery.use(delegator).from("questionMaster").where("topicId", topicId).orderBy("questionId")
+			List<GenericValue> questions = EntityQuery.use(delegator).from("questionMaster").where("topicId", topicId).orderBy("questionDetail")
 							.cursorScrollInsensitive()
 						    .maxRows(offset + pageSize)
 						    .queryList();

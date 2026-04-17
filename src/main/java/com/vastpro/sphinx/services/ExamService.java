@@ -355,7 +355,7 @@ public class ExamService {
 			return result;
 		} catch (GenericEntityException e) {
 			Debug.logError(e.getMessage(), ExamService.class.getName());
-			return ServiceUtil.returnError("Error, occur during get exam by id" + e.getMessage());
+			return ServiceUtil.returnError("Error, occur during get exam" + e.getMessage());
 		}
 	}
 	

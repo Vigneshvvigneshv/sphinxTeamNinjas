@@ -85,7 +85,7 @@ public class ExamAssignToUserService {
 						}
 						String days=(String) userMap.get("timeoutDays");
 						if(days!=null && days.isEmpty()) {
-							return ServiceUtil.returnError("Allowed attempts cannot be empty in "+userName);
+							return ServiceUtil.returnError("Days cannot be empty in "+userName);
 						} 
 						try {
 							Long timeoutDays= Long.valueOf(days);
@@ -120,7 +120,7 @@ public class ExamAssignToUserService {
 			}
 			return ServiceUtil.returnSuccess("Users Assigned to the exam successfully");
 		}
-		return ServiceUtil.returnError("Select the user to assign to the exam");
+		return ServiceUtil.returnError("Select the user to assign the exam");
 	}
 
 	public static Map<String, Object> removeAssignedExam(DispatchContext context, Map<String, Object> input) {
