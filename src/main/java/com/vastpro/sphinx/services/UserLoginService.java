@@ -3,12 +3,14 @@ package com.vastpro.sphinx.services;
 import java.util.Map;
 
 import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.common.login.LoginServices;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityQuery;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
+import org.apache.ofbiz.webapp.control.LoginWorker;
 
 import com.vastpro.sphinx.util.PasswordHashing;
 
@@ -23,7 +25,7 @@ public class UserLoginService {
 		// "successMessage": "User Login Successfully"}
 
 		// Map<String,Object> result=new HashMap<String, Object>();
-
+		
 		Delegator delegator = dctx.getDelegator();
 		try {
 			GenericValue user = delegator.findOne("UserLogin", true, Map.of("userLoginId", context.get("userName")));
@@ -35,6 +37,7 @@ public class UserLoginService {
 				// if (String.valueOf(context.get("password")).equals(user.getString("currentPassword"))) {
 				GenericValue roleType = EntityQuery.use(delegator).from("PartyRole").where("partyId", user.get("partyId")).queryFirst();
 
+				
 				// result.put("successMessage", "User Login Successfully");
 				result.put("role", roleType.getString("roleTypeId"));
 				result.put("partyId", user.getString("partyId"));
