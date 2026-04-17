@@ -269,7 +269,7 @@ public class ExamAssignToUserService {
 		Map<String, Object> result = ServiceUtil.returnSuccess("User getted successfully");
 		try {
 			List<GenericValue> assignedUserList = EntityQuery.use(delegator).from("ExamAssignedUser")
-							.where("examId", input.get("examId")).queryList();
+							.where("examId", input.get("examId")).orderBy("userLoginId").queryList();
 //			if (assignedUserList.size() > 0) {
 //				return ServiceUtil.returnError("No user assigned to the exam");
 //			}
@@ -287,7 +287,7 @@ public class ExamAssignToUserService {
 	    try {
 	        String examId = (String) input.get("examId");
 
-	        // Step 1: Get all partyIds already assigned to THIS specific exam
+	      
 	        List<GenericValue> assignedList = EntityQuery.use(delegator)
 	                .from("PartyExamRelationship")
 	                .where("examId", examId)
@@ -297,24 +297,22 @@ public class ExamAssignToUserService {
 	                .map(gv -> gv.getString("partyId"))
 	                .collect(Collectors.toList());
 
-	        // Step 2: Build conditions for unassigned users
 	        List<EntityCondition> conditions = new ArrayList<>();
 
 	        conditions.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS, "PERSON"));
 	        conditions.add(EntityCondition.makeCondition("statusId",    EntityOperator.EQUALS, "PARTY_ENABLED"));
 	        conditions.add(EntityCondition.makeCondition("roleTypeId",  EntityOperator.EQUALS, "SPHINX_USER"));
 
-	        // Step 3: Exclude already assigned partyIds
+	        
 	        if (!assignedPartyIds.isEmpty()) {
 	            conditions.add(EntityCondition.makeCondition(
 	                "partyId", EntityOperator.NOT_IN, assignedPartyIds
 	            ));
 	        }
-
-	        // Step 4: Query PartyPersonalInfo directly (no LEFT JOIN needed)
+	        
 	        List<GenericValue> unassignedUserList = EntityQuery.use(delegator)
 	                .from("PartyPersonalInfo")
-	                .where(EntityCondition.makeCondition(conditions, EntityOperator.AND))
+	                .where(EntityCondition.makeCondition(conditions, EntityOperator.AND)).orderBy("userLoginId")
 	                .queryList();
 
 	        result.put("unassignedUsers", unassignedUserList);

@@ -307,13 +307,13 @@ public class ExamService {
 		Delegator delegator = context.getDelegator();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		try {
-			List<GenericValue> examList = EntityQuery.use(delegator).from("AdminExamRelationInfo").where("partyId",input.get("partyId")).queryList();
+			List<GenericValue> examList = EntityQuery.use(delegator).from("AdminExamRelationInfo").where("partyId",input.get("partyId")).orderBy("examName").queryList();
 			result.put("examList", examList);
 			return result;
 
 		} catch (GenericEntityException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Debug.logError(e.getMessage(), ExamService.class.getName());
 			return ServiceUtil.returnError("Error, occur during getting list of exam" + e.getMessage());
 		}
 	}

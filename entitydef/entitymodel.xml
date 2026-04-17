@@ -216,6 +216,24 @@
     </entity>
     
     
+      <!-- This entity has all the users who has not logged out -->
+      <!-- This entity is used to  assign and store the data when the user will start the exam-->
+    <entity entity-name="InProgressParty" package-name="in.vastpro.sphinx">
+		<field name="partyId" type="id"></field>
+		<field name="examId" type="id"></field>
+		<field name="remainingTime" type="short-varchar"/>
+		<field name="totalAnswered" type="numeric"></field>
+		<field name="totalRemaining" type="numeric"></field>
+		<field name="isExamActive" type="numeric" not-null="true"/>
+		<field name="currentSplitAttempt" type="numeric"></field>
+		<prim-key field="partyId" />
+		<prim-key field="examId" />
+		<relation rel-entity-name="Party" fk-name="INPROG_USERS_FK" type="many">
+			<key-map field-name="partyId" rel-field-name="partyId" />
+		</relation>				
+    </entity>	
+    
+    
     <!-- to get the user -->
        <view-entity entity-name="PartyPersonalInfo" package-name="">
         <member-entity entity-alias="PY" entity-name="Party"/>
@@ -275,7 +293,8 @@
         <alias entity-alias="EM" name="noOfQuestions"/>
         <alias entity-alias="EM" name="duration"/>
         <alias entity-alias="EM" name="passPercentage"/> 
-        <alias entity-alias="PER" name="partyId"/> 
+        <alias entity-alias="PER" name="partyId"/>
+       	<alias entity-alias="PER" name="timeoutDays"/> 
         <view-link entity-alias="PER" rel-entity-alias="EM">
             <key-map field-name="examId"/>
         </view-link>

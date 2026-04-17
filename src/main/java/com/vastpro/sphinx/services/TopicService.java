@@ -172,7 +172,7 @@ public class TopicService {
 
 		try {
 			// this statement used to get all the topic as list
-			List<GenericValue> topicList = EntityQuery.use(delegator).from("topicMaster").queryList();
+			List<GenericValue> topicList = EntityQuery.use(delegator).from("topicMaster").orderBy("topicName").queryList();
 			// if the list size is 0 then return the no topic found message
 			if (topicList.size() == 0) {
 				return ServiceUtil.returnError("No topic available");

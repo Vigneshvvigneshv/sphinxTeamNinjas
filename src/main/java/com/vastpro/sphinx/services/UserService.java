@@ -21,7 +21,7 @@ public class UserService {
 		try {
 
 			List<GenericValue> userList = EntityQuery.use(delegator).from("PartyPersonalInfo")
-							.where("partyTypeId", "PERSON", "statusId", "PARTY_ENABLED", "roleTypeId", "SPHINX_USER").queryList();
+							.where("partyTypeId", "PERSON", "statusId", "PARTY_ENABLED", "roleTypeId", "SPHINX_USER").orderBy("userLoginId").queryList();
 			// List<GenericValue> userList=EntityQuery.use(delegator).from("UserLogin").queryList();
 //
 //			if (!(userList.size() > 0)) {
