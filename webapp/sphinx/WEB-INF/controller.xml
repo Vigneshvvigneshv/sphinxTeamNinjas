@@ -45,11 +45,11 @@ under the License.
     
     <request-map uri="validateUserLogin">
     	<event type="java" path="com.vastpro.sphinx.events.UserLoginEvents" invoke="validateUserLoginEvents"></event>
-<<<<<<< Updated upstream
+
     	<response name="none" type="none" value="json"></response>
-=======
+
     	<response name="success" type="view" value=""></response>
->>>>>>> Stashed changes
+
     </request-map>
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://sphinx/widget/SphinxScreens.xml#main"/>

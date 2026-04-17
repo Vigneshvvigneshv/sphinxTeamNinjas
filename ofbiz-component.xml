@@ -48,7 +48,7 @@ under the License.
         title="Sphinx"
         server="default-server"
         location="webapp/sphinx"
-        base-permission="OFBTOOLS,SPHINX"
+        base-permission="SPHINX"
         mount-point="/sphinx"/>
         
         

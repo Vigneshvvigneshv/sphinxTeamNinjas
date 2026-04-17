@@ -80,10 +80,10 @@
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 	
-<!-- 	<filter-mapping>
+    <filter-mapping>
 		<filter-name>ControlFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
-	</filter-mapping> -->
+	</filter-mapping> 
 	
 	<filter-mapping>
 		<filter-name>SameSiteFilter</filter-name>
