@@ -1,6 +1,5 @@
 package com.vastpro.sphinx.services;
 
-import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +17,8 @@ import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
 
 import com.vastpro.sphinx.util.FormValidation;
-import com.vastpro.sphinx.util.PasswordHashing;
+import com.vastpro.sphinx.util.PasswordUtil;
+
 
 public class UserSignUpService {
 	public static Map<String, Object> signUpService(DispatchContext dctx, Map<String, Object> params) {
@@ -144,9 +144,9 @@ public class UserSignUpService {
 			userLoginInput.put("userLoginId", username);
 
 			if ("SPHINX_ADMIN".equals(role) && password != null) {
-				userLoginInput.put("currentPassword", PasswordHashing.encryptPassword(password));
+				userLoginInput.put("currentPassword", PasswordUtil.encryptPassword(password));
 			} else {
-				userLoginInput.put("currentPassword", generatePassword());
+				userLoginInput.put("currentPassword", PasswordUtil.generatePassword());
 			}
 
 			userLoginInput.put("enabled", "N");
@@ -204,13 +204,5 @@ public class UserSignUpService {
 		// return ServiceUtil.returnError((String)input.get("errorMessage"));
 	}
 
-	private static String generatePassword() {
-		SecureRandom random = new SecureRandom();
-		String passwordChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
-		StringBuilder passwordBuilder = new StringBuilder();
-		for (int i = 0; i < 6; i++) {
-			passwordBuilder.append(passwordChar.charAt(random.nextInt(passwordChar.length())));
-		}
-		return String.valueOf(passwordBuilder);
-	}
+	
 }

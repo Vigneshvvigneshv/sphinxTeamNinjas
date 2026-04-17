@@ -12,7 +12,7 @@ import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.ServiceUtil;
 import org.apache.ofbiz.webapp.control.LoginWorker;
 
-import com.vastpro.sphinx.util.PasswordHashing;
+import com.vastpro.sphinx.util.PasswordUtil;
 
 
 public class UserLoginService {
@@ -33,7 +33,7 @@ public class UserLoginService {
 				return error;
 			}
 
-			if (PasswordHashing.checkPassword(String.valueOf(context.get("password")), user.getString("currentPassword"))) {
+			if (PasswordUtil.checkPassword(String.valueOf(context.get("password")), user.getString("currentPassword"))) {
 				// if (String.valueOf(context.get("password")).equals(user.getString("currentPassword"))) {
 				GenericValue roleType = EntityQuery.use(delegator).from("PartyRole").where("partyId", user.get("partyId")).queryFirst();
 
