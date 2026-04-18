@@ -388,6 +388,21 @@
 		</view-link>
 		
     </view-entity>
+    
+    
+    
+    <!-- This entity holds user answers for exam questions -->
+	<entity entity-name="AnswerMaster" package-name="in.vastpro.sphinx">
+		<field name="questionId" type="numeric"></field>
+		<field name="examId" type="id"></field>
+		<field name="partyId" type="id"/>
+		<field name="submittedAnswer" type="very-short"></field>
+		<field name="sNo" type="numeric"></field>
+		<field name="isFlagged" type="numeric"/>		
+		<prim-key field="questionId"/>
+		<prim-key field="examId"/>
+		<prim-key field="partyId"/>
+	</entity>
 <!-- <view-entity entity-name="ListExamForUser" package-name="">
 	<member-entity entity-alias="PER" entity-name="PartyExamRelationship"></member-entity>
 	<member-entity entity-alias="UL" entity-name="UserLogin"></member-entity>

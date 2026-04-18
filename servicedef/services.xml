@@ -149,6 +149,15 @@
 		invoke="getAllTopics">
 		<attribute name="topicList" mode="OUT" type="List"
 			optional="true"></attribute>
+		<attribute name="pageNo" mode="IN" type="Integer" optional="true"/>
+		<attribute name="pageSize" mode="IN" type="Integer" optional="true"/>
+		
+		<attribute name="pageNo" mode="OUT" type="Integer" optional="false"/>
+		<attribute name="pageSize" mode="OUT" type="Integer" optional="false"/>
+		<attribute name="totalPages" mode="OUT" type="Integer" optional="false"/>
+		<attribute name="hasNext" mode="OUT" type="Boolean" optional="false"/>
+		<attribute name="hasPrevious" mode="OUT" type="Boolean" optional="false"/>
+		
 	</service>
 
 	<!-- get topic by id -->
@@ -527,7 +536,7 @@
 		location="com.vastpro.sphinx.services.QuestionService"
 		invoke="uploadBulkQuestion">
 		<attribute name="file" mode="IN" type="java.nio.ByteBuffer"
-			optional="true" />
+			optional="true"/>
 	</service>
 
 
@@ -661,5 +670,25 @@
 		<attribute name="examId" mode="IN" type="String"/>
 		<attribute name="partyId" mode="IN" type="String"/>
 	</service> 
+	
+	
+	
+	<!-- Service for Answer answerService -->
+	<service name="AnswerService" engine="java" location="com.vastpro.sphinx.services.AnswerService" invoke="answerService">
+		<attribute name="examId" mode="IN" type="String"/>
+		<attribute name="partyId" mode="IN" type="String"/>
+		<attribute name="questionId" mode="IN" type="String"/>
+		<attribute name="answer" mode="IN" type="String"/>
+	</service> 
+	
+	
+	<service name="CreateAnswer" engine="entity-auto" invoke="create" default-entity-name="AnswerMaster">
+		<auto-attributes include="pk" mode="IN" optional="false"/>
+		<auto-attributes include="nonpk" mode="IN" optional="true"/>
+	</service> 
 
+	<service name="UpdateAnswer" engine="entity-auto" invoke="update" default-entity-name="AnswerMaster">
+		<auto-attributes include="pk" mode="IN" optional="false"/>
+		<auto-attributes include="nonpk" mode="IN" optional="true"/>
+	</service> 
 </services>

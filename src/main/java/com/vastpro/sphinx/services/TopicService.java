@@ -171,13 +171,45 @@ public class TopicService {
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 
 		try {
+			
+			Integer pageNo = (Integer) params.get("pageNo");
+			Integer pageSize = (Integer) params.get("pageSize");
+			
+			if (pageNo == null || pageNo < 1) {
+				pageNo = 1;
+			}
+			if (pageSize == null || pageSize < 1) {
+				pageSize = 10;
+			}
+			
+			
+			long totalCount=EntityQuery.use(delegator).from("topicMaster").queryCount();
+			
+			int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+			int offset = (pageNo - 1) * pageSize;
+			
+			if(totalCount==0) {
+				return ServiceUtil.returnError("No Topic Availbale");
+			}
+			
+			
 			// this statement used to get all the topic as list
-			List<GenericValue> topicList = EntityQuery.use(delegator).from("topicMaster").orderBy("topicName").queryList();
+			List<GenericValue> topicList = EntityQuery.use(delegator).from("topicMaster")
+												.cursorScrollInsensitive()
+												.offset(offset)
+												.limit(pageSize)
+												.queryList();
 			// if the list size is 0 then return the no topic found message
 			if (topicList.size() == 0) {
 				return ServiceUtil.returnError("No topic available");
 			}
 			// are else return the list
+			result.put("pageNo", pageNo);
+			result.put("pageSize", pageSize);
+			result.put("totalPages", totalPages);
+			result.put("hasNext", pageNo < totalPages);
+			result.put("hasPrevious", pageNo > 1);
+			result.put("totalCount", totalCount);
 			result.put("topicList", topicList);
 
 		} catch (GenericEntityException e) {
