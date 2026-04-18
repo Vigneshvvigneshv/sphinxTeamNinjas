@@ -351,6 +351,8 @@
 			optional="true"></auto-attributes>
 	</service>
 
+
+
 	<!-- remove assigned exam to the user by entity-auto -->
 	<service engine="entity-auto" name="removeAssignedValue"
 		invoke="delete" default-entity-name="PartyExamRelationship">
@@ -375,6 +377,13 @@
 			optional="true"></auto-attributes>
 	</service>
 
+<service engine="entity-auto" name="PasswordChangesAuto"
+		invoke="update" default-entity-name="PartyExamRelationship">
+		<auto-attributes mode="IN" include="pk"
+			optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk"
+			optional="true"></auto-attributes>
+	</service>
 	<!-- ================================end of Exam Assign to the user =========================== -->
 	
 	<!-- =======================start Exam Services(start)============================= -->
@@ -648,10 +657,9 @@
 	</service>
 	
 	<!-- Service for  -->
-	<!-- <service name="emailService" engine="auto" location="com.vastpro.sphinx.services.EmailServiceOwn" invoke="emailService">
+	<service name="SendEmailService" engine="java" location="com.vastpro.sphinx.services.EmailService" invoke="sendExamNotification">
 		<attribute name="examId" mode="IN" type="String"/>
 		<attribute name="partyId" mode="IN" type="String"/>
-		
-	</service> -->
+	</service> 
 
 </services>

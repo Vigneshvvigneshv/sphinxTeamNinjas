@@ -47,7 +47,7 @@ public class EmailResource {
 			input.put("partyId", partyId);
 			input.put("examId",examId);
 			
-			Map<String,Object>serviceResult=dispatcher.runSync("EmailService",input );
+			Map<String,Object>serviceResult=dispatcher.runSync("SendEmailService",input);
 			
 			if(ServiceUtil.isError(serviceResult)) {
 				result.put("status", "Error");

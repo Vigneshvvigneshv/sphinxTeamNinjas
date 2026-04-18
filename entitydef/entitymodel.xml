@@ -387,9 +387,6 @@
 		    <key-map field-name="partyId"/>
 		</view-link>
 		
-		
-		
-		
     </view-entity>
 <!-- <view-entity entity-name="ListExamForUser" package-name="">
 	<member-entity entity-alias="PER" entity-name="PartyExamRelationship"></member-entity>

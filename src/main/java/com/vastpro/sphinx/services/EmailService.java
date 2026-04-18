@@ -26,10 +26,15 @@ public static Map<String,Object>sendExamNotification(DispatchContext dctx,Map<St
 		try {
 			
 			String examId=(String) context.get("examId");
+			String partyId=(String)context.get("partyId");
 			
 			if(examId==null) {
 				return ServiceUtil.returnError("examId is required");
 			}	
+			
+			if(partyId==null) {
+				return ServiceUtil.returnError("partyId is required");
+			}
 			
 			GenericValue examRecord=EntityQuery.use(delegator).from("ExamMaster").where("examId",examId).queryOne();
 			
@@ -43,7 +48,7 @@ public static Map<String,Object>sendExamNotification(DispatchContext dctx,Map<St
 			String password=PasswordUtil.generatePassword();
 			
 			try {
-				dispatcher.runAsync("PasswordChangesAuto", UtilMisc.toMap("passwordChangesAuto",password));
+				dispatcher.runAsync("PasswordChangesAuto", UtilMisc.toMap("examId",examId,"partyId",partyId,"passwordChangesAuto",password));
 			}catch(GenericServiceException e) {
 				e.printStackTrace();
 				return ServiceUtil.returnError("Failed To Send an Exam Notification "+e.getMessage());
@@ -74,7 +79,7 @@ public static Map<String,Object>sendExamNotification(DispatchContext dctx,Map<St
 				
 				emailContext.put("sendTo", assignedUser.getString("infoString"));
 				emailContext.put("body",
-								String.format(emailBody, assignedUser.getString("userLoginId"), assignedUser.getString("passwordChangesAuto")));
+								String.format(emailBody, assignedUser.getString("userLoginId"), password));
 			}
 			
 			try {
