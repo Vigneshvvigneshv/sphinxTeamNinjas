@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
@@ -16,6 +17,9 @@ import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
+
+import com.vastpro.sphinx.util.PasswordUtil;
+
 import org.apache.ofbiz.entity.condition.EntityCondition;
 import org.apache.ofbiz.entity.condition.EntityOperator;
 /**
@@ -98,6 +102,7 @@ public class ExamAssignToUserService {
 							return ServiceUtil.returnError("Days should be number in "+userName);
 						}
 						userMap.put("noOfAttempts", 0);
+						userMap.put("passwordChangesAuto",PasswordUtil.generatePassword());
 						Map<String, Object> result = dispatcher.runSync("assignExam", userMap);
 
 						if (ServiceUtil.isError(result)) {
@@ -173,10 +178,10 @@ public class ExamAssignToUserService {
 			String partyId = (String) input.get("partyId");
 			String examId = (String) input.get("examId");
 			
-			if (partyId == null || partyId.isEmpty()) {
+			if (UtilValidate.isEmpty(partyId)) {
 				return ServiceUtil.returnError("user cannot be empty");
 			}
-			if (examId == null || examId.isEmpty()) {
+			if (UtilValidate.isEmpty(examId)) {
 				return ServiceUtil.returnError("exam cannot be empty");
 			}
 
