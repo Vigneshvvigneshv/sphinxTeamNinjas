@@ -359,7 +359,9 @@
 		<auto-attributes mode="IN" include="nonpk"
 			optional="true"></auto-attributes>
 	</service>
-
+	
+	
+	
 
 
 	<!-- remove assigned exam to the user by entity-auto -->
@@ -404,6 +406,16 @@
 	</service>
 	<!-- start exam -->
 	<service engine="entity-auto" name="startExam"  invoke="create" default-entity-name="InProgressParty">
+		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+	</service>
+	
+	<service engine="entity-auto" name="ExamActive"  invoke="update" default-entity-name="InProgressParty">
+		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+	</service>
+	
+	<service engine="entity-auto" name="updateInprogress"  invoke="update" default-entity-name="InProgressParty">
 		<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
 		<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
 	</service>
@@ -678,7 +690,9 @@
 		<attribute name="examId" mode="IN" type="String"/>
 		<attribute name="partyId" mode="IN" type="String"/>
 		<attribute name="questionId" mode="IN" type="String"/>
-		<attribute name="answer" mode="IN" type="String"/>
+		<attribute name="answer" mode="IN" type="String" optional="true"/>
+		 <attribute name="totalAnswered" type="Long" mode="OUT"/>
+        <attribute name="totalRemaining" type="Long" mode="OUT"/>
 	</service> 
 	
 	
@@ -691,4 +705,39 @@
 		<auto-attributes include="pk" mode="IN" optional="false"/>
 		<auto-attributes include="nonpk" mode="IN" optional="true"/>
 	</service> 
+	
+	
+	<service engine="java" name="submitExam" location="com.vastpro.sphinx.services.ExamSubmitService" invoke="submitExam">
+	<attribute name="partyId" type="String"  mode="IN"  optional="false"/>
+    <attribute name="examId" type="String"  mode="IN"  optional="false"/>
+ 	
+    <attribute name="score" type="Double"  mode="OUT" optional="true"/>
+    <attribute name="totalMarks" type="Double"  mode="OUT" optional="true"/>
+    <attribute name="percentage" type="Double"  mode="OUT" optional="true"/>
+    <attribute name="passed" type="Boolean" mode="OUT" optional="true"/>
+
+    <attribute name="correctCount" type="Integer" mode="OUT" optional="true"/>
+    <attribute name="wrongCount"   type="Integer" mode="OUT" optional="true"/>
+    <attribute name="skippedCount" type="Integer" mode="OUT" optional="true"/>
+	</service>
+	
+	
+	<service engine="entity-auto" name="updateNoOfAttempts" invoke="update" default-entity-name="PartyExamRelationship">
+		<auto-attributes mode="IN" include="pk"
+			optional="false"></auto-attributes>
+		<auto-attributes mode="IN" include="nonpk"
+			optional="true"></auto-attributes>
+	</service>
+	
+	<!-- entity-auto create for ExamResult -->
+<service name="createExamResult" engine="entity-auto"
+	invoke="create" default-entity-name="ExamResult">
+	<description>Save exam result after submission</description>
+	<auto-attributes include="nonpk" mode="IN"
+		optional="true" />
+	<auto-attributes include="pk" mode="OUT"
+		optional="false" />
+</service>
+
+
 </services>

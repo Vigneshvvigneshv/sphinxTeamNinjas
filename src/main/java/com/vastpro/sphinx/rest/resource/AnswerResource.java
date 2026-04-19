@@ -57,12 +57,9 @@ public class AnswerResource {
 				
 				return Response.status(400).entity(result).build();
 			}
+		
 			
-			result.put("status", "success");
-			result.put("successMessage",serviceResult.get("successMessage"));
-			
-			
-			return Response.ok().entity(result).build();
+			return Response.ok().entity(serviceResult).build();
 			
 			
 		}catch(GenericServiceException e) {
