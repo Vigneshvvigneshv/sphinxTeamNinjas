@@ -350,7 +350,6 @@ public class QuestionService {
 				
 				questionList.add(qMap);
 			}
-			result.put("totalCount", totalCount);
 			result.put("questionList", questionList);
 
 			result.put("pageNo", pageNo);

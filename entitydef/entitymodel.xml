@@ -388,6 +388,62 @@
 		</view-link>
 		
     </view-entity>
+    
+    
+    
+    <!-- This entity holds user answers for exam questions -->
+	<entity entity-name="AnswerMaster" package-name="in.vastpro.sphinx">
+		<field name="questionId" type="numeric"></field>
+		<field name="examId" type="id"></field>
+		<field name="partyId" type="id"/>
+		<field name="submittedAnswer" type="very-short"></field>
+		<field name="sNo" type="numeric"></field>
+		<field name="isFlagged" type="numeric"/>		
+		<prim-key field="questionId"/>
+		<prim-key field="examId"/>
+		<prim-key field="partyId"/>
+	</entity>
+	
+	
+	<!-- Add to your entitymodel.xml -->
+
+	<!-- Stores the final result of each exam attempt by a user -->
+	<entity entity-name="ExamResult"
+		package-name="in.vastpro.sphinx">
+
+		<field name="resultId" type="id" />   <!-- PK — generated via getNextSeqId -->
+		<field name="partyId" type="id" />   <!-- FK → Party -->
+		<field name="examId" type="id" />   <!-- FK → ExamMaster -->
+
+		<!-- Score details -->
+		<field name="score" type="currency-amount" />   <!-- actual score earned -->
+		<field name="totalMarks" type="currency-amount" />   <!-- max possible marks -->
+		<field name="percentage" type="floating-point" />   <!-- score/totalMarks * 100 -->
+		<field name="passed" type="numeric" />   <!-- 1 = pass, 0 = fail -->
+
+		<!-- Answer breakdown -->
+		<field name="correctCount" type="numeric" />
+		<field name="wrongCount" type="numeric" />
+		<field name="skippedCount" type="numeric" />
+
+		<!-- Attempt tracking -->
+		<field name="attemptNo" type="numeric" />   <!-- which attempt this was -->
+		<field name="submittedDate" type="date-time" />   <!-- when user submitted -->
+		<field name="timeTaken" type="numeric" />   <!-- seconds taken -->
+
+		<prim-key field="resultId"/>
+
+		<relation type="one" rel-entity-name="ExamMaster"
+			fk-name="EXAM_RESULT_EID_FK">
+			<key-map field-name="examId" />
+		</relation>
+
+		<relation type="one" rel-entity-name="Party"
+			fk-name="EXAM_RESULT_PID_FK">
+			<key-map field-name="partyId" />
+		</relation>
+
+	</entity>
 <!-- <view-entity entity-name="ListExamForUser" package-name="">
 	<member-entity entity-alias="PER" entity-name="PartyExamRelationship"></member-entity>
 	<member-entity entity-alias="UL" entity-name="UserLogin"></member-entity>
