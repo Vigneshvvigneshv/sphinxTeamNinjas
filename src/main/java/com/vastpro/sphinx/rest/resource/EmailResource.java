@@ -1,6 +1,7 @@
 package com.vastpro.sphinx.rest.resource;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,13 +39,13 @@ public class EmailResource {
 		}
 		try {
 			
-			String partyId = (String) request.getAttribute("partyId");
+			List<String> partyIdList = (List<String>) request.getAttribute("partyIdList");
 			
 			String examId = (String) request.getAttribute("examId");
 			
 			Map<String,Object> input=new HashMap<String, Object>();
 			
-			input.put("partyId", partyId);
+			input.put("partyIdList", partyIdList);
 			input.put("examId",examId);
 			
 			Map<String,Object>serviceResult=dispatcher.runSync("SendEmailService",input);
