@@ -685,7 +685,7 @@
 	<!-- Service for  -->
 	<service name="SendEmailService" engine="java" location="com.vastpro.sphinx.services.EmailService" invoke="sendExamNotification">
 		<attribute name="examId" mode="IN" type="String"/>
-		<attribute name="partyId" mode="IN" type="String"/>
+		<attribute name="partyIdList" mode="IN" type="List"/>
 	</service> 
 	
 	
