@@ -413,25 +413,24 @@
 	<entity entity-name="ExamResult"
 		package-name="in.vastpro.sphinx">
 
-		<field name="resultId" type="id" />   <!-- PK — generated via getNextSeqId -->
-		<field name="partyId" type="id" />   <!-- FK → Party -->
-		<field name="examId" type="id" />   <!-- FK → ExamMaster -->
+		<field name="resultId" type="id" /> 
+		<field name="partyId" type="id" />
+		<field name="examId" type="id" /> 
 
 		<!-- Score details -->
-		<field name="score" type="currency-amount" />   <!-- actual score earned -->
-		<field name="totalMarks" type="currency-amount" />   <!-- max possible marks -->
-		<field name="percentage" type="floating-point" />   <!-- score/totalMarks * 100 -->
-		<field name="passed" type="numeric" />   <!-- 1 = pass, 0 = fail -->
-
+		<field name="score" type="currency-amount" />
+		<field name="totalMarks" type="currency-amount" /> 
+		<field name="percentage" type="floating-point" /> 
+		<field name="passed" type="numeric"/>   
 		<!-- Answer breakdown -->
-		<field name="correctCount" type="numeric" />
-		<field name="wrongCount" type="numeric" />
+		<field name="correctCount" type="numeric"/>
+		<field name="wrongCount" type="numeric"/>
 		<field name="skippedCount" type="numeric" />
 
 		<!-- Attempt tracking -->
-		<field name="attemptNo" type="numeric" />   <!-- which attempt this was -->
-		<field name="submittedDate" type="date-time" />   <!-- when user submitted -->
-		<field name="timeTaken" type="numeric" />   <!-- seconds taken -->
+		<field name="attemptNo" type="numeric" />   
+		<field name="submittedDate" type="date-time" />   
+		<field name="timeTaken" type="numeric" />  
 
 		<prim-key field="resultId"/>
 
