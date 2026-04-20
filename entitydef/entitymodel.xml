@@ -275,10 +275,10 @@
         <alias entity-alias="EM" name="duration"/>
         <alias entity-alias="EM" name="passPercentage"/> 
         <alias entity-alias="APER" name="partyId"/> 
+        
         <view-link entity-alias="APER" rel-entity-alias="EM">
             <key-map field-name="examId"/>
         </view-link>
-        
     </view-entity>
     
     <!-- exam and party Relationship -->
@@ -295,6 +295,8 @@
         <alias entity-alias="EM" name="passPercentage"/> 
         <alias entity-alias="PER" name="partyId"/>
        	<alias entity-alias="PER" name="timeoutDays"/> 
+       	<alias entity-alias="PER" name="allowedAttempts" />
+       	<alias entity-alias="PER" name="noOfAttempts" />
         <view-link entity-alias="PER" rel-entity-alias="EM">
             <key-map field-name="examId"/>
         </view-link>
