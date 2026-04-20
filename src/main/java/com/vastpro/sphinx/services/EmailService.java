@@ -45,14 +45,16 @@ public static Map<String,Object>sendExamNotification(DispatchContext dctx,Map<St
 			
 			String examName=examRecord.getString("examName");
 			
-			String password=PasswordUtil.generatePassword();
+			GenericValue passwordGet=EntityQuery.use(delegator).from("PartyExamRelationship").where("examId",examId,"partyId",partyId).queryOne();
 			
-			try {
-				dispatcher.runAsync("PasswordChangesAuto", UtilMisc.toMap("examId",examId,"partyId",partyId,"passwordChangesAuto",password));
-			}catch(GenericServiceException e) {
-				e.printStackTrace();
-				return ServiceUtil.returnError("Failed To Send an Exam Notification "+e.getMessage());
-			}
+			String password=passwordGet.getString("passwordChangesAuto");
+			
+//			try {
+//				dispatcher.runAsync("PasswordChangesAuto", UtilMisc.toMap("examId",examId,"partyId",partyId,"passwordChangesAuto",password));
+//			}catch(GenericServiceException e) {
+//				e.printStackTrace();
+//				return ServiceUtil.returnError("Failed To Send an Exam Notification "+e.getMessage());
+//			}
 			
 			List<GenericValue> assignedUsersListsWithEmails = EntityQuery.use(delegator).from("UserDetailsForEmail")
 							.where("contactMechTypeId", "EMAIL_ADDRESS", "examId", examRecord.get("examId"))
