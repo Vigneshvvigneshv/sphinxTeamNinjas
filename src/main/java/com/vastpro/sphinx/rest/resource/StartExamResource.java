@@ -28,6 +28,8 @@ public class StartExamResource {
 			Map<String,Object> input=new HashMap<String, Object>();
 			input.put("partyId", request.getAttribute("partyId"));
 			input.put("examId", request.getAttribute("examId"));
+//			input.put("userName", request.getAttribute("userName"));
+			input.put("password", request.getAttribute("password"));
 			Map<String,Object> result=dispatcher.runSync("startExamOwn", input);
 			return Response.ok(result).build();
 			
