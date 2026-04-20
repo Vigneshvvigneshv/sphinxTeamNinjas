@@ -19,11 +19,11 @@ import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceContainer;
 import org.apache.ofbiz.service.ServiceUtil;
 
-@Path("/answer-submit")
+@Path("/answer")
 public class AnswerResource {
 
 	@POST
-	@Path("/answer-value-submit")
+	@Path("/save-answer")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response AnswerMaster(@Context HttpServletRequest request,@Context HttpServletResponse response) {

@@ -82,7 +82,7 @@ public class GenerateQuestionsMasterBService {
 				int randomIndex = random.nextInt(topicIds.size());
 				String randomTopicId = topicIds.get(randomIndex);
 
-				topicQuestionCount.put(randomTopicId, topicQuestionCount.get("randomTopicId") + 1);
+				topicQuestionCount.put(randomTopicId, topicQuestionCount.getOrDefault(randomTopicId,0) + 1);
 
 				remaining--;
 			}
@@ -91,7 +91,7 @@ public class GenerateQuestionsMasterBService {
 			for (Map<String, Object> topic : topicList) {
 
 				String topicId = (String) topic.get("topicId");
-				int requiredCount = topicQuestionCount.get(topicId);
+				int requiredCount = topicQuestionCount.getOrDefault(topicId,0);
 
 				List<GenericValue> questionList = EntityQuery.use(delegator).from("questionMaster").where("topicId", topicId).queryList();
 
