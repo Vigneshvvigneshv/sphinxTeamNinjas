@@ -72,7 +72,7 @@ public class ExamTopicService {
 			}
 			
 			
-			if((totalPercentage+percentage)>=100) {
+			if((totalPercentage+percentage)>100) {
 				return ServiceUtil.returnError("Total Question Percentage Should not be more than 100");
 			}
 			
