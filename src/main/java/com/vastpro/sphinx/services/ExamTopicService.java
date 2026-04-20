@@ -136,12 +136,17 @@ public class ExamTopicService {
 			
 			double totalPercentage=0;
 			for(GenericValue e:examMapping) {
-				double topicPercentage=e.getDouble("percentage");
-				totalPercentage=totalPercentage+topicPercentage;
+				
+				String existingTopicId=e.getString("topicId");
+				
+				if (!existingTopicId.equals(topicId)) {
+			        totalPercentage += e.getDouble("percentage");
+			    }
 			}
+			totalPercentage += percentage;
 			
 			
-			if(totalPercentage>=100) {
+			if(totalPercentage>100) {
 				return ServiceUtil.returnError("Total Question Percentage Should not be more than 100");
 			}
 			Map<String, Object> serviceResult = dispatcher.runSync("updateExamTopicService", input);
