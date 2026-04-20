@@ -68,6 +68,10 @@ public class StartExamService {
 				Debug.logError(resultFromInceaseAttempts.get("errorMessage").toString(),StartExamService.class.getName());
 				return resultFromInceaseAttempts;
 			}
+			
+			// if the user already in the inProgssParty so we just update the attempts
+			GenericValue alreadyExamStart=EntityQuery.use(delegator).from("InProgressParty").where("partyId",partyId,"examId",examId).queryFirst();
+			if(alreadyExamStart==null) {
 			input.put("isExamActive",1);
 			input.put("remainingTime",String.valueOf(exam.getLong("duration")));
 			input.put("totalAnswered",0);
@@ -77,6 +81,7 @@ public class StartExamService {
 				handleTransaction();
 				Debug.logError(result.get("errorMessage").toString(),StartExamService.class.getName());
 				return ServiceUtil.returnError("Error, occur during start exam");			}
+			}
 			TransactionUtil.commit();
 			return ServiceUtil.returnSuccess("Exam Started"); 
 

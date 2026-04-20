@@ -163,7 +163,7 @@ public class ExamAssignToUserService {
 				return ServiceUtil.returnError("Error, occur during remove the assigned Exam");
 				// return ServiceUtil.returnError((String)result.get("errorMessage"));
 			}
-			return ServiceUtil.returnSuccess("Exam removed successfully");
+			return ServiceUtil.returnSuccess("User removed successfully from the exam");
 
 		} catch ( GenericServiceException e) {
 			Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
