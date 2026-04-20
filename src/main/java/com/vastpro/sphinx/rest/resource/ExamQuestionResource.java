@@ -20,7 +20,7 @@ import org.apache.ofbiz.service.ServiceContainer;
 import org.apache.ofbiz.service.ServiceUtil;
 
 
-@Path("/get-exam-question")
+@Path("/exam-question")
 public class ExamQuestionResource {
 	
 	

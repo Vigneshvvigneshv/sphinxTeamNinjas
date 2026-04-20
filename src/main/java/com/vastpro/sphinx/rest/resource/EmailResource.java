@@ -14,6 +14,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
@@ -48,7 +49,7 @@ public class EmailResource {
 			input.put("examId",examId);
 			
 			Map<String,Object>serviceResult=dispatcher.runSync("SendEmailService",input);
-			
+			Debug.log("serivceResult==--=="+serviceResult);
 			if(ServiceUtil.isError(serviceResult)) {
 				result.put("status", "Error");
 				result.put("errorMessage", ServiceUtil.getErrorMessage(serviceResult));

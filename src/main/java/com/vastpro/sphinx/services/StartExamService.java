@@ -84,7 +84,7 @@ public class StartExamService {
 			}
 			TransactionUtil.commit();
 			return ServiceUtil.returnSuccess("Exam Started"); 
-
+			
 		}catch(GenericEntityException |GenericServiceException e) {
 			handleTransaction();
 			Debug.logError(e.getMessage(),StartExamService.class.getName());

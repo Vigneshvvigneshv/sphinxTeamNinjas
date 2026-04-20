@@ -48,65 +48,7 @@ public class GenerateQuestionResource {
 			String examId = (String) request.getAttribute("examId");
 			List<Map<String, Object>> topicList = (List<Map<String, Object>>) request.getAttribute("topics");
 
-//			int currentPercentage = 0;
-//			List<String> sameTopicCheck = new ArrayList<>();
-//
-//			for (Map<String, Object> topic : topicList) {
-//				String percentageStr = String.valueOf(topic.get("percentage"));
-//				String passPercentageStr = String.valueOf(topic.get("topicPassPercentage"));
-//
-//				if (passPercentageStr.trim().isEmpty() || passPercentageStr == null) {
-//					return Response.status(400).entity(ServiceUtil.returnError("Passpercentage cannot be empty")).build();
-//				}
-//				// checking same topic exist and
-//				if (!sameTopicCheck.contains(String.valueOf((topic.get("topicId"))))) {
-//
-//					sameTopicCheck.add(String.valueOf((topic.get("topicId"))));
-//
-//					currentPercentage += Integer.parseInt(percentageStr);
-//				} else {
-//					return Response.status(400).entity(ServiceUtil.returnError("Topic cannot be same")).build();
-//				}
-//			}
-//
-//			if (currentPercentage != 100) {
-//				return Response.ok().entity(ServiceUtil.returnError("percentage must be 100 ")).build();
-//			}
-//
-//			
-//
-//			for (Map<String, Object> topic : topicList) {
-//				Map<String, Object> input = new HashMap<String, Object>();
-//
-//				input.put("examId", examId);
-//				input.put("topicId", topic.get("topicId"));
-//				input.put("percentage", topic.get("percentage"));
-//				input.put("topicPassPercentage", topic.get("topicPassPercentage"));
-//
-//				if (input.get("examId") == null || input.get("topicId") == null) {
-//					return Response.status(400).entity(ServiceUtil.returnError("examId and topicId are required")).build();
-//				}
-//
-//				//
-//				GenericValue examTopic = EntityQuery.use(delegator).from("ExamTopicMapping")
-//								.where("examId", examId, "topicId", topic.get("topicId")).queryOne();
-//
-//				Map<String, Object> serviceResult = null;
-//				if (examTopic == null) {
-//					serviceResult = dispatcher.runSync("createExamTopic", input);
-//				} else {
-//					serviceResult = dispatcher.runSync("updateExamTopic", input);
-//				}
-//
-//				if (ServiceUtil.isError(serviceResult)) {
-//					TransactionUtil.rollback();
-//					result.put("status", "ERROR");
-//					result.put("errorMessage", ServiceUtil.getErrorMessage(serviceResult));
-//
-//					return Response.status(500).entity(result).build();
-//				}
-//
-//			}
+//		
 
 			
 			// GenerateQuestions Working...

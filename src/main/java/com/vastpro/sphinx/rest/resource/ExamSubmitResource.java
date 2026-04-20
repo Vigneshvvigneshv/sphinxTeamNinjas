@@ -52,15 +52,15 @@ public class ExamSubmitResource {
 	              return Response.status(500).entity(result).build(); 
 			 }
 			 
-			  result.put("responseMessage", "SUCCESS");
-	            result.put("message",       "Exam submitted successfully");
-	            result.put("score",         serviceResult.get("score"));
-	            result.put("totalMarks",    serviceResult.get("totalMarks"));
-	            result.put("percentage",    serviceResult.get("percentage"));
-	            result.put("passed",        serviceResult.get("passed"));
-	            result.put("correctCount",  serviceResult.get("correctCount"));
-	            result.put("wrongCount",    serviceResult.get("wrongCount"));
-	            result.put("skippedCount",  serviceResult.get("skippedCount"));
+				result.put("responseMessage", "SUCCESS");
+				result.put("message", "Exam submitted successfully");
+				result.put("score", serviceResult.get("score"));
+				result.put("totalMarks", serviceResult.get("totalMarks"));
+				result.put("percentage", serviceResult.get("percentage"));
+				result.put("passed", serviceResult.get("passed"));
+				result.put("correctCount", serviceResult.get("correctCount"));
+				result.put("wrongCount", serviceResult.get("wrongCount"));
+				result.put("skippedCount", serviceResult.get("skippedCount"));
 	            
 	            return Response.ok(result).build();
 			
