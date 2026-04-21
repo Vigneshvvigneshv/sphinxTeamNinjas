@@ -1,5 +1,6 @@
 package com.vastpro.sphinx.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,8 +60,8 @@ public class ExamService {
 			createMap.put("examName", input.get("examName"));
 			createMap.put("description", input.get("description"));
 			try {
-				Long noOfQuestions =Long.valueOf((String) input.get("noOfQuestions"));
-				if(noOfQuestions<0) {
+				Long noOfQuestions = Long.valueOf((String) input.get("noOfQuestions"));
+				if (noOfQuestions < 0) {
 					return ServiceUtil.returnError("Number of question should be in greater than 0");
 				}
 				createMap.put("noOfQuestions", noOfQuestions);
@@ -69,8 +70,8 @@ public class ExamService {
 				return ServiceUtil.returnError("Number of question should be in number");
 			}
 			try {
-				Long duration =Long.valueOf((String) input.get("duration"));
-				if(duration<=0 && duration>180 ) {
+				Long duration = Long.valueOf((String) input.get("duration"));
+				if (duration <= 0 && duration > 180) {
 					return ServiceUtil.returnError("duration of question should be betweet 1 to 180");
 				}
 				createMap.put("duration", duration);
@@ -79,18 +80,17 @@ public class ExamService {
 				return ServiceUtil.returnError("Duration should be in number");
 			}
 			try {
-				
-				Long passPercentage =Long.valueOf((String) input.get("passPercentage"));
-				if(passPercentage<20 && passPercentage>100 ) {
+
+				Long passPercentage = Long.valueOf((String) input.get("passPercentage"));
+				if (passPercentage < 20 && passPercentage > 100) {
 					return ServiceUtil.returnError("passPercentage of question should be between 20 to 100");
 				}
 				createMap.put("passPercentage", passPercentage);
-			
+
 			} catch (NumberFormatException e) {
 				Debug.logError(e.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Pass Percentage should be in number");
 			}
-
 
 			TransactionUtil.begin();
 			// call the entity-auto service it will create the record
@@ -150,7 +150,7 @@ public class ExamService {
 	public static Map<String, Object> deleteExam(DispatchContext context, Map<String, Object> param) {
 		LocalDispatcher dispatcher = context.getDispatcher();
 		Delegator delegator = context.getDelegator();
-		String partyId=(String) param.get("partyId");
+		String partyId = (String) param.get("partyId");
 		List<String> deleteList = (List<String>) param.get("deleteList");
 		for (String input : deleteList) {
 			try {
@@ -175,15 +175,14 @@ public class ExamService {
 				// }
 
 				TransactionUtil.begin();
-				
-				//when the exam delete, delete the records from the another table that are related to the exam(deleted exam)
+
+				// when the exam delete, delete the records from the another table that are related to the exam(deleted exam)
 				delegator.removeByAnd("ExamTopicMapping", UtilMisc.toMap("examId", input));
 				delegator.removeByAnd("QuestionBankMasterB", UtilMisc.toMap("examId", input));
 				delegator.removeByAnd("PartyExamRelationship", UtilMisc.toMap("examId", input));
 				// this statement is delete the relation between admin and exam
 				// it remove the relation when the admin delete the exam
-				Map<String, Object> result1 = dispatcher.runSync("deleteAdminPartyExamRel",
-								Map.of("partyId", partyId, "examId", input));
+				Map<String, Object> result1 = dispatcher.runSync("deleteAdminPartyExamRel", Map.of("partyId", partyId, "examId", input));
 
 				// from the entity-auto service return the map the map contain success or error
 				// to add the data
@@ -247,8 +246,8 @@ public class ExamService {
 			createMap.put("examName", input.get("examName"));
 			createMap.put("description", input.get("description"));
 			try {
-				Long noOfQuestions =Long.valueOf((String) input.get("noOfQuestions"));
-				if(noOfQuestions<0) {
+				Long noOfQuestions = Long.valueOf((String) input.get("noOfQuestions"));
+				if (noOfQuestions < 0) {
 					return ServiceUtil.returnError("Number of question should be in greater than 0");
 				}
 				createMap.put("noOfQuestions", noOfQuestions);
@@ -257,8 +256,8 @@ public class ExamService {
 				return ServiceUtil.returnError("Number of question should be in number");
 			}
 			try {
-				Long duration =Long.valueOf((String) input.get("duration"));
-				if(duration<=0 && duration>180 ) {
+				Long duration = Long.valueOf((String) input.get("duration"));
+				if (duration <= 0 && duration > 180) {
 					return ServiceUtil.returnError("duration of question should be betweet 1 to 180");
 				}
 				createMap.put("duration", duration);
@@ -267,13 +266,13 @@ public class ExamService {
 				return ServiceUtil.returnError("Duration should be in number");
 			}
 			try {
-				
-				Long passPercentage =Long.valueOf((String) input.get("passPercentage"));
-				if(passPercentage<20 && passPercentage>100 ) {
+
+				Long passPercentage = Long.valueOf((String) input.get("passPercentage"));
+				if (passPercentage < 20 && passPercentage > 100) {
 					return ServiceUtil.returnError("passPercentage of question should be between 20 to 100");
 				}
 				createMap.put("passPercentage", passPercentage);
-			
+
 			} catch (NumberFormatException e) {
 				Debug.logError(e.getMessage(), ExamService.class.getName());
 				return ServiceUtil.returnError("Pass Percentage should be in number");
@@ -307,7 +306,8 @@ public class ExamService {
 		Delegator delegator = context.getDelegator();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		try {
-			List<GenericValue> examList = EntityQuery.use(delegator).from("AdminExamRelationInfo").where("partyId",input.get("partyId")).orderBy("examName").queryList();
+			List<GenericValue> examList = EntityQuery.use(delegator).from("AdminExamRelationInfo").where("partyId", input.get("partyId"))
+							.orderBy("examName").queryList();
 			result.put("examList", examList);
 			return result;
 
@@ -344,19 +344,61 @@ public class ExamService {
 			return ServiceUtil.returnError("Error, occur during get exam by id" + e.getMessage());
 		}
 	}
-	//get the exam by the user(using the partyId)
+
+	// get the exam by the user(using the partyId) incomplete exam
 	public static Map<String, Object> getExamByPartyId(DispatchContext context, Map<String, Object> input) {
 		Delegator delegator = context.getDelegator();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		try {
 			// before update we check the examId is present or not
-			List<GenericValue> examData = EntityQuery.use(delegator).from("ExamPartyRelationInfo").where("partyId", input.get("partyId")).queryList();
-			result.put("examList", examData);
+			List<GenericValue> examData = EntityQuery.use(delegator).from("ExamPartyRelationInfo").where("partyId", input.get("partyId"))
+							.queryList();
+
+			List<GenericValue> filteredExamData = new ArrayList<>();
+
+			for (GenericValue exam : examData) {
+				Long allowedAttempts = exam.getLong("allowedAttempts");
+				Long noOfAttempts = exam.getLong("noOfAttempts");
+				if ((allowedAttempts - noOfAttempts) > 0) {
+					filteredExamData.add(exam);
+				}
+			}
+			result.put("examList", filteredExamData);
 			return result;
 		} catch (GenericEntityException e) {
 			Debug.logError(e.getMessage(), ExamService.class.getName());
 			return ServiceUtil.returnError("Error, occur during get exam" + e.getMessage());
 		}
 	}
-	
+
+	// get the exam by the user(using the partyId) completed exam
+	public static Map<String, Object> getCompletedExamByPartyId(DispatchContext context, Map<String, Object> input) {
+		Delegator delegator = context.getDelegator();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		try {
+			// before update we check the examId is present or not
+			List<GenericValue> examData = EntityQuery.use(delegator).from("ExamPartyRelationInfo").where("partyId", input.get("partyId"))
+							.queryList();
+
+			List<GenericValue> filteredExamData = new ArrayList<>();
+
+			for (GenericValue exam : examData) {
+				
+
+				GenericValue inInProgressParty = EntityQuery.use(delegator).from("InProgressParty").where("partyId", input.get("partyId"),"examId",exam.getString("examId")
+//								,"isExamActive",0
+								)
+								.queryFirst();
+				if (inInProgressParty != null) {
+						filteredExamData.add(exam);
+				}
+			}
+			result.put("completedExamList", filteredExamData);
+			return result;
+		} catch (GenericEntityException e) {
+			Debug.logError(e.getMessage(), ExamService.class.getName());
+			return ServiceUtil.returnError("Error, occur during get exam" + e.getMessage());
+		}
+	}
+
 }
