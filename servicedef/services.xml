@@ -657,7 +657,7 @@
 		location="com.vastpro.sphinx.services.GenerateQuestionsMasterBService"
 		invoke="generateQuestionsService">
 		<attribute name="examId" mode="IN" type="String" />
-		<attribute name="TopicList" mode="IN" type="List" />
+		
 	</service>
 
 
@@ -680,6 +680,7 @@
 			<attribute name="hasPrevious" mode="OUT" type="Boolean" optional="false"/>
 			<attribute name="totalCount" type="Integer" mode="OUT" optional="false" />
 			<attribute name="question" mode="OUT" type="GenericValue"/>
+			<attribute name="duration" mode="OUT" type="Long" optional="true"/>
 	</service>
 	
 	<!-- Service for  -->

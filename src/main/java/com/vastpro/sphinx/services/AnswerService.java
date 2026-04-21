@@ -45,7 +45,7 @@
 				//Checking The exam Is Active
 				GenericValue inProgress=EntityQuery.use(delegator).from("InProgressParty").where("examId",examId,"partyId",partyId).queryOne();		
 				
-				if(inProgress==null || inProgress.getLong("isExamActive") != 1L) {
+				if(inProgress==null || inProgress.getLong("isExamActive")!=1) {
 					return ServiceUtil.returnError("No Active exam Session for this Party");
 				}
 				

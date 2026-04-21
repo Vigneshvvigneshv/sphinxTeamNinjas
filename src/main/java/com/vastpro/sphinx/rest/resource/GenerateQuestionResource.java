@@ -1,5 +1,6 @@
 package com.vastpro.sphinx.rest.resource;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,48 +41,48 @@ public class GenerateQuestionResource {
 		if (dispatcher == null) {
 			dispatcher = ServiceContainer.getLocalDispatcher("sphinx", (Delegator) request.getAttribute("delegator"));
 		}
-
-//		Delegator delegator = (Delegator) request.getAttribute("delegator");
-
+		
 		try {
-
 			String examId = (String) request.getAttribute("examId");
-			List<Map<String, Object>> topicList = (List<Map<String, Object>>) request.getAttribute("topics");
 
-//		
+		    if (examId == null || examId.isEmpty()) {
+	            result.put("status", "ERROR");
+	            result.put("message", "examId is required");
+	            return Response.status(400).entity(result).build();
+	        }
+		    TransactionUtil.begin();
+		    Map<String, Object> serviceInput = new HashMap<>();
+	        serviceInput.put("examId", examId);
+	        
+	        
+	        Map<String, Object> serviceResult =
+	                        dispatcher.runSync("generateQuestionsService", serviceInput);
+		   
 
-			
-			// GenerateQuestions Working...
-			Map<String, Object> listTopics = new HashMap<String, Object>();
-			TransactionUtil.begin();
-			listTopics.put("TopicList", topicList);
-			listTopics.put("examId", examId);
+		        if (ServiceUtil.isError(serviceResult)) {
+		            TransactionUtil.rollback();
+		            result.put("status", "ERROR");
+		            result.put("errorMessage", ServiceUtil.getErrorMessage(serviceResult));
+		            return Response.status(500).entity(result).build();
+		        }
+		    
 
-			Map<String, Object> serviceResultgenerate = dispatcher.runSync("generateQuestionsService", listTopics);
+		    TransactionUtil.commit();
+		    result.put("status", "SUCCESS");
+		    result.put("message", "Questions generated successfully");
+		    return Response.ok(result).build();
 
-			if (ServiceUtil.isError(serviceResultgenerate)) {
-				TransactionUtil.rollback();
-				result.put("status", "ERROR");
-				result.put("errorMessage", ServiceUtil.getErrorMessage(serviceResultgenerate));
-				return Response.status(500).entity(result).build();
-			}
-			TransactionUtil.commit();
+		} catch (Exception e) {
+		    try {
+		        TransactionUtil.rollback();
+		    } catch (GenericTransactionException e1) {
+		        e1.printStackTrace();
+		    }
+		    e.printStackTrace();
 
-			result.put("status", "success");
-			result.put("message", serviceResultgenerate.get("successMessage"));
-			result.put("responseMessage", "Successfully created question");
-			result.put("successMessage", "success");
-			return Response.ok().entity(result).build();
-
-		} catch (GenericServiceException | GenericEntityException e) {
-			e.printStackTrace();
-			try {
-				TransactionUtil.rollback();
-			} catch (GenericTransactionException e1) {
-				e1.printStackTrace();
-			}
-			result.put("message", "Error in creating questions");
-			return Response.ok().entity(result).build();
+		    result.put("status", "ERROR");
+		    result.put("message", "Error in generating questions");
+		    return Response.status(500).entity(result).build();
 		}
 
 	}
