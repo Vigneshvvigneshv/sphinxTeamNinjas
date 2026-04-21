@@ -371,7 +371,7 @@ public class QuestionResource {
 			return Response.ok().entity(result).build();
 
 		} catch (GenericServiceException e) {
-
+			e.printStackTrace();
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 							.entity(ServiceUtil.returnError("Unexpected error occured, try again after sometime!")).build();
 		}
@@ -417,6 +417,7 @@ public class QuestionResource {
 			result.put("question", ServiceResult.get("question"));
 			return Response.ok().entity(result).build();
 		} catch (GenericServiceException e) {
+			e.printStackTrace();
 			result.put("responseMesage", "ERROR");
 			result.put("message", "Failed to Fetch the question");
 
