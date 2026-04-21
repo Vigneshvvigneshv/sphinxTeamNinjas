@@ -758,7 +758,7 @@
 	<description>Save exam result after submission</description>
 	<attribute name="partyId" mode="IN" type="String"></attribute>
 	<attribute name="examId" mode="IN" type="String"></attribute>
-	<attribute name="resultList" mode="IN" type="GenericValue"></attribute>
+	<attribute name="resultList" mode="OUT" type="GenericValue" optional="true"></attribute>
 </service>
 
 

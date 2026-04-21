@@ -20,20 +20,24 @@ public class ExamResultService {
 			String partyId=(String) input.get("partyId");
 			if(UtilValidate.isEmpty(partyId)) {
 				Debug.logError("Party id is empty",ExamResultService.class.getName());
-				return ServiceUtil.returnError("Error, Get the result contact Admin");
+				return ServiceUtil.returnError("Error, please contact Admin");
 			}
-			String examId=(String) input.get("partyId");
+			String examId=(String) input.get("examId");
 			if(UtilValidate.isEmpty(examId)) {
 				Debug.logError("exam id is empty",ExamResultService.class.getName());
-				return ServiceUtil.returnError("Error, Get the result contact Admin");
+				return ServiceUtil.returnError("Error, please contact Admin");
 			}
 			GenericValue resultList=EntityQuery.use(delegator).from("ExamResult").where("partyId",partyId,"examId",examId).queryFirst();
 			Map<String,Object> result=ServiceUtil.returnSuccess("Exam Result Getted successfully");
-			result.put("resultList", result);
+			if(!(UtilValidate.isEmpty(resultList))) {
+				result.put("resultList", resultList);
+			}else {
+				return ServiceUtil.returnError("Error, Please contact admin");
+			}
 			return result;
 		}catch(GenericEntityException e) {
 			Debug.logError(e.getMessage(),ExamResultService.class.getName());
-			return ServiceUtil.returnError("Error, Get the result");
+			return ServiceUtil.returnError("Error, While getting the result");
 			
 		}
 	}
