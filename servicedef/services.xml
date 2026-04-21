@@ -753,6 +753,15 @@
 		optional="false" />
 </service>
 
+<service name="updateExamResult" engine="entity-auto"
+	invoke="update" default-entity-name="ExamResult">
+	<description>Save exam result after submission</description>
+	<auto-attributes include="nonpk" mode="IN"
+		optional="true" />
+	<auto-attributes include="pk" mode="OUT"
+		optional="true" />
+</service>
+
 <service name="getExamResult" engine="java" location="com.vastpro.sphinx.services.ExamResultService"
 	invoke="getExamResult" >
 	<description>Save exam result after submission</description>
