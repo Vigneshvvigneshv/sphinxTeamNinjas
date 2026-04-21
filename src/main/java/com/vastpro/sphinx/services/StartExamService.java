@@ -69,6 +69,7 @@ public class StartExamService {
 				return resultFromInceaseAttempts;
 			}
 			
+			
 			// if the user already in the inProgssParty so we just update the attempts
 			GenericValue alreadyExamStart=EntityQuery.use(delegator).from("InProgressParty").where("partyId",partyId,"examId",examId).queryFirst();
 			if(alreadyExamStart==null) {
@@ -81,6 +82,14 @@ public class StartExamService {
 				handleTransaction();
 				Debug.logError(result.get("errorMessage").toString(),StartExamService.class.getName());
 				return ServiceUtil.returnError("Error, occur during start exam");			}
+			}else {
+				//this is used to start the again so we set the iExamActive as 1
+				input.put("isExamActive",1);
+				Map<String,Object> setIsExamActive =dispatcher.runSync("updateInprogress", input);
+				if(ServiceUtil.isError(setIsExamActive)) {
+					handleTransaction();
+					Debug.logError(setIsExamActive.get("errorMessage").toString(),StartExamService.class.getName());
+					return ServiceUtil.returnError("Error, occur during start exam");			}
 			}
 			TransactionUtil.commit();
 			return ServiceUtil.returnSuccess("Exam Started"); 
