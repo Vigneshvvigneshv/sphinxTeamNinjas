@@ -34,10 +34,10 @@ public class AnswerResource {
 		}
 		Map<String,Object>result=new HashMap<>();
 		try {
-			String questionId=(String)request.getAttribute("questionId");
+			String questionId=String.valueOf(request.getAttribute("questionId"));
 			String examId=(String)request.getAttribute("examId");
 			String partyId=(String)request.getAttribute("partyId");
-			String answer=(String)request.getAttribute("Answer");
+			String answer=(String)request.getAttribute("answer");
 			
 			
 			Map<String,Object>input=new HashMap<>();
@@ -63,6 +63,12 @@ public class AnswerResource {
 			
 			
 		}catch(GenericServiceException e) {
+			e.printStackTrace();
+			result.put("status", "Error");
+			result.put("errorMessage", e.getMessage());
+			
+			return Response.status(400).entity(result).build();
+		}catch(ClassCastException e) {
 			e.printStackTrace();
 			result.put("status", "Error");
 			result.put("errorMessage", e.getMessage());

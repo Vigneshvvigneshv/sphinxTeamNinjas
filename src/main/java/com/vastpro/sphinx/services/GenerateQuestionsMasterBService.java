@@ -26,13 +26,28 @@ public class GenerateQuestionsMasterBService {
 
 		try {
 			String examId = (String) context.get("examId");
-			List<Map<String, Object>> topicList = (List<Map<String, Object>>) context.get("TopicList");
+			
 
 			// getting the exam
 			GenericValue exam = EntityQuery.use(delegator).from("ExamMaster").where("examId", examId).queryOne();
 
+			if (exam == null) {
+			    return ServiceUtil.returnError("Exam not found");
+			}
 			Long noOfQuestions = exam.getLong("noOfQuestions");
-
+			
+			 if (noOfQuestions == null || noOfQuestions == 0) {
+		            return ServiceUtil.returnError("Invalid number of questions in exam");
+		        }
+			 
+			 List<GenericValue> topicList = EntityQuery.use(delegator)
+				                .from("ExamTopicMapping")
+				                .where("examId", examId)
+				                .queryList();
+			 
+			  if (topicList == null || topicList.isEmpty()) {
+		            return ServiceUtil.returnError("No topics found for this exam");
+		        }
 			// storing final questions to add in the quetionBankMaster B
 			List<GenericValue> finalQuestions = new ArrayList<>();
 
@@ -41,22 +56,23 @@ public class GenerateQuestionsMasterBService {
 
 			int assingedTotal = 0;
 
+			
 			// this loop for adding the each topic questions
-			for (Map<String, Object> topic : topicList) {
-				String topicId = (String) topic.get("topicId");
+			for (GenericValue topic : topicList) {
+				
+				String topicId = topic.getString("topicId");
+	            Double percentage = topic.getDouble("percentage");
+	            
+	            if (percentage == null) percentage = 0.0;
+				
 
-				GenericValue examDetails = EntityQuery.use(delegator).from("ExamTopicMapping").where("examId", examId, "topicId", topicId)
-								.queryOne();
-
-				String percentageStr = (String.valueOf(examDetails.getDouble("percentage")));
-
-				Double percentage = Double.valueOf(percentageStr);
-
-				List<GenericValue> questionList = EntityQuery.use(delegator).from("questionMaster").where("topicId", topicId).queryList();
-				if (percentage > 0) {
-					if (questionList.size() == 0) {
+				List<GenericValue> questionList = EntityQuery.use(delegator)
+								.from("questionMaster")
+								.where("topicId", topicId)
+								.queryList();
+				
+				if (percentage > 0 && (questionList == null || questionList.isEmpty())) {
 						return ServiceUtil.returnError("No Questions found in " + (String) topic.get("topicName"));
-					}
 				}
 
 				int count = (int) Math.floor((percentage / 100) * noOfQuestions);
@@ -64,7 +80,7 @@ public class GenerateQuestionsMasterBService {
 				topicQuestionCount.put(topicId, count);
 
 				assingedTotal += count;
-				;
+				
 			}
 
 			// Remaining question
@@ -72,8 +88,8 @@ public class GenerateQuestionsMasterBService {
 
 			List<String> topicIds = new ArrayList<>();
 
-			for (Map<String, Object> topic : topicList) {
-				topicIds.add((String) topic.get("topicId"));
+			for (GenericValue topic : topicList) {
+				topicIds.add(topic.getString("topicId"));
 			}
 
 			// Generating Random Topic To fetch question from question Master based on topic
@@ -88,9 +104,9 @@ public class GenerateQuestionsMasterBService {
 			}
 
 			// Fetch & pick questions from question master
-			for (Map<String, Object> topic : topicList) {
+			for (GenericValue topic : topicList) {
 
-				String topicId = (String) topic.get("topicId");
+				String topicId =  topic.getString("topicId");
 				int requiredCount = topicQuestionCount.getOrDefault(topicId,0);
 
 				List<GenericValue> questionList = EntityQuery.use(delegator).from("questionMaster").where("topicId", topicId).queryList();
@@ -101,7 +117,10 @@ public class GenerateQuestionsMasterBService {
 				int limit = Math.min(requiredCount, questionList.size());
 
 				for (int i = 0; i < limit; i++) {
-					finalQuestions.add(questionList.get(i));
+					GenericValue q = questionList.get(i);
+					if (!finalQuestions.contains(q)) {
+					    finalQuestions.add(q);
+					}
 				}
 			}
 

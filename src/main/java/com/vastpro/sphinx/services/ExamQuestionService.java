@@ -42,6 +42,7 @@ public static Map<String,Object> getAllExamQuestion(DispatchContext dctx, Map<St
 			
 //			List<Map<String,Object>>questionList=new ArrayList<Map<String,Object>>();
 			
+			GenericValue exam=EntityQuery.use(delegator).from("ExamMaster").where("examId",examId).queryOne();
 			
 			result.put("totalCount", totalCount);
 			result.put("question", question);
@@ -51,7 +52,7 @@ public static Map<String,Object> getAllExamQuestion(DispatchContext dctx, Map<St
 			result.put("hasNext", pageNo < totalPages);
 			result.put("hasPrevious", pageNo > 1);
 			result.put("totalCount", totalCount);		
-			
+			result.put("duration",exam.getLong("duration"));
 			return result;
 			
 		}catch(Exception e) {
