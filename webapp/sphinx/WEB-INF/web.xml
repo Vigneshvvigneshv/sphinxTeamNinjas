@@ -64,12 +64,16 @@
 		<filter-name>SameSiteFilter</filter-name>
 		<filter-class>org.apache.ofbiz.webapp.control.SameSiteFilter</filter-class>
 	</filter>
-	<filter-mapping>
+	 <filter-mapping>
 		<filter-name>ControlFilter</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping> 
 	<filter-mapping>
+		<filter-name>ControlFilter</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping> 
 	
+	<filter-mapping>
 		<filter-name>ContextFilter</filter-name>
 		<url-pattern>/control/*</url-pattern>
 	</filter-mapping>
@@ -80,14 +84,24 @@
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 	
-    <filter-mapping>
+   <!--  <filter-mapping>
 		<filter-name>ControlFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
-	</filter-mapping> 
+	</filter-mapping>  -->
 	
 	<filter-mapping>
 		<filter-name>SameSiteFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+  	  <filter-name>corsFilter</filter-name>
+  	  <filter-class>com.vastpro.sphinx.filters.CorsFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+ 	   <filter-name>corsFilter</filter-name>
+  	  <url-pattern>/api/*</url-pattern>
 	</filter-mapping>
 
 	<listener>

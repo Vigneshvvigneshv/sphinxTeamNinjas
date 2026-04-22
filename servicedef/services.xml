@@ -69,25 +69,26 @@
 		<attribute name="lastName" mode="IN" type="String"></attribute>
 		<attribute name="email" mode="IN" type="String"></attribute>
 		<attribute name="roleTypeId" mode="IN" type="String"></attribute>
+		<attribute name="partyId" mode="IN" type="String"></attribute>
 	</service>
-<!-- 
-	<service name="createParty" engine="entity-auto"
+
+	 <service name="createParty" engine="entity-auto"
 		invoke="create" default-entity-name="Party">
 		<auto-attributes mode="IN" include="pk"
 			optional="false"></auto-attributes>
 		<auto-attributes mode="IN" include="nonpk"
 			optional="true"></auto-attributes>
-	</service> -->
+	</service> 
 
-<!-- 	<service name="createPerson" engine="entity-auto"
+	<service name="createPerson" engine="entity-auto"
 		invoke="create" default-entity-name="Person">
 		<auto-attributes mode="IN" include="pk"
 			optional="false"></auto-attributes>
 		<auto-attributes mode="IN" include="nonpk"
 			optional="true"></auto-attributes>
 	</service>
- -->
-	<!-- <service name="createContactMech" engine="entity-auto"
+
+	 <service name="createContactMech" engine="entity-auto"
 		invoke="create" default-entity-name="ContactMech">
 		<auto-attributes mode="IN" include="pk"
 			optional="false"></auto-attributes>
@@ -100,21 +101,22 @@
 			optional="false"></auto-attributes>
 		<auto-attributes mode="IN" include="nonpk"
 			optional="true"></auto-attributes>
-	</service> -->
-<!-- 	<service name="createUserLogin" engine="entity-auto"
+	</service>
+	<!-- <service name="createUserLogin" engine="entity-auto"
 		invoke="create" default-entity-name="UserLogin">
 		<auto-attributes mode="IN" include="pk"
 			optional="false"></auto-attributes>
 		<auto-attributes mode="IN" include="nonpk"
 			optional="true"></auto-attributes>
-	</service> 
+	</service> -->
+	
 	<service name="createPartyRole" engine="entity-auto"
 		invoke="create" default-entity-name="PartyRole">
 		<auto-attributes mode="IN" include="pk"
 			optional="false"></auto-attributes>
 		<auto-attributes mode="IN" include="nonpk"
 			optional="true"></auto-attributes>
-	</service> -->
+	</service>  
 
 	<!-- End of UserSignUP Service -->
 	<!-- ====================== End user services ================================== -->
@@ -126,6 +128,7 @@
 		location="com.vastpro.sphinx.services.TopicService"
 		invoke="createTopic">
 		<attribute name="topicName" mode="IN" type="String"></attribute>
+		<!-- <attribute name="partyId" mode="IN" type="String"></attribute> -->
 	</service>
 
 	<!-- update topic -->
@@ -149,6 +152,7 @@
 		invoke="getAllTopics">
 		<attribute name="topicList" mode="OUT" type="List"
 			optional="true"></attribute>
+		<!-- <attribute name="partyId" mode="IN" type="String"></attribute> -->
 		<attribute name="pageNo" mode="IN" type="Integer" optional="true"/>
 		<attribute name="pageSize" mode="IN" type="Integer" optional="true"/>
 		

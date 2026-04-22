@@ -1,10 +1,14 @@
 package com.vastpro.sphinx.services;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilDateTime;
+import org.apache.ofbiz.base.util.UtilMisc;
+import org.apache.ofbiz.common.login.LoginServices;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
@@ -60,7 +64,7 @@ public class UserSignUpService {
 			}
 
 			// Check if username already exists
-			GenericValue existingUser = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", username).queryFirst();
+			GenericValue existingUser = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", username).queryOne();
 
 			if (existingUser != null) {
 				return ServiceUtil.returnError("Username already exists");
@@ -140,25 +144,54 @@ public class UserSignUpService {
 				return handleTransaction();
 
 			// create user login
-			Map<String, Object> userLoginInput = new HashMap<>();
-			userLoginInput.put("userLoginId", username);
-
-			if ("SPHINX_ADMIN".equals(role) && password != null) {
-				userLoginInput.put("currentPassword", PasswordUtil.encryptPassword(password));
-			} else {
-				userLoginInput.put("currentPassword", PasswordUtil.generatePassword());
-			}
-
-			userLoginInput.put("enabled", "N");
-			userLoginInput.put("partyId", partyId);
-			Map<String, Object> userLoginResult = dispatcher.runSync("createUserLogin", userLoginInput);
-			if (ServiceUtil.isError(userLoginResult))
-				return handleTransaction();
-
+//			Map<String, Object> userLoginInput = new HashMap<>();
+//			userLoginInput.put("userLoginId", username);
+//
+			if ("SPHINX_USER".equals(role) && password != null) {
+				password = PasswordUtil.generatePassword();
+//				userLoginInput.put("currentPassword", PasswordUtil.encryptPassword(password));
+			} 
+//			else {
+//				
+//			}
+//
+//			userLoginInput.put("enabled", "N");
+//			userLoginInput.put("partyId", partyId);
+//			Map<String, Object> userLoginResult = dispatcher.runSync("createUserLogin", userLoginInput);
+//			if (ServiceUtil.isError(userLoginResult))
+//				return handleTransaction();
+//
 			GenericValue naRole = EntityQuery.use(delegator).from("PartyRole").where("partyId", partyId, "roleTypeId", "_NA_").queryOne();
 			if (naRole != null) {
 				naRole.remove();
 			}
+			
+			// OOTB
+			
+			GenericValue userLogin=EntityQuery.use(delegator).from("UserLogin").where("partyId",params.get("partyId")).queryFirst();
+			
+			dctx.getDispatcher().runSync("createUserLogin",
+							UtilMisc.toMap("userLoginId", username, "currentPassword", password, "currentPasswordVerify",
+											password, "partyId", partyId,
+											"enabled", "Y", "requirePasswordChange", "N", "userLogin",
+											userLogin
+											));
+//
+//			dctx.getDispatcher().runSync("addUserLoginToSecurityGroup",
+//							UtilMisc.toMap("userLoginId", username, "groupId", "SPHINX_ADMIN_GROUP", "fromDate",
+//											Timestamp.valueOf(LocalDateTime.now()),
+//											"userLogin", 
+//											userLogin
+//											));
+			
+//			LoginServices.createUserLogin(dctx, naRole);
+//			
+			GenericValue secGroup = delegator.makeValue("UserLoginSecurityGroup");
+			secGroup.set("userLoginId", username);
+			secGroup.set("groupId", "SPHINX_ADMIN_GROUP");
+			secGroup.set("fromDate", Timestamp.valueOf(LocalDateTime.now()));
+			delegator.create(secGroup);
+//			
 
 			// create contact
 			Map<String, Object> contactMechInput = new HashMap<>();

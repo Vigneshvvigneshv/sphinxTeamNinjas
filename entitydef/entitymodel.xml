@@ -25,7 +25,12 @@
 		<description>Entity for to Store the topic</description>
 		<field name="topicId" type="id"></field>
 		<field name="topicName" type="name"></field>
+		<!-- <field name="partyId" type="id" /> -->
 		<prim-key field="topicId" />
+		
+		<!-- <relation type="one" rel-entity-name="Party">
+			<key-map field-name="partyId" />
+		</relation> -->
 	</entity>
 
 	<entity entity-name="questionMaster">

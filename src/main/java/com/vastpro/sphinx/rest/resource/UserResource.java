@@ -90,6 +90,11 @@ public class UserResource {
 		try {
 //			LocalDispatcher dispatcher = getDispatcher();
 			LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+			HttpSession session = request.getSession();
+			GenericValue userLogin = null;
+			if(UtilValidate.isNotEmpty(session)) {
+				userLogin = (GenericValue) session.getAttribute("userLogin");
+			}
 			if (dispatcher == null) {
 				dispatcher = ServiceContainer.getLocalDispatcher("sphinx",
 						(Delegator) request.getAttribute("delegator"));
@@ -107,6 +112,7 @@ public class UserResource {
 			userInput.put("lastName", request.getAttribute("lastName"));
 			userInput.put("email", request.getAttribute("email"));
 			userInput.put("roleTypeId",request.getAttribute("roleTypeId"));
+			userInput.put("partyId", request.getAttribute("partyId"));
 			Map<String, Object> result = dispatcher.runSync("userSignUpServiceOwn", userInput);
 
 //			return result;

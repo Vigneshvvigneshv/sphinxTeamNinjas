@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
@@ -35,12 +36,18 @@ public class TopicService {
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Map<String, Object> result = ServiceUtil.returnSuccess("Topic created successfully");
 		String topicName = (String) params.get("topicName");
+//		String partyId=(String) params.get("partyId");
 		try {
 			// validate the topic Name is empty or not
 			// if it is empty return the error message
 			if (topicName == null || topicName.trim().isEmpty()) {
 				return ServiceUtil.returnError("Field cannot be empty");
 			}
+			
+//			if (UtilValidate.isEmpty(partyId)) {
+//				Debug.logError("party id is missing",TopicService.class.getName());
+//				return ServiceUtil.returnError("Please, Try again later!");
+//			}
 			// validate the topic name is already exits or not in the topicMaster table
 			GenericValue topicAlreadyExits = EntityQuery.use(delegator).from("topicMaster").where("topicName", params.get("topicName"))
 							.queryFirst();
@@ -171,7 +178,7 @@ public class TopicService {
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 
 		try {
-			
+//			String partyId=(String) params.get("partyId");
 			Integer pageNo = (Integer) params.get("pageNo");
 			Integer pageSize = (Integer) params.get("pageSize");
 			
@@ -195,6 +202,7 @@ public class TopicService {
 			
 			// this statement used to get all the topic as list
 			List<GenericValue> topicList = EntityQuery.use(delegator).from("topicMaster")
+//							.where("partyId",partyId)
 												.cursorScrollInsensitive()
 												.offset(offset)
 												.limit(pageSize)

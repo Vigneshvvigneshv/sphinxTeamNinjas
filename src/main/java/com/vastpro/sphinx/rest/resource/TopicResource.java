@@ -39,7 +39,7 @@ public class TopicResource {
 		try {
 			Map<String, Object> input=new HashMap<String, Object>();
 			input.put("topicName",request.getAttribute("topicName"));
-			request.getParameterMap();
+//			input.put("partyId",request.getAttribute("partyId"));
 			Map<String, Object> result = dispatcher.runSync("createTopicOwn", input);
 			
 			return Response.ok(result).build();
@@ -95,9 +95,12 @@ public class TopicResource {
 	}
 	
 	
-	@GET
-	@Path("/getall-topic")
-	public  Response getTopic(@Context HttpServletRequest request) {
+//	@GET
+//	@Path("/getall-topic/{partyId}")
+//	public  Response getTopic(@PathParam("partyId") String partyId,@Context HttpServletRequest request) {
+		@GET
+		@Path("/getall-topic")
+		public  Response getTopic(@Context HttpServletRequest request) {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		if (dispatcher == null) {
 			dispatcher = ServiceContainer.getLocalDispatcher("sphinx",
@@ -111,6 +114,7 @@ public class TopicResource {
 			Map<String,Object>input=new HashMap<>();
 			input.put("pageNo",pageNo);
 			input.put("pageSize",pageSize);
+//			input.put("partyId", partyId);
 			
 			
 			Map<String, Object> result = dispatcher.runSync("getAllTopics", input);
