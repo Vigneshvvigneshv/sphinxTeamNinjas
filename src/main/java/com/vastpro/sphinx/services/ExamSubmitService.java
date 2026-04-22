@@ -190,6 +190,8 @@ public class ExamSubmitService {
 			if(isUser==null) {
 				examResultOut = dispatcher.runSync("createExamResult", examResultInput);
 			}else {
+				
+				examResultInput.put("resultId",isUser.getString("resultId"));
 				examResultOut = dispatcher.runSync("updateExamResult", examResultInput);
 			}
 			

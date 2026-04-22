@@ -758,7 +758,7 @@
 	<description>Save exam result after submission</description>
 	<auto-attributes include="nonpk" mode="IN"
 		optional="true" />
-	<auto-attributes include="pk" mode="OUT"
+	<auto-attributes include="pk" mode="IN"
 		optional="true" />
 </service>
 

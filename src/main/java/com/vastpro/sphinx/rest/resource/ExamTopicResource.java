@@ -82,6 +82,7 @@ public class ExamTopicResource {
 		}
 		
 		TransactionUtil.begin();
+		Map<String, Object> serviceResult = null;
 		for (Map<String, Object> topic : topicList) {
 			Map<String, Object> input = new HashMap<String, Object>();
 
@@ -98,7 +99,7 @@ public class ExamTopicResource {
 			GenericValue examTopic = EntityQuery.use(delegator).from("ExamTopicMapping")
 							.where("examId", examId, "topicId", topic.get("topicId")).queryOne();
 
-			Map<String, Object> serviceResult = null;
+			
 			if (examTopic == null) {
 				serviceResult = dispatcher.runSync("createExamTopic", input);
 			} else {
@@ -113,10 +114,10 @@ public class ExamTopicResource {
 				return Response.status(500).entity(result).build();
 			}
 			
-			TransactionUtil.commit();
-			result.put("status", "success");
-			result.put("successMessage",serviceResult.get("successMessage") );
 		}
+		result.put("status", "success");
+		result.put("successMessage",serviceResult.get("successMessage") );
+		TransactionUtil.commit();
 		return Response.ok().entity(result).build();
 		
 	}catch( GenericServiceException | GenericEntityException e) {
