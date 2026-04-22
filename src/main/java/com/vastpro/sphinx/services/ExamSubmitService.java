@@ -100,7 +100,7 @@ public class ExamSubmitService {
 	            int skippedCount = 0;
 	            
 	            List<GenericValue> examQuestions = EntityQuery.use(delegator)
-	                            .from("QuestionBankMaster")
+	                            .from("QuestionBankMasterB")
 	                            .where("examId", examId)
 	                            .queryList();
 	            
@@ -184,7 +184,17 @@ public class ExamSubmitService {
 			examResultInput.put("attemptNo", updatedAttempts);
 			examResultInput.put("submittedDate", new Timestamp(System.currentTimeMillis()));
 
-			Map<String, Object> examResultOut = dispatcher.runSync("createExamResult", examResultInput);
+			GenericValue isUser=EntityQuery.use(delegator).from("ExamResult").where("examId",examId,"partyId",partyId).queryOne();
+			Map<String, Object> examResultOut=null;
+			
+			if(isUser==null) {
+				examResultOut = dispatcher.runSync("createExamResult", examResultInput);
+			}else {
+				
+				examResultInput.put("resultId",isUser.getString("resultId"));
+				examResultOut = dispatcher.runSync("updateExamResult", examResultInput);
+			}
+			
 
 			if (ServiceUtil.isError(examResultOut)) {
 			    TransactionUtil.rollback();

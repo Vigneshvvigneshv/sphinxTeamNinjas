@@ -159,11 +159,6 @@ public class QuestionService {
 					if (optionA == null || optionA.isEmpty()  ||optionB == null || optionB.isEmpty() ||optionC == null || optionC.isEmpty() ||optionD == null || optionD.isEmpty()) {
 						return ServiceUtil.returnError("options can not be empty for SINGLE_CHOICE and Multi Choice Question");
 					}
-					
-				}else if (questionTypeId.trim().equals("TRUE_FALSE")) {
-					if ( optionA == null || optionB == null||optionA.isEmpty() || optionB.isEmpty() ) {
-						return ServiceUtil.returnError("options can not be empty for True_FALSE");
-					}
 				}
 			}
 			

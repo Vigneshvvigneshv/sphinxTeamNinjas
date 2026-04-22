@@ -8,7 +8,6 @@ import java.util.Map;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.base.util.UtilMisc;
-import org.apache.ofbiz.common.login.LoginServices;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
@@ -168,12 +167,13 @@ public class UserSignUpService {
 			
 			// OOTB
 			
-			GenericValue userLogin=EntityQuery.use(delegator).from("UserLogin").where("partyId",params.get("partyId")).queryFirst();
-			
+			GenericValue userLogin=EntityQuery.use(delegator).from("UserLogin").where("partyId",params.get("partyId")).queryFirst();	
+
 			dctx.getDispatcher().runSync("createUserLogin",
 							UtilMisc.toMap("userLoginId", username, "currentPassword", password, "currentPasswordVerify",
 											password, "partyId", partyId,
 											"enabled", "Y", "requirePasswordChange", "N", "userLogin",
+
 											userLogin
 											));
 //
@@ -192,6 +192,7 @@ public class UserSignUpService {
 			secGroup.set("fromDate", Timestamp.valueOf(LocalDateTime.now()));
 			delegator.create(secGroup);
 //			
+
 
 			// create contact
 			Map<String, Object> contactMechInput = new HashMap<>();

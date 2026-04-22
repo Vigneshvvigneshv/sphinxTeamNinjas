@@ -72,7 +72,7 @@
 		<attribute name="partyId" mode="IN" type="String"></attribute>
 	</service>
 
-	 <service name="createParty" engine="entity-auto"
+	<service name="createParty" engine="entity-auto"
 		invoke="create" default-entity-name="Party">
 		<auto-attributes mode="IN" include="pk"
 			optional="false"></auto-attributes>
@@ -101,22 +101,26 @@
 			optional="false"></auto-attributes>
 		<auto-attributes mode="IN" include="nonpk"
 			optional="true"></auto-attributes>
+
 	</service>
-	<!-- <service name="createUserLogin" engine="entity-auto"
+	
+<!-- 	<service name="createUserLogin" engine="entity-auto"
+
 		invoke="create" default-entity-name="UserLogin">
 		<auto-attributes mode="IN" include="pk"
 			optional="false"></auto-attributes>
 		<auto-attributes mode="IN" include="nonpk"
 			optional="true"></auto-attributes>
 	</service> -->
-	
+
 	<service name="createPartyRole" engine="entity-auto"
 		invoke="create" default-entity-name="PartyRole">
 		<auto-attributes mode="IN" include="pk"
 			optional="false"></auto-attributes>
 		<auto-attributes mode="IN" include="nonpk"
 			optional="true"></auto-attributes>
-	</service>  
+	</service> 
+
 
 	<!-- End of UserSignUP Service -->
 	<!-- ====================== End user services ================================== -->
@@ -755,6 +759,15 @@
 		optional="true" />
 	<auto-attributes include="pk" mode="OUT"
 		optional="false" />
+</service>
+
+<service name="updateExamResult" engine="entity-auto"
+	invoke="update" default-entity-name="ExamResult">
+	<description>Save exam result after submission</description>
+	<auto-attributes include="nonpk" mode="IN"
+		optional="true" />
+	<auto-attributes include="pk" mode="IN"
+		optional="true" />
 </service>
 
 <service name="getExamResult" engine="java" location="com.vastpro.sphinx.services.ExamResultService"
