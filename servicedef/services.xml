@@ -460,7 +460,8 @@
 		<attribute name="answerValue" mode="IN" type="BigDecimal" optional="true" />
 		<attribute name="topicId" mode="IN" type="String" optional="false" />
 		<attribute name="negativeMarkValue" mode="IN" type="BigDecimal" optional="true" />
-		<attribute name="questionId" mode="OUT" type="Long" optional="true"/>	
+		<attribute name="questionId" mode="OUT" type="Long" optional="true"/>
+		<attribute name="partyId" mode="IN" type="String" optional="false"></attribute>	
 	</service>
 
 
@@ -488,7 +489,8 @@
 		<attribute name="difficultyLevel" type="Long" mode="IN" optional="true" />
 		<attribute name="answerValue" type="BigDecimal" mode="IN" optional="true" />
 		<attribute name="topicId" type="String" mode="IN" optional="true" />
-		<attribute name="negativeMarkValue" type="BigDecimal" mode="IN" optional="true" />
+		<attribute name="negativeMarkValue" type="BigDecimal" mode="IN" optional="true"/>
+		<attribute name="partyId" type="id" mode ="IN" optional="true"/>
 	</service>
 
 	<service name="updateQuestion" engine="entity-auto"
@@ -545,6 +547,7 @@
 		<attribute name="hasNext" mode="OUT" type="Boolean" optional="false"/>
 		<attribute name="hasPrevious" mode="OUT" type="Boolean" optional="false"/>
 		<attribute name="totalCount" type="Integer" mode="OUT" optional="false" />
+		<attribute name="partyId" type="String" mode="IN" optional="false"/>
 	</service>
 
 	<!-- GetQuestion by question id -->
@@ -572,6 +575,7 @@
 		invoke="uploadBulkQuestion">
 		<attribute name="file" mode="IN" type="java.nio.ByteBuffer"
 			optional="true"/>
+		<attribute name="partyId" mode="IN" type="String" optional="false"/>
 	</service>
 
 

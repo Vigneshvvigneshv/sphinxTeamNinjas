@@ -47,14 +47,15 @@ public class QuestionService {
 
 			String topicId = (String) questions.get("topicId");
 			String questionDetail = (String) questions.get("questionDetail");
-
+			
 			String answer = (String) questions.get("answer");
 			String optionA = (String) questions.get("optionA");
 			String optionB = (String) questions.get("optionB");
 			String optionC = (String) questions.get("optionC");
 			String optionD = (String) questions.get("optionD");
 			String questionTypeId = (String) questions.get("questionTypeId");
-
+			String partyId=(String)questions.get("partyId");
+			
 			// questions.put("negativeMarkValue", 0.0);
 
 			if (topicId == null || questionDetail == null || answer == null) {
@@ -66,7 +67,6 @@ public class QuestionService {
 				if (optionA.isEmpty() || optionB.isEmpty() || optionC.isEmpty() || optionD.isEmpty()) {
 					return ServiceUtil.returnError("options can not be empty for SINGLE_CHOICE and Multi Choice Question");
 				}
-
 			} 
 
 			// check topic exists
@@ -81,23 +81,7 @@ public class QuestionService {
 			String questionId = delegator.getNextSeqId("questionMaster");
 
 			questions.put("questionId", questionId);
-			// GenericValue question =delegator.makeValue("questionMaster");
-			// question.set("questionId", questionId);
-			// question.set("questionDetail", questionDetail);
-			// question.set("optionA", questions.getOrDefault("optionA", ""));
-			// question.set("optionB", questions.getOrDefault("optionB", ""));
-			// question.set("optionC", questions.getOrDefault("optionC", ""));
-			// question.set("optionD", questions.getOrDefault("optionD", ""));
-			// question.set("optionE", questions.getOrDefault("optionE", ""));
-			// question.set("answer", answer);
-			// question.set("numAnswers", questions.getOrDefault("numAnswers", 1L));
-			// question.set("questionTypeId", questionTypeId);
-			// question.set("difficultyLevel", questions.getOrDefault("difficultyLevel", 1L));
-			// question.set("answerValue", questions.getOrDefault("answerValue", 1.0));
-			// question.set("topicId", topicId);
-			// question.set("negativeMarkValue",questions.getOrDefault("negativeMarkValue", 0.0));
-			// delegator.create(question);
-
+			
 			Map<String, Object> serviceResult = dispatcher.runSync("createQuestion", questions);
 
 			Map<String, Object> result = ServiceUtil.returnSuccess("Question created Successfully");
@@ -151,7 +135,7 @@ public class QuestionService {
 			BigDecimal answerValue = (BigDecimal) context.get("answerValue");
 			String topicId = (String) context.get("topicId");
 			BigDecimal negativeMarkValue = (BigDecimal) context.get("negativeMarkValue");
-
+			
 			if(questionTypeId == null) {
 				return ServiceUtil.returnError("QuestionTypeId is null");
 			}else {
@@ -178,7 +162,7 @@ public class QuestionService {
 			updateQuestion.put("answerValue", answerValue);
 			updateQuestion.put("topicId", topicId);
 			updateQuestion.put("negativeMarkValue", negativeMarkValue);
-
+			
 			if (topicId != null) {
 				GenericValue topic = EntityQuery.use(delegator).from("topicMaster").where("topicId", topicId).queryOne();
 
@@ -297,12 +281,17 @@ public class QuestionService {
 		try {
 			Integer pageNo = (Integer) context.get("pageNo");
 			Integer pageSize = (Integer) context.get("pageSize");
+			String partyId=(String) context.get("partyId");
 			
 			if (pageNo == null || pageNo < 1) {
 				pageNo = 1;
 			}
 			if (pageSize == null || pageSize < 1) {
 				pageSize = 10;
+			}
+			
+			if(partyId==null) {
+				return ServiceUtil.returnError("PartyId is required");
 			}
 			
 			
@@ -316,7 +305,7 @@ public class QuestionService {
 				return ServiceUtil.returnError("No Question Availbale");
 			}
 			
-			List<GenericValue> questions = EntityQuery.use(delegator).from("questionMaster").orderBy("questionDetail")
+			List<GenericValue> questions = EntityQuery.use(delegator).from("questionMaster").where("partyId",partyId).orderBy("questionDetail")
 							.cursorScrollInsensitive().offset(offset)
 						    .limit(pageSize).queryList();
 
@@ -549,10 +538,10 @@ public class QuestionService {
 	public Map<String, ? extends Object> uploadBulkQuestion(DispatchContext dctx, Map<String, ? extends Object> context) {
 
 		// process the excel file
-
+		
 		Delegator delegator=dctx.getDelegator();
 		try {
-
+			String partyId=(String)context.get("partyId");
 			ByteBuffer buffer = (ByteBuffer) context.get("file");
 
 			byte[] bytes = new byte[buffer.remaining()];
@@ -643,6 +632,7 @@ public class QuestionService {
 					}
 				}
 				question.put("negativeMarkValue", 0.0);
+				question.put("partyId", partyId);
 				questions.add(question);
 			}
 
@@ -652,15 +642,7 @@ public class QuestionService {
 			for (Map<String, ? extends Object> question : questions) {
 				
 				
-//				GenericEntity entity = (GenericEntity) question;
-//				String topicId = entity.getString("topicId");
-//				
-//				
-//				if(topicId==null) {
-//					continue;
-//				}
 				
-
 				Map<String, Object> serviceResult = dctx.getDispatcher().runSync("createQuestionService", question);
 
 				if (serviceResult.get("responseMessage") != null && serviceResult.get("responseMessage").equals("error")) {

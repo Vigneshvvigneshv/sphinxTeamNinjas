@@ -70,6 +70,7 @@ public class QuestionResource {
 			input.put("answerValue", request.getAttribute("answerValue"));
 			input.put("topicId", request.getAttribute("topicId"));
 			input.put("negativeMarkValue", request.getAttribute("negativeMarkValue"));
+			input.put("partyId",request.getAttribute("partyId"));
 
 			Map<String, Object> result = dispatcher.runSync("createQuestionService", input);
 			return Response.ok(result).build();
@@ -100,6 +101,7 @@ public class QuestionResource {
 			String questionIdStr = (String) request.getAttribute("questionId");
 			String topicIdStr=(String)request.getAttribute("topicId");
 			
+			
 			if (questionIdStr == null || topicIdStr==null ) {
 				result.put("status", "ERROR");
 				result.put("message", "questionId and topicId is required");
@@ -126,10 +128,10 @@ public class QuestionResource {
 			input.put("answerValue", request.getAttribute("answerValue"));
 			input.put("topicId", request.getAttribute("topicId"));
 			input.put("negativeMarkValue", request.getAttribute("negativeMarkValue"));
-
-			System.out.println("negativeMarkValue" + request.getAttribute("negativeMarkValue"));
-			System.out.println("questionTypeId" + request.getAttribute("questionTypeId"));
-
+			
+//			System.out.println("negativeMarkValue" + request.getAttribute("negativeMarkValue"));
+//			System.out.println("questionTypeId" + request.getAttribute("questionTypeId"));
+			
 			// Call service
 			Map<String, Object> serviceResult = dispatcher.runSync("updateQuestionMaster", input);
 
@@ -331,9 +333,10 @@ public class QuestionResource {
 		InputStream file;
 		Part filePart;
 		ByteBuffer buffer;
+		String partyId=(String) request.getParameter("partyId");
 		try {
 			filePart = request.getPart("file");
-
+			
 			if (filePart == null) {
 				return Response.status(Response.Status.BAD_REQUEST).entity(ServiceUtil.returnError("File was not found on Request!"))
 								.build();
@@ -361,7 +364,7 @@ public class QuestionResource {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 
 		try {
-			Map<String, Object> result = dispatcher.runSync("uploadBulkQuestion", UtilMisc.toMap("file", buffer));
+			Map<String, Object> result = dispatcher.runSync("uploadBulkQuestion", UtilMisc.toMap("file", buffer,"partyId",partyId));
 			if (result.get("responseMessage") != null && result.get("responseMessage").equals("error")) {
 				return Response.status(Response.Status.BAD_REQUEST).entity(result).build();
 			} else {
@@ -442,10 +445,13 @@ public class QuestionResource {
 		try {
 			String pageNo=(String)request.getParameter("pageNo");
 			String pageSize=(String)request.getParameter("pageSize");
+			String partyId=(String)request.getParameter("partyId");
 			
 			Map<String,Object>input=new HashMap<>();
 			input.put("pageNo",pageNo);
 			input.put("pageSize",pageSize);
+			input.put("partyId",partyId);
+			
 			Map<String, Object> ServiceResult = dispatcher.runSync("getallquestion",input);
 			
 		
