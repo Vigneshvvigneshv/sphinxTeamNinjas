@@ -36,7 +36,7 @@ public class TopicService {
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Map<String, Object> result = ServiceUtil.returnSuccess("Topic created successfully");
 		String topicName = (String) params.get("topicName");
-//		String partyId=(String) params.get("partyId");
+		String partyId=(String) params.get("partyId");
 		try {
 			// validate the topic Name is empty or not
 			// if it is empty return the error message
@@ -49,11 +49,18 @@ public class TopicService {
 //				return ServiceUtil.returnError("Please, Try again later!");
 //			}
 			// validate the topic name is already exits or not in the topicMaster table
-			GenericValue topicAlreadyExits = EntityQuery.use(delegator).from("topicMaster").where("topicName", params.get("topicName"))
+			GenericValue topicAlreadyExits = EntityQuery.use(delegator).from("topicMaster").where("topicName", topicName
+							,"partyId",partyId
+							)
 							.queryFirst();
 			if (topicAlreadyExits != null) {
 				return ServiceUtil.returnError("Topic Already Exits");
 			}
+			
+			//get the nextSeqId to set the data
+			String topicId=delegator.getNextSeqId("topicMaster");
+			params.put("topicId", topicId);
+			
 			// if the topicName is not empty and not present in the table then insert the topic in the table
 			Map<String, Object> record = dispatcher.runSync("createTopic", params);
 			// any error occur in the insert the record by using entityAuto then return the error message
@@ -65,7 +72,7 @@ public class TopicService {
 
 		} catch (GenericServiceException | GenericEntityException e) {
 			Debug.logError(e.getMessage(), TopicService.class.getName());
-			return ServiceUtil.returnError("Error, occur during adding the topic" + e.getMessage());
+			return ServiceUtil.returnError("Error, occur during adding the topic");
 		}
 	}
 
@@ -118,7 +125,7 @@ public class TopicService {
 			return ServiceUtil.returnSuccess("Topic updated successfully");
 		} catch (GenericServiceException | GenericEntityException e) {
 			Debug.logError(e.getMessage(), TopicService.class.getName());
-			return ServiceUtil.returnError("Error, occur during update the topic" + e.getMessage());
+			return ServiceUtil.returnError("Error, occur during update the topic");
 		}
 	}
 
@@ -178,7 +185,7 @@ public class TopicService {
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 
 		try {
-//			String partyId=(String) params.get("partyId");
+			String partyId=(String) params.get("partyId");
 			Integer pageNo = (Integer) params.get("pageNo");
 			Integer pageSize = (Integer) params.get("pageSize");
 			
@@ -202,7 +209,7 @@ public class TopicService {
 			
 			// this statement used to get all the topic as list
 			List<GenericValue> topicList = EntityQuery.use(delegator).from("topicMaster")
-//							.where("partyId",partyId)
+							.where("partyId",partyId)
 												.cursorScrollInsensitive()
 												.offset(offset)
 												.limit(pageSize)
