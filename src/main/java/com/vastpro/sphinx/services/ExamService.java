@@ -57,8 +57,21 @@ public class ExamService {
 			examId = "exam" + examId;
 			Map<String, Object> createMap = new HashMap<String, Object>();
 			createMap.put("examId", examId);
-			createMap.put("examName", input.get("examName"));
-			createMap.put("description", input.get("description"));
+			
+			//validate the exam name length is less than 20 character
+			String examName=(String) input.get("examName");
+			if(examName.length()>20) {
+				return ServiceUtil.returnError("Exam name length should be less than 20 character");
+			}
+			createMap.put("examName", examName);
+			
+			//validate the description is less than 255 character
+			String description=(String) input.get("description");
+			if(description.length()>255) {
+				return ServiceUtil.returnError("Description length should be less than 255 character");
+			}
+			createMap.put("description", description);
+			
 			try {
 				Long noOfQuestions = Long.valueOf((String) input.get("noOfQuestions"));
 				if (noOfQuestions < 0) {
@@ -243,8 +256,21 @@ public class ExamService {
 
 			Map<String, Object> createMap = new HashMap<String, Object>();
 			createMap.put("examId", input.get("examId"));
-			createMap.put("examName", input.get("examName"));
-			createMap.put("description", input.get("description"));
+			
+			//validate the exam name length is less than 20 character
+			String examName=(String) input.get("examName");
+			if(examName.length()>20) {
+				return ServiceUtil.returnError("Exam name length should be less than 20 character");
+			}
+			createMap.put("examName", examName);
+			
+			//validate the description is less than 255 character
+			String description=(String) input.get("description");
+			if(description.length()>255) {
+				return ServiceUtil.returnError("Description length should be less than 255 character");
+			}
+			createMap.put("description", description);
+			
 			try {
 				Long noOfQuestions = Long.valueOf((String) input.get("noOfQuestions"));
 				if (noOfQuestions < 0) {
