@@ -25,11 +25,10 @@ public class EmailService {
 
 			String examId = (String) context.get("examId");
 			List<String> partyIdList = (List<String>) context.get("partyIdList");
-			
-			if(partyIdList.size()==0) {
+
+			if (partyIdList.size() == 0) {
 				return ServiceUtil.returnError("PartyList is Empty");
 			}
-			
 
 			if (examId == null) {
 				return ServiceUtil.returnError("examId is required");
