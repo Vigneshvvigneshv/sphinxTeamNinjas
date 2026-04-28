@@ -18,6 +18,7 @@ public class ExamResultService {
 		Delegator delegator=context.getDelegator();
 		try {
 			String partyId=(String) input.get("partyId");
+			
 			if(UtilValidate.isEmpty(partyId)) {
 				Debug.logError("Party id is empty",ExamResultService.class.getName());
 				return ServiceUtil.returnError("Error, please contact Admin");
@@ -28,7 +29,7 @@ public class ExamResultService {
 				return ServiceUtil.returnError("Error, please contact Admin");
 			}
 			GenericValue resultList=EntityQuery.use(delegator).from("ExamResult").where("partyId",partyId,"examId",examId).queryFirst();
-			Map<String,Object> result=ServiceUtil.returnSuccess("Exam Result Getted successfully");
+			Map<String,Object> result=ServiceUtil.returnSuccess("Exam Result fetched successfully");
 			if(!(UtilValidate.isEmpty(resultList))) {
 				result.put("resultList", resultList);
 			}else {

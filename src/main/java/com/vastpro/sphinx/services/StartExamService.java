@@ -92,6 +92,9 @@ public class StartExamService {
 					return ServiceUtil.returnError("Error, occur during start exam");			}
 			}
 			TransactionUtil.commit();
+			
+			delegator.removeByAnd("AnswerMaster", UtilMisc.toMap("examId", examId,"partyId",partyId));
+			
 			return ServiceUtil.returnSuccess("Exam Started"); 
 			
 		}catch(GenericEntityException |GenericServiceException e) {

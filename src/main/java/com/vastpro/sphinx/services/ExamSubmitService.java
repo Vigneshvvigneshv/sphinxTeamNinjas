@@ -60,7 +60,7 @@ public class ExamSubmitService {
 	            Long allowedAttempts = partyExamRel.getLong("allowedAttempts");
 	            Long noOfAttempts    = partyExamRel.getLong("noOfAttempts");
 	            
-	            if(allowedAttempts != null && noOfAttempts != null && noOfAttempts >= allowedAttempts) {
+	            if(allowedAttempts != null && noOfAttempts != null && noOfAttempts > allowedAttempts) {
 	                 TransactionUtil.rollback();
 	                return ServiceUtil.returnError("No attempts remaining. Allowed: " + allowedAttempts + ", Used: " + noOfAttempts);
 	             }
@@ -146,17 +146,17 @@ public class ExamSubmitService {
 	            boolean passed = passPercentage != null
 	                    && percentage >= passPercentage.doubleValue();
 	 
-	         Long updatedAttempts = (noOfAttempts != null ? noOfAttempts : 0L) + 1L;
-            Map<String,Object>serviceResult=dispatcher.runSync("updateNoOfAttempts", 
-            						UtilMisc.toMap("examId",examId,"partyId",partyId,"noOfAttempts",updatedAttempts,
-            										"lastPerformanceDate",  new Timestamp(System.currentTimeMillis())));
-
-            
-            if(ServiceUtil.isError(serviceResult)) {
-            	TransactionUtil.rollback();
-            	
-            	return ServiceUtil.returnError("Error Updating the No of Attempts");
-            }
+//	         Long updatedAttempts = (noOfAttempts != null ? noOfAttempts : 0L) + 1L;
+//            Map<String,Object>serviceResult=dispatcher.runSync("updateNoOfAttempts", 
+//            						UtilMisc.toMap("examId",examId,"partyId",partyId,"noOfAttempts",updatedAttempts,
+//            										"lastPerformanceDate",  new Timestamp(System.currentTimeMillis())));
+//
+//            
+//            if(ServiceUtil.isError(serviceResult)) {
+//            	TransactionUtil.rollback();
+//            	
+//            	return ServiceUtil.returnError("Error Updating the No of Attempts");
+//            }
             
             
             Map<String,Object>serviceResult2=dispatcher.runSync("ExamActive", 
@@ -181,7 +181,7 @@ public class ExamSubmitService {
 			examResultInput.put("correctCount", (long) correctCount);
 			examResultInput.put("wrongCount", (long) wrongCount);
 			examResultInput.put("skippedCount", (long) skippedCount);
-			examResultInput.put("attemptNo", updatedAttempts);
+			examResultInput.put("attemptNo", noOfAttempts);
 			examResultInput.put("submittedDate", new Timestamp(System.currentTimeMillis()));
 
 			GenericValue isUser=EntityQuery.use(delegator).from("ExamResult").where("examId",examId,"partyId",partyId).queryOne();
@@ -201,8 +201,13 @@ public class ExamSubmitService {
 			    return ServiceUtil.returnError("Failed to save exam result: "+ ServiceUtil.getErrorMessage(examResultOut));
 			}
 
+			// ── Delete QuestionBankMasterB records for this exam ──────────────────
+			delegator.removeByAnd("QuestionBankMasterB", UtilMisc.toMap("examId", examId));
+
 			TransactionUtil.commit();
 			
+			
+		
 			  Map<String, Object> result = ServiceUtil.returnSuccess("Exam submitted successfully");
 			  result.put("score",score);
 			  result.put("totalMarks", totalMarks);

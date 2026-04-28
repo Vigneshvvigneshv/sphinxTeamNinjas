@@ -452,15 +452,15 @@ public class QuestionResource {
 			input.put("pageSize",pageSize);
 			input.put("partyId",partyId);
 			
-			Map<String, Object> ServiceResult = dispatcher.runSync("getallquestion",input);
+			Map<String, Object> serviceResult = dispatcher.runSync("getallquestion",input);
 			
 		
-			if(ServiceUtil.isError(ServiceResult)){
-				return Response.status(400).entity(ServiceUtil.getErrorMessage(ServiceResult)).build();
+			if(ServiceUtil.isError(serviceResult)){
+				return Response.status(400).entity(serviceResult).build();
 			}
 			
 			
-			return Response.ok().entity(ServiceResult).build();
+			return Response.ok().entity(serviceResult).build();
 			
 			}catch(GenericServiceException e) {
 			e.printStackTrace();
