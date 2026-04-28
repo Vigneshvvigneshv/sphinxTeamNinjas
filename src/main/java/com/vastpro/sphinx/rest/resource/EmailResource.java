@@ -28,7 +28,7 @@ public class EmailResource {
 
 	
 	@POST
-	@Path("/send-email")
+	@Path("/send-exam-email")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response emailResource(@Context HttpServletRequest request, @Context HttpServletResponse response) {
@@ -66,4 +66,19 @@ public class EmailResource {
 			return Response.status(200).entity(result).build();
 		}	
 	}
+	
+//	@POST
+//	@Path("/send-exam-email")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response emailUserResource(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+//		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+//		Map<String, Object> result = new HashMap<>();
+//		if (dispatcher == null) {
+//			dispatcher = ServiceContainer.getLocalDispatcher("sphinx", (Delegator) request.getAttribute("delegator"));
+//		}
+//		
+//		
+//	}
+	
 }
