@@ -59,7 +59,7 @@
 
 	<!-- UserSignUP Service -->
 
-	<!-- <service name="userSignUpServiceOwn" engine="java"
+	<service name="userSignUpServiceOwn" engine="java"
 		location="com.vastpro.sphinx.services.UserSignUpService"
 		invoke="signUpService">
 
@@ -102,7 +102,7 @@
 		<auto-attributes mode="IN" include="nonpk"
 			optional="true"></auto-attributes>
 
-	</service> -->
+	</service>
 	
 <!-- 	<service name="createUserLogin" engine="entity-auto"
 
@@ -113,13 +113,13 @@
 			optional="true"></auto-attributes>
 	</service> -->
 
-	<!-- <service name="createPartyRole" engine="entity-auto"
+	<service name="createPartyRole" engine="entity-auto"
 		invoke="create" default-entity-name="PartyRole">
 		<auto-attributes mode="IN" include="pk"
 			optional="false"></auto-attributes>
 		<auto-attributes mode="IN" include="nonpk"
 			optional="true"></auto-attributes>
-	</service>  -->
+	</service> 
 
 
 	<!-- End of UserSignUP Service -->
