@@ -38,12 +38,17 @@ public class ExamService {
 		Delegator delegator = context.getDelegator();
 		try {
 
-			// before update we check the examName is present or not
+			// before update we check the examName is present or not in the particular admin
 			if (input.get("examName") != null) {
-				GenericValue examAlreadyExits = EntityQuery.use(delegator).from("ExamMaster").where("examName", input.get("examName"))
-								.queryFirst();
+				List<GenericValue> examAlreadyExits = EntityQuery.use(delegator).from("ExamMaster").where("examName", input.get("examName"))
+								.queryList();
+				for(GenericValue examData:examAlreadyExits) {
 				if (examAlreadyExits != null) {
+					GenericValue adminExamAlreadyExits=EntityQuery.use(delegator).from("AdminPartyExamRel").where("examId",examData.getString("examId"),"partyId",input.get("partyId")).queryFirst();
+					if(adminExamAlreadyExits!=null) {
 					return ServiceUtil.returnError("Exam Already Exits");
+					}
+				}
 				}
 			} else {
 				return ServiceUtil.returnError("Exam name cannot be empty");
