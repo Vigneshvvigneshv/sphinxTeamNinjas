@@ -94,4 +94,58 @@ public class EmailService {
 			return ServiceUtil.returnError(e.getMessage());
 		}
 	}
+	
+	public static Map<String, Object> sendUserNotification(DispatchContext dctx, Map<String, Object> context){
+
+
+		
+
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+
+		try {
+
+			String userName = (String) context.get("userName");
+			String password = (String) context.get("password");
+			String email = (String) context.get("email");
+			
+			
+			
+
+			
+			
+
+				Map<String, Object> emailContext = new HashMap<>();
+				emailContext.put("subject", "Exam Assignment and Access Details");
+
+				String emailBody = "Dear Candidate,\n\n"
+						+ "Welcome! Your account has been successfully created in the Sphinx application.\n\n"
+						+ "Please find your login credentials below:\n\n"
+						+ "Username: %s\n"
+						+ "Password: %s\n\n"
+						+ "Kindly use the above credentials to log in to the Sphinx application.\n\n"
+						+ "For security purposes, we recommend changing your password upon first login.\n\n"
+						+ "Should you require any assistance, please do not hesitate to contact the administrator.\n\n"
+						+ "Best regards,\n"
+						+ "Sphinx Administrator";
+
+				emailContext.put("contentType", "text/plain");
+				emailContext.put("body", String.format(emailBody, userName, password));
+				emailContext.put("sendTo",email);	
+			
+
+				try {
+					dispatcher.runAsync("sendMail", emailContext);
+				} catch (GenericServiceException e) {
+					e.printStackTrace();
+					return ServiceUtil.returnError("Failed To Send Notification " + e.getMessage());
+				}
+			
+
+			return ServiceUtil.returnSuccess("User credentials sended!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ServiceUtil.returnError(e.getMessage());
+		}
+	
+	}
 }
