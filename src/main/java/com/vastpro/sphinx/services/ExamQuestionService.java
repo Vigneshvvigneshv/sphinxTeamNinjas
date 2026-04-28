@@ -26,7 +26,19 @@ public static Map<String,Object> getAllExamQuestion(DispatchContext dctx, Map<St
 				pageSize = 1;
 			}
 			
-			long totalCount=EntityQuery.use(delegator).from("QuestionBankMasterB").where("examId",examId).queryCount();
+			// ── Step 1: Get totalQuestions from ExamMaster ──
+	        
+	        GenericValue exam=EntityQuery.use(delegator).from("ExamMaster").where("examId",examId).queryOne();
+
+	        if (exam == null) {
+	            return ServiceUtil.returnError("Exam not found");
+	        }
+	        
+	        Long totalCount = exam.getLong("noOfQuestions");
+	        if (totalCount == null || totalCount == 0) {
+	            return ServiceUtil.returnError("No Questions Available");
+	        }
+	        
 			
 			int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 			int offset = (pageNo - 1) * pageSize;
@@ -36,13 +48,13 @@ public static Map<String,Object> getAllExamQuestion(DispatchContext dctx, Map<St
 			}
 			
 			
+			
 			GenericValue question = EntityQuery.use(delegator).from("QuestionBankMasterB").where("examId",examId).orderBy("-lastUpdatedStamp")
 							.cursorScrollInsensitive().offset(offset)
 						    .limit(pageSize).queryOne();
 			
 //			List<Map<String,Object>>questionList=new ArrayList<Map<String,Object>>();
 			
-			GenericValue exam=EntityQuery.use(delegator).from("ExamMaster").where("examId",examId).queryOne();
 			
 			result.put("totalCount", totalCount);
 			result.put("question", question);
