@@ -710,6 +710,12 @@
 		<attribute name="examId" mode="IN" type="String"/>
 		<attribute name="partyIdList" mode="IN" type="List"/>
 	</service> 
+	<service name="SendUserEmailService" engine="java" location="com.vastpro.sphinx.services.EmailService" invoke="sendUserNotification">
+		<attribute name="userName" mode="IN" type="String"/>
+		<attribute name="password" mode="IN" type="String"/>
+		<attribute name="email" mode="IN" type="String"/>
+		
+	</service>
 	
 	
 	

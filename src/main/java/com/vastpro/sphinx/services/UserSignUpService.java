@@ -239,8 +239,17 @@ public class UserSignUpService {
 			Map<String, Object> partyContactMechResult = dispatcher.runSync("createPartyContactMech", partyContactMechInput);
 			if (ServiceUtil.isError(partyContactMechResult))
 				return handleTransaction();
-
+			
+			
+			Map<String, Object> userCredentialMail=new HashMap<String, Object>();
+			userCredentialMail.put("userName", username);
+			userCredentialMail.put("password", password);
+			userCredentialMail.put("email", email);
+			
+			dispatcher.runAsync("SendUserEmailService", userCredentialMail);
+			
 			TransactionUtil.commit();
+			
 			// result.put("partyId", partyId);
 			return ServiceUtil.returnSuccess("Registration Successfull");
 		} catch (GenericEntityException | GenericServiceException e) {
