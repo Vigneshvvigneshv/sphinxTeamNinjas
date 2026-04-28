@@ -69,7 +69,7 @@
 		<attribute name="lastName" mode="IN" type="String"></attribute>
 		<attribute name="email" mode="IN" type="String"></attribute>
 		<attribute name="roleTypeId" mode="IN" type="String"></attribute>
-		<attribute name="partyId" mode="IN" type="String"></attribute>
+		<!-- <attribute name="partyId" mode="IN" type="String"></attribute> -->
 	</service>
 
 	<service name="createParty" engine="entity-auto"

@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.base.util.UtilMisc;
@@ -148,6 +150,7 @@ public class UserSignUpService {
 //
 			if ("SPHINX_USER".equals(role) && password != null) {
 				password = PasswordUtil.generatePassword();
+				Debug.log("_____password-------"+password);
 //				userLoginInput.put("currentPassword", PasswordUtil.encryptPassword(password));
 			} 
 //			else {
@@ -167,24 +170,33 @@ public class UserSignUpService {
 			
 			// OOTB
 			
-			GenericValue userLogin=EntityQuery.use(delegator).from("UserLogin").where("partyId",params.get("partyId")).queryFirst();	
-
-			dctx.getDispatcher().runSync("createUserLogin",
+//			GenericValue userLogin=EntityQuery.use(delegator).from("UserLogin").where("partyId",params.get("partyId")).queryFirst();	
+			
+			Map<String,Object> userLoginResult=dctx.getDispatcher().runSync("createUserLogin",
 							UtilMisc.toMap("userLoginId", username, "currentPassword", password, "currentPasswordVerify",
 											password, "partyId", partyId,
 											"enabled", "Y", "requirePasswordChange", "N", "userLogin",
 
-											userLogin
+											params.get("userLogin")
 											));
+			
+			if(ServiceUtil.isError(userLoginResult)) {
+				Debug.logError("Error while create the user using thr createUserLogin out box service"+(String)userLoginResult.get("errorMessage"),UserSignUpService.class.getName());
+				return handleTransaction();
+			}
 //
-//			dctx.getDispatcher().runSync("addUserLoginToSecurityGroup",
+//			Map<String,Object> setAdminPartyResult=dctx.getDispatcher().runSync("addUserLoginToSecurityGroup",
 //							UtilMisc.toMap("userLoginId", username, "groupId", "SPHINX_ADMIN_GROUP", "fromDate",
 //											Timestamp.valueOf(LocalDateTime.now()),
 //											"userLogin", 
-//											userLogin
+//											params.get("userLogin")
 //											));
+//			if(ServiceUtil.isError(setAdminPartyResult)) {
+//				Debug.logError("Error while create the user using the addUserLoginToSecurityGroup out box service"+(String)userLoginResult.get("errorMessage"),UserSignUpService.class.getName());
+//				return handleTransaction();
+//			}
 			
-//			LoginServices.createUserLogin(dctx, naRole);
+
 //			
 			GenericValue secGroup = delegator.makeValue("UserLoginSecurityGroup");
 			secGroup.set("userLoginId", username);
@@ -192,6 +204,23 @@ public class UserSignUpService {
 			secGroup.set("fromDate", Timestamp.valueOf(LocalDateTime.now()));
 			delegator.create(secGroup);
 //			
+			if (!("SPHINX_USER".equals(role))) {
+				GenericValue set = delegator.makeValue("UserLoginSecurityGroup");
+				secGroup.set("userLoginId", username);
+				secGroup.set("groupId", "PARTYADMIN");
+				secGroup.set("fromDate", Timestamp.valueOf(LocalDateTime.now()));
+				delegator.create(secGroup);
+//				Map<String,Object> setPartyToCreateUserResult=dctx.getDispatcher().runSync("addUserLoginToSecurityGroup",
+//								UtilMisc.toMap("userLoginId", username, "groupId", "PARTYADMIN", "fromDate",
+//												Timestamp.valueOf(LocalDateTime.now()),
+//												"userLogin", 
+//												params.get("userLogin")
+//												));
+//				if(ServiceUtil.isError(setPartyToCreateUserResult)) {
+//					Debug.logError("Error while create the user using the addUserLoginToSecurityGroup out box service when set the PARTYADMIN"+(String)userLoginResult.get("errorMessage"),UserSignUpService.class.getName());
+//					return handleTransaction();
+//				}
+			}
 
 
 			// create contact

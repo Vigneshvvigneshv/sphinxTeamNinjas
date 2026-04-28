@@ -89,10 +89,12 @@
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>  -->
 	
+    <!-- 
 	<filter-mapping>
 		<filter-name>SameSiteFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
 	</filter-mapping>
+    -->
 	<filter>
   	  <filter-name>corsFilter</filter-name>
   	  <filter-class>com.vastpro.sphinx.filters.CorsFilter</filter-class>
