@@ -54,9 +54,7 @@ public class ExamQuestionResource {
 			if (pageSize != null) {
 			    input.put("pageSize", Integer.parseInt(pageSize));
 			}
-//			input.put("pageSize",pageSize);
-			
-			
+
 			
 			Map<String,Object> serviceResult=dispatcher.runSync("getallExamQuestions", input);
 			
