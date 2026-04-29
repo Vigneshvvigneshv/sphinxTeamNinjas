@@ -70,6 +70,9 @@
 		<attribute name="email" mode="IN" type="String"></attribute>
 		<attribute name="roleTypeId" mode="IN" type="String"></attribute>
 		<!-- <attribute name="partyId" mode="IN" type="String"></attribute> -->
+		<attribute name="userName" mode="OUT" type="String" optional="true"></attribute>
+		<attribute name="email" mode="OUT" type="String" optional="true"></attribute>
+		
 	</service>
 
 	<service name="createParty" engine="entity-auto"

@@ -65,7 +65,8 @@ public class UserResource {
 					if(UtilValidate.isNotEmpty(userLogin)) {
 						GenericValue userRole = EntityQuery.use(delegator).from("PartyRole")
 										.where("partyId", userLogin.getString("partyId")).queryFirst();
-						session.setAttribute("userRole", userRole);
+						session.setAttribute("role", userRole.getString("roleTypeId"));
+						session.setAttribute("partyId",userRole.getString("partyId"));
 						result.put("role", userRole.getString("roleTypeId"));
 						result.put("partyId", userRole.getString("partyId"));
 					}
@@ -155,5 +156,22 @@ public class UserResource {
 		}
 	}
 	
+	@GET
+	@Path(SphinxConstants.GET_CREDENTIALS)
+//	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getCredentials(@Context HttpServletRequest request) {
+		try {
+			Map<String, Object> result=new HashMap<String, Object>();
+			HttpSession session=request.getSession(false);
+			
+			result.put("role", session.getAttribute("role")) ;
+			result.put("partyId", session.getAttribute("partyId")) ;
+			return Response.ok(result).build();
+		} catch (Exception e) {
+			// TODO: handle exception
+			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
+		}
+	}
 	
 }

@@ -102,7 +102,7 @@ public class ExamAssignToUserService {
 							return ServiceUtil.returnError("Days should be number in "+userName);
 						}
 						userMap.put("noOfAttempts", 0);
-						userMap.put("passwordChangesAuto",PasswordUtil.generatePassword());
+						userMap.put("passwordChangesAuto",PasswordUtil.examGeneratePassword());
 						Map<String, Object> result = dispatcher.runSync("assignExam", userMap);
 
 						if (ServiceUtil.isError(result)) {

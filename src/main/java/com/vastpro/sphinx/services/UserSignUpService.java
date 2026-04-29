@@ -28,6 +28,7 @@ import com.vastpro.sphinx.util.PasswordUtil;
 public class UserSignUpService {
 	public static Map<String, Object> signUpService(DispatchContext dctx, Map<String, Object> params) {
 		Map<String, Object> result = ServiceUtil.returnSuccess("success");
+		Map<String, Object> errorResult = ServiceUtil.returnError("Sign up failed");
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		try {
@@ -49,7 +50,7 @@ public class UserSignUpService {
 			if ("SPHINX_ADMIN".equals(role)) {
 
 				if (!FormValidation.validatePassword(password)) {
-					return ServiceUtil.returnError("Password must be strong (8+ chars, upper, lower, number, special)");
+					return ServiceUtil.returnError("Password must be at least 8 characters");
 				}
 			}
 
@@ -68,7 +69,17 @@ public class UserSignUpService {
 			GenericValue existingUser = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", username).queryOne();
 
 			if (existingUser != null) {
-				return ServiceUtil.returnError("Username already exists");
+				errorResult.put("userName", "User name already exists");
+				return errorResult;
+			}
+			
+			//check if email already exits
+			GenericValue existingEmail=EntityQuery.use(delegator).from("ContactMech").where("infoString",email).queryFirst();
+			
+			if (existingEmail != null) {
+//				return ServiceUtil.returnError("Email already exists");
+				errorResult.put("email", "Email already exists");
+				return errorResult;
 			}
 
 			// Create Party
@@ -149,8 +160,9 @@ public class UserSignUpService {
 //			userLoginInput.put("userLoginId", username);
 //
 			if ("SPHINX_USER".equals(role) && password != null) {
-				password = PasswordUtil.generatePassword();
-				Debug.log("_____password-------"+password);
+				password ="user_" +PasswordUtil.userGeneratePassword();
+				Debug.log("==============================================================================================================================================="
+						+ "=============================================================_____password-------"+password);
 //				userLoginInput.put("currentPassword", PasswordUtil.encryptPassword(password));
 			} 
 //			else {
