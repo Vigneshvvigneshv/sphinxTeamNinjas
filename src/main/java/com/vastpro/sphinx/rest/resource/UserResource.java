@@ -28,14 +28,16 @@ import org.apache.ofbiz.service.ServiceContainer;
 import org.apache.ofbiz.service.ServiceUtil;
 import org.apache.ofbiz.webapp.control.LoginWorker;
 
+import com.vastpro.sphinx.util.SphinxConstants;
+
 import javax.ws.rs.core.Response;
 
-@Path("/user")
+@Path(SphinxConstants.USER)
 
 public class UserResource {
 
 	@POST
-	@Path("/login")
+	@Path(SphinxConstants.LOGIN)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response validateUser(@Context HttpServletRequest request, @Context HttpServletResponse response) {

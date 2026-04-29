@@ -109,11 +109,6 @@ public class EmailService {
 			String email = (String) context.get("email");
 			
 			
-			
-
-			
-			
-
 				Map<String, Object> emailContext = new HashMap<>();
 				emailContext.put("subject", "Exam Assignment and Access Details");
 
@@ -123,7 +118,6 @@ public class EmailService {
 						+ "Username: %s\n"
 						+ "Password: %s\n\n"
 						+ "Kindly use the above credentials to log in to the Sphinx application.\n\n"
-						+ "For security purposes, we recommend changing your password upon first login.\n\n"
 						+ "Should you require any assistance, please do not hesitate to contact the administrator.\n\n"
 						+ "Best regards,\n"
 						+ "Sphinx Administrator";
