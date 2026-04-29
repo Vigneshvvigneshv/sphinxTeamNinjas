@@ -23,7 +23,7 @@ import org.apache.ofbiz.service.ServiceUtil;
 public class ExamSubmitResource {
 	
 	@POST
-    @Path("/submit-exam")
+    @Path("/exam-submit")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
 	public Response submitExam(@Context HttpServletRequest request,@Context HttpServletResponse response) {
@@ -61,7 +61,11 @@ public class ExamSubmitResource {
 				result.put("correctCount", serviceResult.get("correctCount"));
 				result.put("wrongCount", serviceResult.get("wrongCount"));
 				result.put("skippedCount", serviceResult.get("skippedCount"));
-	            
+				
+				 if (serviceResult.containsKey("failedTopicId")) {
+		                result.put("failedTopicId", serviceResult.get("failedTopicId"));
+		            }
+				 
 	            return Response.ok(result).build();
 			
 		}catch(GenericServiceException e) {

@@ -23,7 +23,7 @@ import org.apache.ofbiz.service.ServiceUtil;
 @Path("/exam-question")
 public class ExamQuestionResource {
 	
-	
+
 	@GET
 	@Path("/get-exam-questions")
 	@Consumes(MediaType.APPLICATION_JSON)
