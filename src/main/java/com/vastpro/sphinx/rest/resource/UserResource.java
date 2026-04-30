@@ -84,7 +84,7 @@ public class UserResource {
 	}
 
 	@POST
-	@Path("/signup")
+	@Path(SphinxConstants.SIGN_UP)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response signupUser(@Context HttpServletRequest request, @Context HttpServletResponse response) {
@@ -129,7 +129,7 @@ public class UserResource {
 	}
 
 	@GET
-	@Path("/getall-user")
+	@Path(SphinxConstants.GET_ALL_USERS)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllUser(@Context HttpServletRequest request) {
@@ -143,7 +143,7 @@ public class UserResource {
 	}
 	
 	@DELETE
-	@Path("/delete-user")
+	@Path(SphinxConstants.DELETE_USER)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteUser(@Context HttpServletRequest request) {
