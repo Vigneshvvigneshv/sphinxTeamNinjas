@@ -302,11 +302,18 @@ public class ExamAssignToUserService {
 	                .map(gv -> gv.getString("partyId"))
 	                .collect(Collectors.toList());
 
+	        
+	        String adminUserLoginId=EntityQuery
+	        		.use(delegator)
+	        		.from("UserLogin")
+	        		.where("partyId",input.get("partyId"))
+	        		.queryFirst().getString("userLoginId");
 	        List<EntityCondition> conditions = new ArrayList<>();
 
 	        conditions.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS, "PERSON"));
 	        conditions.add(EntityCondition.makeCondition("statusId",    EntityOperator.EQUALS, "PARTY_ENABLED"));
 	        conditions.add(EntityCondition.makeCondition("roleTypeId",  EntityOperator.EQUALS, "SPHINX_USER"));
+	        conditions.add(EntityCondition.makeCondition("createdByUserLogin",  EntityOperator.EQUALS, adminUserLoginId));
 
 	        
 	        if (!assignedPartyIds.isEmpty()) {

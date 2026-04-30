@@ -19,9 +19,9 @@ public class UserService {
 		Delegator delegator = context.getDelegator();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		try {
-
+			String adminUserLoginId=EntityQuery.use(delegator).from("UserLogin").where("partyId",input.get("partyId")).queryFirst().getString("userLoginId");
 			List<GenericValue> userList = EntityQuery.use(delegator).from("PartyPersonalInfo")
-							.where("partyTypeId", "PERSON", "statusId", "PARTY_ENABLED", "roleTypeId", "SPHINX_USER").orderBy("userLoginId").queryList();
+							.where("partyTypeId", "PERSON", "statusId", "PARTY_ENABLED", "roleTypeId", "SPHINX_USER","createdByUserLogin",adminUserLoginId).orderBy("userLoginId").queryList();
 			// List<GenericValue> userList=EntityQuery.use(delegator).from("UserLogin").queryList();
 //
 //			if (!(userList.size() > 0)) {

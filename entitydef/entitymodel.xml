@@ -254,6 +254,7 @@
         
         <alias entity-alias="PR" name="roleTypeId"/>
         <alias entity-alias="PY" name="partyId"/>
+        <alias entity-alias="PY" name="createdByUserLogin"/>
         <alias entity-alias="PY" name="partyTypeId"/>
         <alias entity-alias="PY" name="statusId"/>
         <alias entity-alias="PN" name="firstName"/>
@@ -353,6 +354,8 @@
 	<alias entity-alias="PER" name="allowedAttempts"/>
     <alias entity-alias="PER" name="timeoutDays"/>
     <alias entity-alias="PER" field="partyId" name="examPartyId"/>
+    <alias entity-alias="PPI" name="createdByUserLogin"/>
+    
 
     <view-link entity-alias="PPI" rel-entity-alias="PER" rel-optional="true">
         <key-map field-name="partyId"/>
