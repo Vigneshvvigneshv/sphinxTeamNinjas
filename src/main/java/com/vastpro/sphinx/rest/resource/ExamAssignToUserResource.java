@@ -119,15 +119,15 @@ public class ExamAssignToUserResource {
 		}
 	}
 	@GET
-	@Path("/get-unassigned-user/{examId}/{partyId}")
+	@Path("/get-unassigned-user/{examId}/{userName}")
 //	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUnassignedUser(@PathParam("examId") String examId,@PathParam("partyId") String partyId,@Context HttpServletRequest request) {
+	public Response getUnassignedUser(@PathParam("examId") String examId,@PathParam("userName") String userName,@Context HttpServletRequest request) {
 		LocalDispatcher dispatcher=(LocalDispatcher) request.getAttribute("dispatcher");
 		try {
 			Map<String,Object> input=new HashMap<String, Object>();
 			input.put("examId", examId);
-			input.put("partyId", partyId);
+			input.put("userName", userName);
 			Map<String,Object> result=dispatcher.runSync("getUnassignedUser",input);
 			return Response.ok(result).build();
 		}catch(Exception e) {

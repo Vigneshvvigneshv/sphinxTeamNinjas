@@ -291,7 +291,7 @@ public class ExamAssignToUserService {
 	    Map<String, Object> result = ServiceUtil.returnSuccess("User fetched successfully");
 	    try {
 	        String examId = (String) input.get("examId");
-
+	        String userName=(String) input.get("userName");
 	      
 	        List<GenericValue> assignedList = EntityQuery.use(delegator)
 	                .from("PartyExamRelationship")
@@ -303,17 +303,17 @@ public class ExamAssignToUserService {
 	                .collect(Collectors.toList());
 
 	        
-	        String adminUserLoginId=EntityQuery
-	        		.use(delegator)
-	        		.from("UserLogin")
-	        		.where("partyId",input.get("partyId"))
-	        		.queryFirst().getString("userLoginId");
+//	        String adminUserLoginId=EntityQuery
+//	        		.use(delegator)
+//	        		.from("UserLogin")
+//	        		.where("partyId",input.get("partyId"))
+//	        		.queryFirst().getString("userLoginId");
 	        List<EntityCondition> conditions = new ArrayList<>();
 
 	        conditions.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS, "PERSON"));
 	        conditions.add(EntityCondition.makeCondition("statusId",    EntityOperator.EQUALS, "PARTY_ENABLED"));
 	        conditions.add(EntityCondition.makeCondition("roleTypeId",  EntityOperator.EQUALS, "SPHINX_USER"));
-	        conditions.add(EntityCondition.makeCondition("createdByUserLogin",  EntityOperator.EQUALS, adminUserLoginId));
+	        conditions.add(EntityCondition.makeCondition("createdByUserLogin",  EntityOperator.EQUALS, userName));
 
 	        
 	        if (!assignedPartyIds.isEmpty()) {
