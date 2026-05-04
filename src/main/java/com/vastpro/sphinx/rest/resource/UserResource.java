@@ -69,6 +69,7 @@ public class UserResource {
 						session.setAttribute("role", userRole.getString("roleTypeId"));
 						session.setAttribute("partyId",userRole.getString("partyId"));
 						result.put("role", userRole.getString("roleTypeId"));
+						result.put("userName",request.getAttribute("userName"));
 						result.put("partyId", userRole.getString("partyId"));
 					}
 				}
