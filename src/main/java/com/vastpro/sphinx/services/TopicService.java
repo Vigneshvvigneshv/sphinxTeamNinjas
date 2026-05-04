@@ -153,6 +153,14 @@ public class TopicService {
 			if (topicMaster == null) {
 				return ServiceUtil.returnError("Topic with ID " + topicId + " not found.");
 			}
+			
+			GenericValue topicAssignedExam = EntityQuery.use(delegator).from("ExamTopicMaster").where("topicId", topicId).queryOne();
+			if(topicAssignedExam!=null) {
+				return ServiceUtil.returnError("Topic is assigned to the assessment");
+			}
+
+			
+			
 //			Map<String, Object> deleteMap = new HashMap<String, Object>();
 //			deleteMap.put("topicId", topicId);
 			// the deleteTopic is delete the record based on the topicId in the topicMaster Table
