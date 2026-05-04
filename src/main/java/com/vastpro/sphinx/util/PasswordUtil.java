@@ -24,7 +24,7 @@ public class PasswordUtil {
 	}
 	public static String examGeneratePassword() {
 		SecureRandom random = new SecureRandom();
-		String passwordChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		String passwordChar = "0123456789";
 		StringBuilder passwordBuilder = new StringBuilder();
 		for (int i = 0; i < 6; i++) {
 			passwordBuilder.append(passwordChar.charAt(random.nextInt(passwordChar.length())));

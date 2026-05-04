@@ -21,14 +21,15 @@ import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceContainer;
 
 import com.vastpro.sphinx.dto.TopicDTO;
+import com.vastpro.sphinx.util.SphinxConstants;
 
 
-@Path("/topic")
+@Path(SphinxConstants.TOPIC)
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class TopicResource {
 	@POST
-	@Path("/create-topic")
+	@Path(SphinxConstants.CREATE_TOPIC)
 	public  Response createTopic(@Context HttpServletRequest request) {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		if (dispatcher == null) {
@@ -50,7 +51,7 @@ public class TopicResource {
 	}
 	
 	@PUT
-	@Path("/update-topic")
+	@Path(SphinxConstants.UPDATE_TOPIC)
 	public  Response updateTopic(@Context HttpServletRequest request) {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		if (dispatcher == null) {
@@ -74,7 +75,7 @@ public class TopicResource {
 	}
 	
 	@DELETE
-	@Path("/delete-topic")
+	@Path(SphinxConstants.DELETE_TOPIC)
 	public  Response deleteTopic(@Context HttpServletRequest request) {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		if (dispatcher == null) {
@@ -97,7 +98,7 @@ public class TopicResource {
 	
 	
 	@GET
-	@Path("/getall-topic/{partyId}")
+	@Path(SphinxConstants.GET_ALL_TOPIC)
 	public  Response getTopic(@PathParam("partyId") String partyId,@Context HttpServletRequest request) {
 //		@GET
 //		@Path("/getall-topic")
@@ -128,7 +129,7 @@ public class TopicResource {
 	}
 	
 	@GET
-	@Path("/gettopic/{topicId}")
+	@Path(SphinxConstants.GET_TOPIC_BY_ID)
 	@Produces(MediaType.APPLICATION_JSON)
 //	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getTopicById(@PathParam("topicId") String topicId,@Context HttpServletRequest request){

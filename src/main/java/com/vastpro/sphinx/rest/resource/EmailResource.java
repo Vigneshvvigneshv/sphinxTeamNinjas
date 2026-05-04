@@ -22,13 +22,15 @@ import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceContainer;
 import org.apache.ofbiz.service.ServiceUtil;
 
+import com.vastpro.sphinx.util.SphinxConstants;
 
-@Path("/email")
+
+@Path(SphinxConstants.EMAIL)
 public class EmailResource {
 
 	
 	@POST
-	@Path("/send-exam-email")
+	@Path(SphinxConstants.SEND_EXAM_EMAIL)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response emailResource(@Context HttpServletRequest request, @Context HttpServletResponse response) {
