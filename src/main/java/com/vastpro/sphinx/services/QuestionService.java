@@ -580,9 +580,9 @@ public class QuestionService {
 				for (ColumnConfig col : columns) {
 					Cell cell = row.getCell(col.index);
 
-					if (col.required && (cell == null || cell.getCellType() == CellType.BLANK)) {
-						return ServiceUtil.returnError("Row " + i + ", Column " + col.index + " " + col.label + " is required");
-					}
+//					if (col.required && (cell == null || cell.getCellType() == CellType.BLANK)) {
+//						return ServiceUtil.returnError("Row " + i + ", Column " + col.index + " " + col.label + " is required");
+//					}
 
 					if (cell == null) {
 						question.put(col.field, null);
