@@ -79,8 +79,19 @@
 		<field name="createdByUserLogin" type="id-vlong"></field>
 		<!--field to store the adminId who last modified this exam -->
 		<field name="lastModifiedByUserLogin" type="id-vlong"></field>
-		<prim-key field="examId" />
+		<prim-key field="examId"/>
 	</entity>
+	
+	<!-- This entity holds exams & their setup details -->
+	<!-- <entity entity-name="ExamSetupDetails" package-name="in.vastpro.sphinx">
+		<field name="examId" type="id"></field>
+		<field name="setupType" type="id" not-null="true"></field>
+		<field name="setupDetails" type="very-long" not-null="true"></field>		
+		<prim-key field="examId" />
+		<relation rel-entity-name="ExamMaster" fk-name="EXAM_SETUP_FK" type="one">
+			<key-map field-name="examId" rel-field-name="examId" />
+		</relation>			
+	</entity> -->
 
 
 	<!-- ExamTopicMaster -->
@@ -102,6 +113,9 @@
 			<key-map field-name="topicId" />
 		</relation>
 	</entity>
+	
+	
+	
 
 	
 <!-- Exam Assignment Master -->

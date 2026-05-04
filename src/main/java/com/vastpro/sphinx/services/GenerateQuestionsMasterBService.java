@@ -126,25 +126,25 @@ public class GenerateQuestionsMasterBService {
 			}
 
 			// Fallback: fill remaining slots from all questions if still short
-			if (finalQuestions.size() < noOfQuestions) {
-				List<GenericValue> allQuestions = EntityQuery.use(delegator)
-								.from("questionMaster")
-								.queryList();
-
-				Collections.shuffle(allQuestions, random);
-
-				for (GenericValue q : allQuestions) {
-					if (finalQuestions.size() >= noOfQuestions) break;
-
-					Long qId = q.getLong("questionId");
-					boolean alreadyAdded = finalQuestions.stream()
-									.anyMatch(f -> qId.equals(f.getLong("questionId")));
-
-					if (!alreadyAdded) {
-						finalQuestions.add(q);
-					}
-				}
-			}
+//			if (finalQuestions.size() < noOfQuestions) {
+//				List<GenericValue> allQuestions = EntityQuery.use(delegator)
+//								.from("questionMaster")
+//								.queryList();
+//
+//				Collections.shuffle(allQuestions, random);
+//
+//				for (GenericValue q : allQuestions) {
+//					if (finalQuestions.size() >= noOfQuestions) break;
+//
+//					Long qId = q.getLong("questionId");
+//					boolean alreadyAdded = finalQuestions.stream()
+//									.anyMatch(f -> qId.equals(f.getLong("questionId")));
+//
+//					if (!alreadyAdded) {
+//						finalQuestions.add(q);
+//					}
+//				}
+//			}
 
 			// Safety trim (should never trigger with fixes above)
 			if (finalQuestions.size() > noOfQuestions) {

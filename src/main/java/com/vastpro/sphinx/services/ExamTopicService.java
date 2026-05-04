@@ -59,51 +59,53 @@ public class ExamTopicService {
 			input.put("topicPassPercentage", topicPassPercentage);
 
 			
-			//TopicQuestionPercentage
-			List<GenericValue> examMapping=EntityQuery.use(delegator)
-											.from("ExamTopicMapping")
-											.where("examId",examId)
-											.queryList();
+//			//TopicQuestionPercentage
+//			List<GenericValue> examMapping=EntityQuery.use(delegator)
+//											.from("ExamTopicMapping")
+//											.where("examId",examId)
+//											.queryList();
+//			
+//			double totalPercentage=0;
+//			double topicPercentage=0;
+//			for(GenericValue e:examMapping) {
+//				topicPercentage=e.getDouble("percentage");
+//				totalPercentage=totalPercentage+topicPercentage;
+//			}
+//			
+//			
+//			if((totalPercentage+percentage)>100) {
+//				return ServiceUtil.returnError("Total Question Percentage Should not be more than 100");
+//			}
+//			
+//			GenericValue examNoOFQuestions = EntityQuery.use(delegator).from("ExamMaster").where("examId", examId).queryOne();
+//			if (examNoOFQuestions == null) {
+//			    return ServiceUtil.returnError("Exam not found");
+//			}
+//			
+//			Long noOfQuestions = exam.getLong("noOfQuestions");
+//			
+//			if(noOfQuestions==0) {
+//				return ServiceUtil.returnError("Number Of Questions in exam is cannot be 0");
+//			}
 			
-			double totalPercentage=0;
-			double topicPercentage=0;
-			for(GenericValue e:examMapping) {
-				topicPercentage=e.getDouble("percentage");
-				totalPercentage=totalPercentage+topicPercentage;
-			}
 			
 			
-			if((totalPercentage+percentage)>100) {
-				return ServiceUtil.returnError("Total Question Percentage Should not be more than 100");
-			}
+//			List<GenericValue> questionList = EntityQuery.use(delegator)
+//							.from("questionMaster")
+//							.where("topicId", topicId)
+//							.queryList();
+//			
+//			if (percentage > 0 && (questionList == null || questionList.isEmpty())) {
+//				return ServiceUtil.returnError("No Questions found in " + (String) topic.get("topicName"));
+//			}
 			
-			GenericValue examNoOFQuestions = EntityQuery.use(delegator).from("ExamMaster").where("examId", examId).queryOne();
-			if (examNoOFQuestions == null) {
-			    return ServiceUtil.returnError("Exam not found");
-			}
+//			int count = (int) Math.floor((percentage / 100) * noOfQuestions);
 			
-			Long noOfQuestions = exam.getLong("noOfQuestions");
+//			int remaining=count-questionList.size()+1;
 			
-			if(noOfQuestions==0) {
-				return ServiceUtil.returnError("Number Of Questions in exam is cannot be 0");
-			}
-			
-			List<GenericValue> questionList = EntityQuery.use(delegator)
-							.from("questionMaster")
-							.where("topicId", topicId)
-							.queryList();
-			
-			if (percentage > 0 && (questionList == null || questionList.isEmpty())) {
-				return ServiceUtil.returnError("No Questions found in " + (String) topic.get("topicName"));
-			}
-			
-			int count = (int) Math.floor((percentage / 100) * noOfQuestions);
-			
-			int remaining=count-questionList.size()+1;
-			
-			if(count>questionList.size()) {
-				return ServiceUtil.returnError("Not Enough Question to Add the topic "+topic.getString("topicName")+" add "+remaining +" more questions" );
-			}
+//			if(count>questionList.size()) {
+//				return ServiceUtil.returnError("Not Enough Question to Add the topic "+topic.getString("topicName")+" add "+remaining +" more questions" );
+//			}
 			
 			
 			Map<String, Object> serviceResult = dispatcher.runSync("createExamTopicService", input);
@@ -157,27 +159,28 @@ public class ExamTopicService {
 
 			
 			
-			//TopicQuestionPercentage
-			List<GenericValue> examMapping=EntityQuery.use(delegator)
-											.from("ExamTopicMapping")
-											.where("examId",examId)
-											.queryList();
+//			//TopicQuestionPercentage
+//			List<GenericValue> examMapping=EntityQuery.use(delegator)
+//											.from("ExamTopicMapping")
+//											.where("examId",examId)
+//											.queryList();
+//			
+//			double totalPercentage=0;
+//			for(GenericValue e:examMapping) {
+//				
+//				String existingTopicId=e.getString("topicId");
+//				
+//				if (!existingTopicId.equals(topicId)) {
+//			        totalPercentage += e.getDouble("percentage");
+//			    }
+//			}
+//			totalPercentage += percentage;
+//			
+//			
+//			if(totalPercentage>100) {
+//				return ServiceUtil.returnError("Total Question Percentage Should not be more than 100");
+//			}
 			
-			double totalPercentage=0;
-			for(GenericValue e:examMapping) {
-				
-				String existingTopicId=e.getString("topicId");
-				
-				if (!existingTopicId.equals(topicId)) {
-			        totalPercentage += e.getDouble("percentage");
-			    }
-			}
-			totalPercentage += percentage;
-			
-			
-			if(totalPercentage>100) {
-				return ServiceUtil.returnError("Total Question Percentage Should not be more than 100");
-			}
 			
 			GenericValue examNoOFQuestions = EntityQuery.use(delegator).from("ExamMaster").where("examId", examId).queryOne();
 			if (examNoOFQuestions == null) {

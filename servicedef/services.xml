@@ -796,7 +796,10 @@
 </service>
 
 
-
-
+<service name="SetupExamService" engine="java" location="com.vastpro.sphinx.services.ExamSetupService" invoke="examSetupService">
+	<description>Setting the exam finally</description>
+	<attribute name="examId" mode="IN" type="String"></attribute>
+	<!-- <attribute name="errors" mode="OUT" type="List" ></attribute> -->
+</service>
 
 </services>
