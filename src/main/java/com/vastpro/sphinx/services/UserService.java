@@ -31,7 +31,7 @@ public class UserService {
 			return result;
 		} catch (GenericEntityException e) {
 			Debug.logError(e.getMessage(), UserService.class.getName());
-			return ServiceUtil.returnError("Error,Occur during get the user records" + e.getMessage());
+			return ServiceUtil.returnError("Error,Occur during get the user records");
 		}
 	}
 
