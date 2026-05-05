@@ -41,7 +41,7 @@ public class TopicService {
 			// validate the topic Name is empty or not
 			// if it is empty return the error message
 			if (topicName == null || topicName.trim().isEmpty()) {
-				return ServiceUtil.returnError("Topic name is required");
+				return ServiceUtil.returnError("Field cannot be empty");
 			}
 			
 //			if (UtilValidate.isEmpty(partyId)) {
@@ -221,7 +221,6 @@ public class TopicService {
 												.cursorScrollInsensitive()
 												.offset(offset)
 												.limit(pageSize)
-												.orderBy("topicName")
 												.queryList();
 			// if the list size is 0 then return the no topic found message
 			if (topicList.size() == 0) {
