@@ -39,13 +39,16 @@ public class UserSignUpService {
 			String lastName = (String) params.get("lastName");
 			String email = (String) params.get("email");
 			String role = (String) params.get("roleTypeId");
+			String adminPartyId = (String) params.get("partyId");
 
 			if (!FormValidation.validateUsername(username)) {
-				return ServiceUtil.returnError("Username must be at least 5 characters");
+				errorResult.put("userName","Username must be at least 5 characters");
+				return errorResult;
 			}
 
 			if (!FormValidation.validateEmail(email)) {
-				return ServiceUtil.returnError("Enter a valid email");
+				errorResult.put("email", "Enter valid email");
+				return errorResult;
 			}
 			if ("SPHINX_ADMIN".equals(role)) {
 
@@ -129,11 +132,14 @@ public class UserSignUpService {
 
 			TransactionUtil.begin();
 
+			//Get the admin userloginId to store createdByUserLogin
+			String adminUserLoginId=EntityQuery.use(delegator).from("UserLogin").where("partyId",adminPartyId).queryFirst().getString("userLoginId");
 			// create party
 			Map<String, Object> partyInput = new HashMap<>();
 			partyInput.put("partyId", partyId);
 			partyInput.put("partyTypeId", "PERSON");
 			partyInput.put("statusId", "PARTY_ENABLED");
+			partyInput.put("createdByUserLogin", adminUserLoginId);
 			Map<String, Object> partyResult = dispatcher.runSync("createParty", partyInput);
 			if (ServiceUtil.isError(partyResult))
 				return handleTransaction();

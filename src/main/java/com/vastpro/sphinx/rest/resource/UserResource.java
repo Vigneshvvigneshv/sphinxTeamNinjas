@@ -12,6 +12,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -68,6 +69,7 @@ public class UserResource {
 						session.setAttribute("role", userRole.getString("roleTypeId"));
 						session.setAttribute("partyId",userRole.getString("partyId"));
 						result.put("role", userRole.getString("roleTypeId"));
+						result.put("userName",request.getAttribute("userName"));
 						result.put("partyId", userRole.getString("partyId"));
 					}
 				}
@@ -115,7 +117,7 @@ public class UserResource {
 			userInput.put("lastName", request.getAttribute("lastName"));
 			userInput.put("email", request.getAttribute("email"));
 			userInput.put("roleTypeId",request.getAttribute("roleTypeId"));
-//			userInput.put("partyId", request.getAttribute("partyId"));
+			userInput.put("partyId", request.getAttribute("partyId"));
 			userInput.put("userLogin", userLogin);
 
 			Map<String, Object> result = dispatcher.runSync("userSignUpServiceOwn", userInput);
@@ -132,10 +134,10 @@ public class UserResource {
 	@Path(SphinxConstants.GET_ALL_USERS)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllUser(@Context HttpServletRequest request) {
+	public Response getAllUser(@PathParam("userName") String userName , @Context HttpServletRequest request) {
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		try {
-			Map<String, Object> result = dispatcher.runSync("getAllUser", new HashMap<String, Object>());
+			Map<String, Object> result = dispatcher.runSync("getAllUser",UtilMisc.toMap("userName",userName));
 			return Response.ok(result).build();
 		} catch (Exception e) {
 			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
