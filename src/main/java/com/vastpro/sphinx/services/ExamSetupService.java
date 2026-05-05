@@ -34,7 +34,7 @@ public class ExamSetupService {
 			
 			 Long setupProper = exam.getLong("examSetupProper");
 	            if (setupProper != null && setupProper == 1L) {
-	                return ServiceUtil.returnError("Exam [" + examId + "] is already finalized and locked.");
+	                return ServiceUtil.returnError("Exam [" + exam.getString("examName") + "] is already finalized and locked.");
 	            }
 			//TopicQuestionPercentage
 			List<GenericValue> topicMapping=EntityQuery.use(delegator)
@@ -45,17 +45,17 @@ public class ExamSetupService {
 			if(topicMapping==null || topicMapping.isEmpty()) {
 				return ServiceUtil.returnError("No Topic in Exam");
 			}
-			double totalPercentage=0;
-			double topicPercentage=0;
-			for(GenericValue e:topicMapping) {
-				topicPercentage=e.getDouble("percentage");
-				totalPercentage=totalPercentage+topicPercentage;
-			}
-			
-			
-			if(totalPercentage!=100) {
-				return ServiceUtil.returnError("Topic percentages must sum to 100%. Current total: " + totalPercentage+"%" );
-			}
+//			double totalPercentage=0;
+//			double topicPercentage=0;
+//			for(GenericValue e:topicMapping) {
+//				topicPercentage=e.getDouble("percentage");
+//				totalPercentage=totalPercentage+topicPercentage;
+//			}
+//			
+//			
+//			if(totalPercentage!=100) {
+//				return ServiceUtil.returnError("Topic percentages must sum to 100%. Current total: " + totalPercentage+"%" );
+//			}
 				
 			
 			

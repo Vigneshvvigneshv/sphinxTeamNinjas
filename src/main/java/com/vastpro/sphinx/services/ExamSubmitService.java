@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
@@ -221,6 +222,12 @@ public class ExamSubmitService {
 				return ServiceUtil.returnError("Failed to save exam result: " + ServiceUtil.getErrorMessage(examResultOut));
 			}
 
+			
+			Map<String,Object> resultFromInceaseAttempts=dispatcher.runSync("increaseAttemptsOwn",UtilMisc.toMap("partyId",partyId,"examId",examId)); 
+			if(ServiceUtil.isError(resultFromInceaseAttempts)) {
+				TransactionUtil.rollback();
+				return ServiceUtil.returnError("Error occured in increase attempts");
+			}
 			// ── Cleanup QuestionBankMasterB ───────────────────────────────────────
 			delegator.removeByAnd("QuestionBankMasterB", UtilMisc.toMap("examId", examId));
 
