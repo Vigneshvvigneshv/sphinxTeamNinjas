@@ -154,7 +154,7 @@ public class TopicService {
 				return ServiceUtil.returnError("Topic with ID " + topicId + " not found.");
 			}
 			
-			GenericValue topicAssignedExam = EntityQuery.use(delegator).from("ExamTopicMaster").where("topicId", topicId).queryOne();
+			GenericValue topicAssignedExam = EntityQuery.use(delegator).from("ExamTopicMapping").where("topicId", topicId).queryFirst();
 			if(topicAssignedExam!=null) {
 				return ServiceUtil.returnError("Topic is assigned to the assessment");
 			}
@@ -174,7 +174,7 @@ public class TopicService {
 
 		} catch (GenericServiceException | GenericEntityException e) {
 			Debug.logError(e.getMessage(), TopicService.class.getName());
-			return ServiceUtil.returnError("Error, occur during delete the topic" + e.getMessage());
+			return ServiceUtil.returnError("Error, occur during delete the topic");
 		}
 	}
 

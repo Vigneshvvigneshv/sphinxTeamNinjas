@@ -6,7 +6,7 @@ public interface SphinxConstants {
 	String LOGIN="/login";
 	String SIGN_UP="/signup";
 	String GET_CREDENTIALS="/get-credentials";
-	String GET_ALL_USERS="/getall-user/{partyId}";
+	String GET_ALL_USERS="/getall-user/{userName}";
 	String DELETE_USER="/delete-user";
 	String EMAIL="/email";
 	String SEND_EXAM_EMAIL="/send-exam-email";
