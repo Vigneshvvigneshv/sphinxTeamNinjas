@@ -27,10 +27,7 @@ public class GenerateQuestionsMasterBService {
 			String examId = (String) context.get("examId");
 
 			// Get the exam
-			GenericValue exam = EntityQuery.use(delegator)
-							.from("ExamMaster")
-							.where("examId", examId)
-							.queryOne();
+			GenericValue exam = EntityQuery.use(delegator).from("ExamMaster").where("examId", examId).queryOne();
 
 			if (exam == null) {
 				return ServiceUtil.returnError("Exam not found");
@@ -42,10 +39,7 @@ public class GenerateQuestionsMasterBService {
 				return ServiceUtil.returnError("Invalid number of questions in exam");
 			}
 
-			List<GenericValue> topicList = EntityQuery.use(delegator)
-							.from("ExamTopicMapping")
-							.where("examId", examId)
-							.queryList();
+			List<GenericValue> topicList = EntityQuery.use(delegator).from("ExamTopicMapping").where("examId", examId).queryList();
 
 			if (topicList == null || topicList.isEmpty()) {
 				return ServiceUtil.returnError("No topics found for this exam");
@@ -54,7 +48,6 @@ public class GenerateQuestionsMasterBService {
 			// Final questions list to insert into QuestionBankMasterB
 			List<GenericValue> finalQuestions = new ArrayList<>();
 
-			// Calculate how many questions per topic based on percentage
 			Map<String, Integer> topicQuestionCount = new HashMap<>();
 			int assignedTotal = 0;
 
@@ -62,12 +55,10 @@ public class GenerateQuestionsMasterBService {
 				String topicId = topic.getString("topicId");
 				Double percentage = topic.getDouble("percentage");
 
-				if (percentage == null) percentage = 0.0;
+				if (percentage == null)
+					percentage = 0.0;
 
-				List<GenericValue> questionList = EntityQuery.use(delegator)
-								.from("questionMaster")
-								.where("topicId", topicId)
-								.queryList();
+				List<GenericValue> questionList = EntityQuery.use(delegator).from("questionMaster").where("topicId", topicId).queryList();
 
 				if (percentage > 0 && (questionList == null || questionList.isEmpty())) {
 					return ServiceUtil.returnError("No Questions found in " + topic.get("topicName"));
@@ -97,12 +88,10 @@ public class GenerateQuestionsMasterBService {
 				String topicId = topic.getString("topicId");
 				int requiredCount = topicQuestionCount.getOrDefault(topicId, 0);
 
-				if (requiredCount == 0) continue;
+				if (requiredCount == 0)
+					continue;
 
-				List<GenericValue> questionList = EntityQuery.use(delegator)
-								.from("questionMaster")
-								.where("topicId", topicId)
-								.queryList();
+				List<GenericValue> questionList = EntityQuery.use(delegator).from("questionMaster").where("topicId", topicId).queryList();
 
 				Collections.shuffle(questionList, random);
 
@@ -110,14 +99,14 @@ public class GenerateQuestionsMasterBService {
 
 				for (int i = 0; i < limit; i++) {
 					// Hard cap — never exceed noOfQuestions
-					if (finalQuestions.size() >= noOfQuestions) break;
+					if (finalQuestions.size() >= noOfQuestions)
+						break;
 
 					GenericValue q = questionList.get(i);
 					Long qId = q.getLong("questionId");
 
 					// Deduplicate by questionId (not object reference)
-					boolean alreadyAdded = finalQuestions.stream()
-									.anyMatch(f -> qId.equals(f.getLong("questionId")));
+					boolean alreadyAdded = finalQuestions.stream().anyMatch(f -> qId.equals(f.getLong("questionId")));
 
 					if (!alreadyAdded) {
 						finalQuestions.add(q);
@@ -126,25 +115,25 @@ public class GenerateQuestionsMasterBService {
 			}
 
 			// Fallback: fill remaining slots from all questions if still short
-//			if (finalQuestions.size() < noOfQuestions) {
-//				List<GenericValue> allQuestions = EntityQuery.use(delegator)
-//								.from("questionMaster")
-//								.queryList();
-//
-//				Collections.shuffle(allQuestions, random);
-//
-//				for (GenericValue q : allQuestions) {
-//					if (finalQuestions.size() >= noOfQuestions) break;
-//
-//					Long qId = q.getLong("questionId");
-//					boolean alreadyAdded = finalQuestions.stream()
-//									.anyMatch(f -> qId.equals(f.getLong("questionId")));
-//
-//					if (!alreadyAdded) {
-//						finalQuestions.add(q);
-//					}
-//				}
-//			}
+			// if (finalQuestions.size() < noOfQuestions) {
+			// List<GenericValue> allQuestions = EntityQuery.use(delegator)
+			// .from("questionMaster")
+			// .queryList();
+			//
+			// Collections.shuffle(allQuestions, random);
+			//
+			// for (GenericValue q : allQuestions) {
+			// if (finalQuestions.size() >= noOfQuestions) break;
+			//
+			// Long qId = q.getLong("questionId");
+			// boolean alreadyAdded = finalQuestions.stream()
+			// .anyMatch(f -> qId.equals(f.getLong("questionId")));
+			//
+			// if (!alreadyAdded) {
+			// finalQuestions.add(q);
+			// }
+			// }
+			// }
 
 			// Safety trim (should never trigger with fixes above)
 			if (finalQuestions.size() > noOfQuestions) {
@@ -155,12 +144,12 @@ public class GenerateQuestionsMasterBService {
 			for (GenericValue question : finalQuestions) {
 
 				// Skip if already exists in QuestionBankMasterB
-				GenericValue alreadyExists = EntityQuery.use(delegator)
-								.from("QuestionBankMasterB")
+				GenericValue alreadyExists = EntityQuery.use(delegator).from("QuestionBankMasterB")
 								.where("questionId", question.get("questionId"), "examId", examId, "topicId", question.get("topicId"))
 								.queryOne();
 
-				if (alreadyExists != null) continue;
+				if (alreadyExists != null)
+					continue;
 
 				Map<String, Object> input = new HashMap<>();
 				input.put("examId", examId);

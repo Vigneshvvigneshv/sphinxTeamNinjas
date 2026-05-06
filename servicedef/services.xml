@@ -800,6 +800,15 @@
 	<attribute name="resultList" mode="OUT" type="GenericValue" optional="true"></attribute>
 </service>
 
+<service name="deleteExamResult" engine="entity-auto"
+	invoke="delete" default-entity-name="ExamResult">
+	<description>delete exam Result</description>
+	<auto-attributes include="nonpk" mode="IN"
+		optional="true" />
+	<auto-attributes include="pk" mode="IN"
+		optional="true" />
+</service>
+
 
 <service name="SetupExamService" engine="java" location="com.vastpro.sphinx.services.ExamSetupService" invoke="examSetupService">
 	<description>Setting the exam finally</description>

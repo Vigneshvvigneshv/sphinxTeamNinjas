@@ -34,7 +34,7 @@ public class ExamSetupService {
 			
 			 Long setupProper = exam.getLong("examSetupProper");
 	            if (setupProper != null && setupProper == 1L) {
-	                return ServiceUtil.returnError("Exam [" + examId + "] is already finalized and locked.");
+	                return ServiceUtil.returnError("Exam [" + exam.getString("examName") + "] is already finalized and locked.");
 	            }
 			//TopicQuestionPercentage
 			List<GenericValue> topicMapping=EntityQuery.use(delegator)
@@ -85,7 +85,7 @@ public class ExamSetupService {
 	                
 	                
 	                if(count>questionList.size()) {
-	    				errors.add("Not enough questions in "+topic.getString("topicName")+" add "+(count-questionList.size()) +" more questions" );
+	    				errors.add("Not enough questions in "+topic.getString("topicName")+" add "+(count-questionList.size()+1) +" more questions" );
 	    			}   
 	              
 			 }

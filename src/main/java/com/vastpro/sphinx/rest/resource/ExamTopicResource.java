@@ -77,8 +77,12 @@ public class ExamTopicResource {
 			}
 		}
 		
-		if (currentPercentage > 100) {
-			return Response.ok().entity(ServiceUtil.returnError("percentage must be 100 ")).build();
+//		if (currentPercentage > 100) {
+//			return Response.ok().entity(ServiceUtil.returnError("percentage must be 100 ")).build();
+//		}
+		
+		if(currentPercentage>100) {
+			return Response.ok().entity(ServiceUtil.returnError("Topic percentages must sum to 100%. Current total: " + currentPercentage+"%" )).build();
 		}
 		
 		TransactionUtil.begin();

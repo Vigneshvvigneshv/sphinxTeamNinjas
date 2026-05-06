@@ -55,6 +55,14 @@ public class StartExamService {
 				return ServiceUtil.returnError("Password is incorrect");
 			}
 			
+			//validating the number of attempts
+			
+			Long numberOfAttempts = examExits.getLong("noOfAttempts");
+			Long allowAttempts = examExits.getLong("allowedAttempts");
+
+			if (numberOfAttempts >= allowAttempts) {
+				return ServiceUtil.returnError("User reached a maximum attempts");
+			}
 			
 			GenericValue exam=EntityQuery.use(delegator).from("ExamMaster").where("examId",examId).queryFirst();
 			if(exam==null) {
@@ -62,12 +70,13 @@ public class StartExamService {
 				return ServiceUtil.returnError("Error, contact the Admin");
 			}
 			TransactionUtil.begin();
-			Map<String,Object> resultFromInceaseAttempts=dispatcher.runSync("increaseAttemptsOwn",UtilMisc.toMap("partyId",partyId,"examId",examId)); 
-			if(ServiceUtil.isError(resultFromInceaseAttempts)) {
-				handleTransaction();
-				Debug.logError(resultFromInceaseAttempts.get("errorMessage").toString(),StartExamService.class.getName());
-				return resultFromInceaseAttempts;
-			}
+			
+//			Map<String,Object> resultFromInceaseAttempts=dispatcher.runSync("increaseAttemptsOwn",UtilMisc.toMap("partyId",partyId,"examId",examId)); 
+//			if(ServiceUtil.isError(resultFromInceaseAttempts)) {
+//				handleTransaction();
+//				Debug.logError(resultFromInceaseAttempts.get("errorMessage").toString(),StartExamService.class.getName());
+//				return resultFromInceaseAttempts;
+//			}
 			
 			
 			// if the user already in the inProgssParty so we just update the attempts
