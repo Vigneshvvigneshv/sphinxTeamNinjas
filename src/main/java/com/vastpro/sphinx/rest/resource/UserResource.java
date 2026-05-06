@@ -34,7 +34,6 @@ import com.vastpro.sphinx.util.SphinxConstants;
 import javax.ws.rs.core.Response;
 
 @Path(SphinxConstants.USER)
-
 public class UserResource {
 
 	@POST

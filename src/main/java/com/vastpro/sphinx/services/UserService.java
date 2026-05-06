@@ -14,12 +14,23 @@ import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
 
+/**
+ * this class is used to get the all user and disable the user(delete the user)
+ */
 public class UserService {
+	/**
+	 * getAllUser method is used to get the all the user based on which admin created 
+	 * @param context(is for get the dispatcher and delegator)
+	 * @param input(it have userName of the admin)
+	 * @return list of user
+	 */
 	public static Map<String, Object> getAllUser(DispatchContext context, Map<String, Object> input) {
 		Delegator delegator = context.getDelegator();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		try {
 //			String adminUserLoginId=EntityQuery.use(delegator).from("UserLogin").where("partyId",input.get("partyId")).queryFirst().getString("userLoginId");
+			
+			//get the list of user
 			List<GenericValue> userList = EntityQuery.use(delegator).from("PartyPersonalInfo")
 							.where("partyTypeId", "PERSON", "statusId", "PARTY_ENABLED", "roleTypeId", "SPHINX_USER","createdByUserLogin",input.get("userName")).orderBy("userLoginId").queryList();
 			// List<GenericValue> userList=EntityQuery.use(delegator).from("UserLogin").queryList();

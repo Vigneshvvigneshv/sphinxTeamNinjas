@@ -36,6 +36,7 @@ public class ExamService {
 	public static Map<String, Object> createExam(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
 		Delegator delegator = context.getDelegator();
+		Map<String,Object> successResult=ServiceUtil.returnSuccess("Exam create successfully");
 		try {
 
 			// before update we check the examName is present or not in the particular admin
@@ -138,7 +139,9 @@ public class ExamService {
 			}
 
 			TransactionUtil.commit(); // if success then return the success message
-			return ServiceUtil.returnSuccess("Exam create successfully");
+			
+			successResult.put("examId", examId);
+			return successResult;
 
 		} catch (GenericServiceException | GenericEntityException e) {
 			// e.printStackTrace();

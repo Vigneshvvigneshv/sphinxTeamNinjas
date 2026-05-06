@@ -14,6 +14,9 @@ import org.apache.ofbiz.webapp.control.LoginWorker;
 
 import com.vastpro.sphinx.util.PasswordUtil;
 
+/**
+ * this class is used to manage the login and validate the user by using LoginWorker(but done it in userResource)
+ */
 
 public class UserLoginService {
 
