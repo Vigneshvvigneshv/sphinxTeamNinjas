@@ -56,7 +56,15 @@ public class CertificateService {
             if (exam == null || person == null || examResultDetails == null) {
                 return ServiceUtil.returnError("Invalid exam or user");
             }
-
+            
+            // Derive pass/fail status from score
+            String status = "FAIL";
+            if(examResultDetails.getLong("passed")!=0) {
+            	status="PASS";
+            }else {
+            	return ServiceUtil.returnError("Certificate unavailable. The required passing score was not achieved.");
+            }
+            
             String candidateName = person.getString("firstName") + " "
                     + (UtilValidate.isNotEmpty(person.getString("lastName"))
                             ? person.getString("lastName") : "");
@@ -65,11 +73,8 @@ public class CertificateService {
             String date     = new SimpleDateFormat("dd MMMM yyyy").format(new Date());
             String score    = (String) examResultDetails.get("score");
 
-            // Derive pass/fail status from score
-            String status = "FAIL";
-            if(examResultDetails.getLong("passed")!=0) {
-            	status="PASS";
-            }
+           
+            
               
             
 
