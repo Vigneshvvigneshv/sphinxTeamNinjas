@@ -45,17 +45,17 @@ public class ExamSetupService {
 			if(topicMapping==null || topicMapping.isEmpty()) {
 				return ServiceUtil.returnError("No Topic in Exam");
 			}
-//			double totalPercentage=0;
-//			double topicPercentage=0;
-//			for(GenericValue e:topicMapping) {
-//				topicPercentage=e.getDouble("percentage");
-//				totalPercentage=totalPercentage+topicPercentage;
-//			}
-//			
-//			
-//			if(totalPercentage!=100) {
-//				return ServiceUtil.returnError("Topic percentages must sum to 100%. Current total: " + totalPercentage+"%" );
-//			}
+			double totalPercentage=0;
+			double topicPercentage=0;
+			for(GenericValue e:topicMapping) {
+				topicPercentage=e.getDouble("percentage");
+				totalPercentage=totalPercentage+topicPercentage;
+			}
+			
+			
+			if(totalPercentage!=100) {
+				return ServiceUtil.returnError("Topic percentages must sum to 100%. Current total: " + totalPercentage+"%" );
+			}
 				
 			
 			
@@ -85,7 +85,7 @@ public class ExamSetupService {
 	                
 	                
 	                if(count>questionList.size()) {
-	    				errors.add("Not enough questions in "+topic.getString("topicName")+" add "+(count-questionList.size()) +" more questions" );
+	    				errors.add("Not enough questions in "+topic.getString("topicName")+" add "+(count-questionList.size()+1) +" more questions" );
 	    			}   
 	              
 			 }

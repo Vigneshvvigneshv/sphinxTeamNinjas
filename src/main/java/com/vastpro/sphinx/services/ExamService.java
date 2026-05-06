@@ -212,6 +212,12 @@ public class ExamService {
 					// return ServiceUtil.returnError((String) result1.get("errorMessage"));
 				}
 
+				List<GenericValue> ExamResult=EntityQuery.use(delegator).from("ExamResult").where("examId",input).queryList();
+				
+				if(ExamResult!=null) {
+					return ServiceUtil.returnError("Exam is Assigned");
+				}
+				
 				Map<String, Object> result = dispatcher.runSync("deleteExam", UtilMisc.toMap("examId", input));
 
 				if (ServiceUtil.isError(result)) {
