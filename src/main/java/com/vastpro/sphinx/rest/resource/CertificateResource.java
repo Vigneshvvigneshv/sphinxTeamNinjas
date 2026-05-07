@@ -1,5 +1,6 @@
 package com.vastpro.sphinx.rest.resource;
 
+import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
 import org.apache.ofbiz.service.ServiceUtil;
 import org.apache.ofbiz.base.util.UtilMisc;
@@ -32,7 +33,7 @@ public class CertificateResource {
             // Call the OFBiz service defined in services.xml
             Map<String, Object> serviceContext = UtilMisc.toMap(
                "partyId",request.getAttribute("partyId"),
-               "examId",request.getAttribute("examId")            );
+               "examId",request.getAttribute("examId"));
 
             Map<String, Object> result = dispatcher.runSync(
                 "generateSphinxCertificate", serviceContext
@@ -43,7 +44,7 @@ public class CertificateResource {
                     .entity(Map.of("error", ServiceUtil.getErrorMessage(result)))
                     .build();
             }
-
+            
             ByteArrayOutputStream pdfStream =
                 (ByteArrayOutputStream) result.get("pdfBytes");
 
@@ -55,8 +56,9 @@ public class CertificateResource {
                 .header("Access-Control-Allow-Origin", "*")
                 .build();
 
-        } catch (Exception e) {
-            return Response.status(500)
+        } catch (GenericServiceException e) {
+        	e.printStackTrace();
+        	return Response.status(500)
                 .entity(Map.of("error", e.getMessage()))
                 .build();
         }

@@ -306,7 +306,7 @@ public class ExamTopicService {
 				return ServiceUtil.returnError((String) result.get("errorMessage"));
 			}
 
-			return ServiceUtil.returnSuccess("Topic Deleted Successfully");
+			return ServiceUtil.returnSuccess("Topic Removed Successfully");
 		} catch (GenericServiceException e) {
 			e.printStackTrace();
 			return ServiceUtil.returnError("Failed to Delete Topic");

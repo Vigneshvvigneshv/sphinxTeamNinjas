@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -71,24 +72,25 @@ public class CertificateService {
 
             String examName = exam.getString("examName");
             String date     = new SimpleDateFormat("dd MMMM yyyy").format(new Date());
-            String score    = (String) examResultDetails.get("score");
+            String score    = ((BigDecimal) examResultDetails.get("score")).toPlainString();
 
            
-            
-              
-            
 
             byte[] pdfBytes = generateWithFop(
                     candidateName.trim(), examName, date, score, status);
 
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            outputStream.write(pdfBytes);
+            
             String filename = "Sphinx_Certificate.pdf";
 
             Map<String, Object> result = ServiceUtil.returnSuccess();
-            result.put("pdfBytes", pdfBytes);
+            result.put("pdfBytes", outputStream);
             result.put("filename", filename);
             return result;
 
         } catch (Exception e) {
+        	e.printStackTrace();
             Debug.logError("Error occur in the generte cerificate", CertificateService.class.getName());
             return ServiceUtil.returnError(e.getMessage());
         }
