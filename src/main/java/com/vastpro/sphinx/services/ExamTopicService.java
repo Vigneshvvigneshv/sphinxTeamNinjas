@@ -74,7 +74,7 @@ public class ExamTopicService {
 //			
 //			
 			if((totalPercentage+percentage)>100) {
-				return ServiceUtil.returnError("Total topic Percentage Should not be more than 100");
+				return ServiceUtil.returnError("Total percentage should not be more than 100");
 			}
 //			
 //			GenericValue examNoOFQuestions = EntityQuery.use(delegator).from("ExamMaster").where("examId", examId).queryOne();
@@ -178,7 +178,7 @@ public class ExamTopicService {
 			
 			
 			if(totalPercentage>100) {
-				return ServiceUtil.returnError("Total Question Percentage Should not be more than 100");
+				return ServiceUtil.returnError("Total percentage should not be more than 100");
 			}
 			
 			
@@ -221,7 +221,7 @@ public class ExamTopicService {
 
 		} catch (GenericServiceException | GenericEntityException e) {
 			e.printStackTrace();
-			return ServiceUtil.returnError("Error Occured in Updating the Exam Topic");
+			return ServiceUtil.returnError("Error occured in updating the Exam Topic");
 		}
 	}
 
@@ -284,7 +284,7 @@ public class ExamTopicService {
 			return result;
 
 		} catch (Exception e) {
-			return ServiceUtil.returnError("Error Fetching in Topic " + e.getMessage());
+			return ServiceUtil.returnError("Error in fetching Topic " + e.getMessage());
 		}
 	}
 
@@ -306,10 +306,10 @@ public class ExamTopicService {
 				return ServiceUtil.returnError((String) result.get("errorMessage"));
 			}
 
-			return ServiceUtil.returnSuccess("Topic Removed Successfully");
+			return ServiceUtil.returnSuccess("Topic removed successfully");
 		} catch (GenericServiceException e) {
 			e.printStackTrace();
-			return ServiceUtil.returnError("Failed to Delete Topic");
+			return ServiceUtil.returnError("Failed to remove topic");
 		}
 	}
 }

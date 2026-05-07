@@ -54,7 +54,7 @@ public class ExamSetupService {
 			
 			
 			if(totalPercentage!=100) {
-				return ServiceUtil.returnError("Topic percentages must sum to 100%. Current total: " + totalPercentage+"%" );
+				return ServiceUtil.returnError((int)totalPercentage +"% only assigned to this exam. need "+(int)(100-totalPercentage)+"%" );
 			}
 				
 			
