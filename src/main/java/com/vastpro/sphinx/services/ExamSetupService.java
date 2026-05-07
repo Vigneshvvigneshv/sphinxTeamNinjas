@@ -105,10 +105,10 @@ public class ExamSetupService {
 			 }
 			
 			 
-			 Map<String,Object>questionServiceResult=dispatcher.runSync("generateQuestionsService", UtilMisc.toMap("examId",examId));
-			 if(ServiceUtil.isError(questionServiceResult)) {
-				 return ServiceUtil.returnError((String)questionServiceResult.get("errorMessage"));
-			 }
+//			 Map<String,Object>questionServiceResult=dispatcher.runSync("generateQuestionsService", UtilMisc.toMap("examId",examId));
+//			 if(ServiceUtil.isError(questionServiceResult)) {
+//				 return ServiceUtil.returnError((String)questionServiceResult.get("errorMessage"));
+//			 }
 			 
 			  Map<String, Object> result = ServiceUtil.returnSuccess("Exam setup completed successfully"); 
 			 

@@ -818,9 +818,9 @@
 
 <!-- ========================= Certificate Service (Start) ============================== -->
 
-<service name="generateSphinxCertificate" engine="java" location="com.vastpro.sphinx.service.CertificateService" invoke="generateCertificate">
+<service name="generateSphinxCertificate" engine="java" location="com.vastpro.sphinx.services.CertificateService" invoke="generateCertificate">
         <attribute name="partyId" type="String"  mode="IN" optional="false"/>
-        <attribute name="examName" type="String"  mode="IN" optional="false"/>
+        <attribute name="examId" type="String"  mode="IN" optional="false"/>
      
         <attribute name="pdfBytes" type="java.io.ByteArrayOutputStream" mode="OUT" optional="false"/>
     </service>

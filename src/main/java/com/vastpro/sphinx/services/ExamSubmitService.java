@@ -191,7 +191,19 @@ public class ExamSubmitService {
 				TransactionUtil.rollback();
 				return ServiceUtil.returnError("Error updating ExamActive");
 			}
-
+			
+			Map<String,Object> resultFromInceaseAttempts=dispatcher.runSync("increaseAttemptsOwn",UtilMisc.toMap("partyId",partyId,"examId",examId)); 
+			if(ServiceUtil.isError(resultFromInceaseAttempts)) {
+				TransactionUtil.rollback();
+				return ServiceUtil.returnError("Error occured in increase attempts");
+			}
+			
+			GenericValue updatedRel = EntityQuery.use(delegator)
+						    .from("PartyExamRelationship")
+						    .where("partyId", partyId, "examId", examId)
+						    .queryOne();
+			
+			Long updatedAttempts = updatedRel.getLong("noOfAttempts");
 			// ── Save / update ExamResult ──────────────────────────────────────────
 			Map<String, Object> examResultInput = new HashMap<>();
 			examResultInput.put("partyId", partyId);
@@ -203,7 +215,7 @@ public class ExamSubmitService {
 			examResultInput.put("correctCount", (long) correctCount);
 			examResultInput.put("wrongCount", (long) wrongCount);
 			examResultInput.put("skippedCount", (long) skippedCount);
-			examResultInput.put("attemptNo", noOfAttempts);
+			examResultInput.put("attemptNo", updatedAttempts);
 			examResultInput.put("submittedDate", new Timestamp(System.currentTimeMillis()));
 
 			GenericValue existingResult = EntityQuery.use(delegator).from("ExamResult").where("examId", examId, "partyId", partyId)
@@ -223,11 +235,7 @@ public class ExamSubmitService {
 			}
 
 			
-			Map<String,Object> resultFromInceaseAttempts=dispatcher.runSync("increaseAttemptsOwn",UtilMisc.toMap("partyId",partyId,"examId",examId)); 
-			if(ServiceUtil.isError(resultFromInceaseAttempts)) {
-				TransactionUtil.rollback();
-				return ServiceUtil.returnError("Error occured in increase attempts");
-			}
+			
 			// ── Cleanup QuestionBankMasterB ───────────────────────────────────────
 			delegator.removeByAnd("QuestionBankMasterB", UtilMisc.toMap("examId", examId));
 
