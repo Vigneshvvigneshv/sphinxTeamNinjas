@@ -114,7 +114,7 @@ public class ExamTopicService {
 				return ServiceUtil.returnError("Error Occured in Creating Exam Topic");
 			}
 
-			return ServiceUtil.returnSuccess("Exam TopicMaster Created SuccessFully");
+			return ServiceUtil.returnSuccess("Topic added to the assesment");
 
 		} catch (GenericServiceException | GenericEntityException e) {
 			e.printStackTrace();
@@ -217,7 +217,7 @@ public class ExamTopicService {
 				return ServiceUtil.returnError("Error Occured in Updating the Exam Topic");
 			}
 
-			return ServiceUtil.returnSuccess("Exam TopicMaster updated SuccessFully");
+			return ServiceUtil.returnSuccess("Topic updated to the assesment");
 
 		} catch (GenericServiceException | GenericEntityException e) {
 			e.printStackTrace();
