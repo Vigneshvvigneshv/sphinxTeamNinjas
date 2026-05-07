@@ -105,6 +105,8 @@ public class ExamService {
 					return ServiceUtil.returnError("passPercentage of question should be between 20 to 100");
 				}
 				createMap.put("passPercentage", passPercentage);
+				//when create the exam initially we set the setup 0 and then setup the exam then we change it to 1
+				createMap.put("examSetupProper", 0);
 
 			} catch (NumberFormatException e) {
 				Debug.logError(e.getMessage(), ExamService.class.getName());

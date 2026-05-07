@@ -42,9 +42,14 @@ public class ExamAssignToUserService {
 		String examId = (String) input.get("examId");
 		
 		try {
-			Long examSetup=EntityQuery.use(delegator).from("ExamMaster").where("examId",examId).queryFirst().getLong("examSetupProper");
-			if(examSetup==0) {
-				return ServiceUtil.returnError("Please, setup exam before assign the user's");
+			Long examSetup=EntityQuery.use(delegator).from("ExamMaster").where("examId",examId).queryOne().getLong("examSetupProper");
+			if(UtilValidate.isEmpty(examSetup)) {
+				Debug.logError("exam is not present in the Exam Master",ExamAssignToUserService.class.getName());
+				return ServiceUtil.returnError("Please, contact the admin");
+			}else {
+				if(examSetup==0) {
+					return ServiceUtil.returnError("Please, setup exam before assign the user's");
+				}
 			}
 		} catch (GenericEntityException e) {
 			Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
