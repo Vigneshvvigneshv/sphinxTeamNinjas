@@ -36,7 +36,7 @@ public class ExamService {
 	public static Map<String, Object> createExam(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
 		Delegator delegator = context.getDelegator();
-		Map<String,Object> successResult=ServiceUtil.returnSuccess("Exam create successfully");
+		Map<String,Object> successResult=ServiceUtil.returnSuccess("Exam created successfully");
 		try {
 
 			// before update we check the examName is present or not in the particular admin
