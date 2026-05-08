@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilMisc;
+import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
@@ -175,20 +176,20 @@ public class ExamService {
 		Delegator delegator = context.getDelegator();
 		String partyId = (String) param.get("partyId");
 		List<String> deleteList = (List<String>) param.get("deleteList");
-		for (String input : deleteList) {
+		for (String examId : deleteList) {
 			try {
 				// before update we check the examId is present or not
-				// GenericValue examId = EntityQuery.use(delegator).from("ExamMaster").where("examId", input.get("examId")).queryFirst();
+				// GenericValue examId = EntityQuery.use(delegator).from("ExamMaster").where("examId", examId.get("examId")).queryFirst();
 				//
 				// if (examId == null) {
 				// return ServiceUtil.returnSuccess("Exam not found");
 				// }
 
 				// List<GenericValue> examPresentInExamTopic = EntityQuery.use(delegator).from("ExamTopicMapping")
-				// .where("examId", input.get("examId")).queryList();
+				// .where("examId", examId.get("examId")).queryList();
 				//
 				// if (examPresentInExamTopic.size() > 0) {
-				// // Map<String, Object> result1 = dispatcher.runSync("deleteTopicInExamTopicMaster", input);
+				// // Map<String, Object> result1 = dispatcher.runSync("deleteTopicInExamTopicMaster", examId);
 				// // if (ServiceUtil.isError(result1)) {
 				// // return ServiceUtil.returnError((String) result1.get("errorMessage"));
 				// // }
@@ -200,12 +201,12 @@ public class ExamService {
 				TransactionUtil.begin();
 
 				// when the exam delete, delete the records from the another table that are related to the exam(deleted exam)
-				delegator.removeByAnd("ExamTopicMapping", UtilMisc.toMap("examId", input));
-				delegator.removeByAnd("QuestionBankMasterB", UtilMisc.toMap("examId", input));
-				delegator.removeByAnd("PartyExamRelationship", UtilMisc.toMap("examId", input));
+				delegator.removeByAnd("ExamTopicMapping", UtilMisc.toMap("examId", examId));
+				delegator.removeByAnd("QuestionBankMasterB", UtilMisc.toMap("examId", examId));
+				delegator.removeByAnd("PartyExamRelationship", UtilMisc.toMap("examId", examId));
 				// this statement is delete the relation between admin and exam
 				// it remove the relation when the admin delete the exam
-				Map<String, Object> result1 = dispatcher.runSync("deleteAdminPartyExamRel", Map.of("partyId", partyId, "examId", input));
+				Map<String, Object> result1 = dispatcher.runSync("deleteAdminPartyExamRel", Map.of("partyId", partyId, "examId", examId));
 
 				// from the entity-auto service return the map the map contain success or error
 				// to add the data
@@ -217,13 +218,26 @@ public class ExamService {
 					// return ServiceUtil.returnError((String) result1.get("errorMessage"));
 				}
 
-				List<GenericValue> ExamResult=EntityQuery.use(delegator).from("ExamResult").where("examId",input).queryList();
+//				List<GenericValue> examResult=EntityQuery.use(delegator).from("ExamResult").where("examId",examId).queryList();
+//				
+//				if(examResult!=null&&examResult.size()<=0) {
+//					return ServiceUtil.returnError("Exam is Assigned");
+//				}
 				
-				if(ExamResult!=null) {
-					return ServiceUtil.returnError("Exam is Assigned");
+				//validate the exam is already been setup or not before delete the exam
+				Long examSetup=EntityQuery.use(delegator).from("ExamMaster").where("examId",examId).queryOne().getLong("examSetupProper");
+				if(UtilValidate.isEmpty(examSetup)) {
+					Debug.logError("exam is not present in the Exam Master",ExamAssignToUserService.class.getName());
+					return ServiceUtil.returnError("Please, contact the admin");
+				}else {
+					if(examSetup==1) {
+						return ServiceUtil.returnError("Cannot delete the exam because it has already been set up");		
+					}
 				}
+			
 				
-				Map<String, Object> result = dispatcher.runSync("deleteExam", UtilMisc.toMap("examId", input));
+				
+				Map<String, Object> result = dispatcher.runSync("deleteExam", UtilMisc.toMap("examId", examId));
 
 				if (ServiceUtil.isError(result)) {
 					TransactionUtil.rollback();
@@ -264,6 +278,18 @@ public class ExamService {
 		LocalDispatcher dispatcher = context.getDispatcher();
 		Delegator delegator = context.getDelegator();
 		try {
+			
+			
+			//validate the exam is already been setup or not before update the exam
+			Long examSetup=EntityQuery.use(delegator).from("ExamMaster").where("examId",input.get("examId")).queryOne().getLong("examSetupProper");
+			if(UtilValidate.isEmpty(examSetup)) {
+				Debug.logError("exam is not present in the Exam Master",ExamAssignToUserService.class.getName());
+				return ServiceUtil.returnError("Please, contact the admin");
+			}else {
+				if(examSetup==1) {
+					return ServiceUtil.returnError("Cannot update the exam because it has already been set up");		
+				}
+			}
 			// before update we check the examId is present or not
 			GenericValue examIdExits = EntityQuery.use(delegator).from("ExamMaster").where("examId", input.get("examId")).queryFirst();
 			if (examIdExits == null) {
@@ -442,5 +468,22 @@ public class ExamService {
 			return ServiceUtil.returnError("Error, occur during get exam" + e.getMessage());
 		}
 	}
-
+	
+	
+	
+//	private static boolean validateExamSetup(String examId,Delegator delegator)throws GenericEntityException{
+//		//validate the exam is already been setup or not before delete the exam
+//		Long examSetup=EntityQuery.use(delegator).from("ExamMaster").where("examId",examId).queryOne().getLong("examSetupProper");
+//		if(UtilValidate.isEmpty(examSetup)) {
+//			Debug.logError("exam is not present in the Exam Master",ExamAssignToUserService.class.getName());
+////			return ServiceUtil.returnError("Please, contact the admin");
+//			return false;
+//		}else {
+//			if(examSetup==1) {
+////				return ServiceUtil.returnError("Cannot delete the exam because it has already been set up");
+//				return true;
+//			}
+//		}
+//	}
+//
 }
