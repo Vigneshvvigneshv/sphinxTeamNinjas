@@ -124,8 +124,21 @@ public class CertificateService {
                 .replace("${score}",score)
                 .replace("${status}",status);
         foTemplate.close();
+        
+        
+        String configPath = Paths.get(ofbizHome, "plugins", "sphinx", "src",
+                        "main", "java", "fop-config.xml").toString();
+                File fopConfigFile = new File(configPath);
 
-        FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI());
+                FopFactory fopFactory;
+                if (fopConfigFile.exists()) {
+                    fopFactory = FopFactory.newInstance(fopConfigFile); // ✅ with font config
+                    Debug.logInfo("FOP using config file: " + configPath, CertificateService.class.getName());
+                } else {
+                    fopFactory = FopFactory.newInstance(templateFile.getParentFile().toURI()); // ✅ correct base URI
+                    Debug.logInfo("FOP config not found, using template directory as base URI", CertificateService.class.getName());
+                }
+                
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, baos);
 
