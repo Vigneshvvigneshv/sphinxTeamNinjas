@@ -34,7 +34,7 @@ public class ExamSetupService {
 			
 			 Long setupProper = exam.getLong("examSetupProper");
 	            if (setupProper != null && setupProper == 1L) {
-	                return ServiceUtil.returnError("Exam [" + exam.getString("examName") + "] is already finalized and locked.");
+	                return ServiceUtil.returnError( exam.getString("examName") + "] is already finalized and locked.");
 	            }
 			//TopicQuestionPercentage
 			List<GenericValue> topicMapping=EntityQuery.use(delegator)
@@ -54,7 +54,7 @@ public class ExamSetupService {
 			
 			
 			if(totalPercentage!=100) {
-				return ServiceUtil.returnError((int)totalPercentage +"% only assigned to this exam. need "+(int)(100-totalPercentage)+"%" );
+				return ServiceUtil.returnError((int)totalPercentage +"% only assigned to this exam. Need "+(int)(100-totalPercentage)+"% more to setup" );
 			}
 				
 			
