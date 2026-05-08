@@ -68,7 +68,7 @@ public class ExamService {
 			//validate the exam name length is less than 20 character
 			String examName=(String) input.get("examName");
 			if(examName.length()>20) {
-				return ServiceUtil.returnError("Exam name length should be less than 20 character");
+				return ServiceUtil.returnError("Assessment name length should be less than 20 character");
 			}
 			createMap.put("examName", examName);
 			
@@ -214,7 +214,7 @@ public class ExamService {
 				// error
 				if (ServiceUtil.isError(result1)) {
 					TransactionUtil.rollback();
-					return ServiceUtil.returnError("Error, occur during delete the Exam");
+					return ServiceUtil.returnError("Error, occur during delete the assessment");
 					// return ServiceUtil.returnError((String) result1.get("errorMessage"));
 				}
 
@@ -231,7 +231,7 @@ public class ExamService {
 					return ServiceUtil.returnError("Please, contact the admin");
 				}else {
 					if(examSetup==1) {
-						return ServiceUtil.returnError("Cannot delete the exam because it has already been set up");		
+						return ServiceUtil.returnError("Cannot delete the assessment because it has already been set up");		
 					}
 				}
 			
@@ -241,7 +241,7 @@ public class ExamService {
 
 				if (ServiceUtil.isError(result)) {
 					TransactionUtil.rollback();
-					return ServiceUtil.returnError("Error, occur during delete the Exam");
+					return ServiceUtil.returnError("Error, occur during delete the assessment");
 					// return ServiceUtil.returnError((String) result.get("errorMessage"));
 				}
 				TransactionUtil.commit();
@@ -255,13 +255,13 @@ public class ExamService {
 					// TODO Auto-generated catch block
 					// e1.printStackTrace();
 					Debug.logError(e1.getMessage(), ExamService.class.getName());
-					return ServiceUtil.returnError("Error, occur during delete exam" + e1.getMessage());
+					return ServiceUtil.returnError("Error, occur during delete assessment" + e1.getMessage());
 				}
 				Debug.logError(e.getMessage(), ExamService.class.getName());
-				return ServiceUtil.returnError("Error, occur during delete exam" + e.getMessage());
+				return ServiceUtil.returnError("Error, occur during delete assessment" + e.getMessage());
 			}
 		}
-		return ServiceUtil.returnSuccess("Exam deleted successfully");
+		return ServiceUtil.returnSuccess("assessment deleted successfully");
 	}
 
 	/**
@@ -287,7 +287,7 @@ public class ExamService {
 				return ServiceUtil.returnError("Please, contact the admin");
 			}else {
 				if(examSetup==1) {
-					return ServiceUtil.returnError("Cannot update the exam because it has already been set up");		
+					return ServiceUtil.returnError("Cannot update the assessment because it has already been set up");		
 				}
 			}
 			// before update we check the examId is present or not
@@ -302,7 +302,7 @@ public class ExamService {
 			//validate the exam name length is less than 20 character
 			String examName=(String) input.get("examName");
 			if(examName.length()>20) {
-				return ServiceUtil.returnError("Exam name length should be less than 20 character");
+				return ServiceUtil.returnError("Assessment name length should be less than 20 character");
 			}
 			createMap.put("examName", examName);
 			
@@ -349,15 +349,15 @@ public class ExamService {
 			Map<String, Object> result = dispatcher.runSync("updateExam", createMap);
 
 			if (ServiceUtil.isError(result)) {
-				return ServiceUtil.returnError("Error, occur during update the Exam");
+				return ServiceUtil.returnError("Error, occur during update the assessment");
 			}
 
-			return ServiceUtil.returnSuccess("Exam update successfully");
+			return ServiceUtil.returnSuccess("Assessment update successfully");
 
 		} catch (GenericServiceException | GenericEntityException e) {
 			// e.printStackTrace();
 			Debug.logError(e.getMessage(), ExamService.class.getName());
-			return ServiceUtil.returnError("Error, occur during update exam" + e.getMessage());
+			return ServiceUtil.returnError("Error, occur during update assessment" + e.getMessage());
 		}
 	}
 
@@ -382,7 +382,7 @@ public class ExamService {
 		} catch (GenericEntityException e) {
 			// TODO Auto-generated catch block
 			Debug.logError(e.getMessage(), ExamService.class.getName());
-			return ServiceUtil.returnError("Error, occur during getting list of exam" + e.getMessage());
+			return ServiceUtil.returnError("Error, occur during getting list of assessment" + e.getMessage());
 		}
 	}
 
@@ -403,13 +403,13 @@ public class ExamService {
 			// before update we check the examId is present or not
 			GenericValue examData = EntityQuery.use(delegator).from("ExamMaster").where("examId", input.get("examId")).queryFirst();
 			if (examData == null) {
-				return ServiceUtil.returnError("Exam not found");
+				return ServiceUtil.returnError("Assessment not found");
 			}
 			result.put("examList", examData);
 			return result;
 		} catch (GenericEntityException e) {
 			Debug.logError(e.getMessage(), ExamService.class.getName());
-			return ServiceUtil.returnError("Error, occur during get exam by id" + e.getMessage());
+			return ServiceUtil.returnError("Error, occur during get assessment by id" + e.getMessage());
 		}
 	}
 
@@ -435,7 +435,7 @@ public class ExamService {
 			return result;
 		} catch (GenericEntityException e) {
 			Debug.logError(e.getMessage(), ExamService.class.getName());
-			return ServiceUtil.returnError("Error, occur during get exam" + e.getMessage());
+			return ServiceUtil.returnError("Error, occur during get assessment" + e.getMessage());
 		}
 	}
 
@@ -465,7 +465,7 @@ public class ExamService {
 			return result;
 		} catch (GenericEntityException e) {
 			Debug.logError(e.getMessage(), ExamService.class.getName());
-			return ServiceUtil.returnError("Error, occur during get exam" + e.getMessage());
+			return ServiceUtil.returnError("Error, occur during get assessment" + e.getMessage());
 		}
 	}
 	

@@ -128,18 +128,18 @@ public class ExamAssignToUserService {
 
 						rollBackTransaction();
 						Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
-						return ServiceUtil.returnError("Error, occur during assing the Exam to the user" + e.getMessage());
+						return ServiceUtil.returnError("Error, occur during assing the assessment to the user" + e.getMessage());
 					}
 				}
 				TransactionUtil.commit();
 			} catch (GenericTransactionException e) {
 				rollBackTransaction();
 				Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
-				return ServiceUtil.returnError("Users can't assign to the exam, Please Try again later");
+				return ServiceUtil.returnError("User's can't assign to the assessment, Please Try again later");
 			}
-			return ServiceUtil.returnSuccess("Users Assigned to the exam successfully");
+			return ServiceUtil.returnSuccess("Users Assigned to the assessment successfully");
 		}
-		return ServiceUtil.returnError("Select the user to assign the exam");
+		return ServiceUtil.returnError("Select the user to assign the assessment");
 	}
 
 	public static Map<String, Object> removeAssignedExam(DispatchContext context, Map<String, Object> input) {
@@ -150,11 +150,13 @@ public class ExamAssignToUserService {
 
 			String partyId = (String) input.get("partyId");
 			String examId = (String) input.get("examId");
-			if (partyId == null || partyId.isEmpty()) {
-				return ServiceUtil.returnError("user cannot be empty");
+			if (UtilValidate.isEmpty(partyId)) {
+				Debug.logError("partyIs is empty",ExamAssignToUserService.class.getName());
+				return ServiceUtil.returnError("Please, Contact the admin");
 			}
-			if (examId == null || examId.isEmpty()) {
-				return ServiceUtil.returnError("exam cannot be empty");
+			if (UtilValidate.isEmpty(examId)) {
+				Debug.logError("examId is empty",ExamAssignToUserService.class.getName());
+				return ServiceUtil.returnError("Please, Contact the admin");
 			}
 //			GenericValue partyIdAlreadyExits = EntityQuery.use(delegator).from("PartyExamRelationship").where("partyId", partyId)
 //							.queryFirst();
@@ -174,14 +176,14 @@ public class ExamAssignToUserService {
 			Map<String, Object> result = dispatcher.runSync("removeAssignedValue", input);
 
 			if (ServiceUtil.isError(result)) {
-				return ServiceUtil.returnError("Error, occur during remove the assigned Exam");
+				return ServiceUtil.returnError("Error, occur during remove the assigned assessment");
 				// return ServiceUtil.returnError((String)result.get("errorMessage"));
 			}
-			return ServiceUtil.returnSuccess("User removed successfully from the exam");
+			return ServiceUtil.returnSuccess("User removed successfully from the assessment");
 
 		} catch ( GenericServiceException e) {
 			Debug.logError(e.getMessage(), ExamAssignToUserService.class.getName());
-			return ServiceUtil.returnError("Error, occur during remove the assigned Exam" + e.getMessage());
+			return ServiceUtil.returnError("Error, occur during remove the assigned assessment" + e.getMessage());
 		}
 	}
 
@@ -193,10 +195,12 @@ public class ExamAssignToUserService {
 			String examId = (String) input.get("examId");
 			
 			if (UtilValidate.isEmpty(partyId)) {
-				return ServiceUtil.returnError("user cannot be empty");
+				Debug.logError("partyIs is empty",ExamAssignToUserService.class.getName());
+				return ServiceUtil.returnError("Please, Contact the admin");
 			}
 			if (UtilValidate.isEmpty(examId)) {
-				return ServiceUtil.returnError("exam cannot be empty");
+				Debug.logError("examId is empty",ExamAssignToUserService.class.getName());
+				return ServiceUtil.returnError("Please, Contact the admin");
 			}
 
 			String attempts=(String) input.get("allowedAttempts");

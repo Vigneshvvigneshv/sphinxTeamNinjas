@@ -57,8 +57,8 @@ public class EmailService {
 				// return ServiceUtil.returnError("Failed To Send an Exam Notification "+e.getMessage());
 				// }
 
-				List<GenericValue> assignedUsersListsWithEmails = EntityQuery.use(delegator).from("UserDetailsForEmail")
-								.where("contactMechTypeId", "EMAIL_ADDRESS", "examId", examRecord.get("examId")).queryList();
+				GenericValue assignedUsersListsWithEmails = EntityQuery.use(delegator).from("UserDetailsForEmail")
+								.where("contactMechTypeId", "EMAIL_ADDRESS", "partyId", partyId).queryFirst();
 
 				if (assignedUsersListsWithEmails.isEmpty()) {
 					return ServiceUtil.returnError("No assigned users found for the exam.");
@@ -74,19 +74,19 @@ public class EmailService {
 
 				emailContext.put("contentType", "text/plain");
 
-				for (GenericValue assignedUser : assignedUsersListsWithEmails) {
+				
 
-					emailContext.put("sendTo", assignedUser.getString("infoString"));
-					emailContext.put("body", String.format(emailBody, assignedUser.getString("userLoginId"), password));
+					emailContext.put("sendTo", assignedUsersListsWithEmails.getString("infoString"));
+					emailContext.put("body", String.format(emailBody, assignedUsersListsWithEmails.getString("userLoginId"), password));
+					try {
+						dispatcher.runAsync("sendMail", emailContext);
+					} catch (GenericServiceException e) {
+						e.printStackTrace();
+						return ServiceUtil.returnError("Failed To Send an Exam Notification " + e.getMessage());
+					}
 				}
 
-				try {
-					dispatcher.runAsync("sendMail", emailContext);
-				} catch (GenericServiceException e) {
-					e.printStackTrace();
-					return ServiceUtil.returnError("Failed To Send an Exam Notification " + e.getMessage());
-				}
-			}
+			
 
 			return ServiceUtil.returnSuccess("Mail Notificaiton Initiated! The Users will recieve the Email shortly!");
 		} catch (Exception e) {
