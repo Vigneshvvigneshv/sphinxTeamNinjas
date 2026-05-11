@@ -70,9 +70,9 @@ public class CertificateService {
                     + (UtilValidate.isNotEmpty(person.getString("lastName"))
                             ? person.getString("lastName") : "");
 
-            String examName = exam.getString("examName");
-            String date = new SimpleDateFormat("dd MMMM yyyy").format(new Date());
-            String percentage  = ((BigDecimal) examResultDetails.get("percentage")).toPlainString();
+            String examName = exam.getString("examName").toUpperCase();
+            String date = new SimpleDateFormat("dd MMMM yyyy").format(new Date()).toUpperCase();
+            String percentage  =String.valueOf( examResultDetails.get("percentage"));
 
            
 

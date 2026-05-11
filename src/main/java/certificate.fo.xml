@@ -111,7 +111,7 @@
       <!-- ══ CERTIFICATE TITLE ══ -->
       <fo:block-container position="absolute"
           top="37mm" left="13mm" width="271mm">
-        <fo:block font-family="serif" font-size="52pt"
+        <fo:block font-family="serif" font-size="40pt"
                   color="#1C2B4A" text-align="center"
                   font-style="italic" font-weight="bold">Certificate of Achievement</fo:block>
       </fo:block-container>
@@ -139,7 +139,7 @@
       <!-- ══ CANDIDATE NAME ══ -->
       <fo:block-container position="absolute"
           top="76mm" left="13mm" width="271mm">
-        <fo:block font-family="serif" font-size="36pt"
+        <fo:block font-family="serif" font-size="28pt"
                   color="#1C2B4A" text-align="center"
                   font-style="italic" font-weight="bold">${candidateName}</fo:block>
       </fo:block-container>
@@ -159,8 +159,8 @@
 
       <!-- Body text -->
       <fo:block-container position="absolute"
-          top="99mm" left="50mm" width="271mm">
-        <fo:block font-family="serif" font-size="8.5pt"
+          top="99mm" left="20mm" width="271mm">
+        <fo:block font-family="serif" font-size="13pt"
                   color="#7A8899" text-align="center">
           has successfully completed the examination and demonstrated outstanding proficiency.
         </fo:block>
@@ -170,9 +170,9 @@
       <!-- Label -->
       <fo:block-container position="absolute"
           top="108mm" left="13mm" width="271mm">
-        <fo:block font-family="serif" font-size="8.5pt"
+        <fo:block font-family="serif" font-size="11pt"
                   color="#7A8899" text-align="center"
-                  letter-spacing="3pt">Assessment Name</fo:block>
+                  letter-spacing="1pt">Assessment Name</fo:block>
       </fo:block-container>
       <!-- Exam name value -->
       <fo:block-container position="absolute"
@@ -205,7 +205,7 @@
                   letter-spacing="2pt" padding-top="3mm">PERCENTAGE</fo:block>
         <fo:block font-family="serif" font-size="22pt"
                   color="#8B6A14" text-align="center"
-                  font-weight="bold">${score}%</fo:block>
+                  font-weight="bold">${percentage}%</fo:block>
       </fo:block-container>
 
       <!-- ══ STATUS BOX ══ -->
@@ -283,7 +283,7 @@
       </fo:block-container>
 
       <!-- ══ BOTTOM NAVY FOOTER ══ -->
-<!--       <fo:block-container position="absolute"
+      <fo:block-container position="absolute"
           top="192mm" left="13mm" width="271mm" height="5mm"
           background-color="#1C2B4A">
         <fo:block/>
@@ -292,7 +292,7 @@
           top="192mm" left="13mm" width="271mm" height="0.8pt"
           background-color="#C8A84B">
         <fo:block/>
-      </fo:block-container> -->
+      </fo:block-container> 
       <fo:block-container position="absolute"
           top="194mm" left="13mm" width="271mm">
         <fo:block font-family="serif" font-size="7.5pt"
