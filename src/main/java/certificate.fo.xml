@@ -103,7 +103,7 @@
       <!-- Platform name in header -->
       <fo:block-container position="absolute"
           top="20mm" left="13mm" width="271mm">
-        <fo:block font-family="serif" font-size="8pt"
+        <fo:block font-family="serif" font-size="10pt"
                   color="#E8D080" text-align="center"
                   letter-spacing="5pt">SPHINX ASSESSMENT PLATFORM</fo:block>
       </fo:block-container>
@@ -111,85 +111,99 @@
       <!-- ══ CERTIFICATE TITLE ══ -->
       <fo:block-container position="absolute"
           top="37mm" left="13mm" width="271mm">
-        <fo:block font-family="serif" font-size="46pt"
+        <fo:block font-family="serif" font-size="52pt"
                   color="#1C2B4A" text-align="center"
-                  font-style="italic" font-weight="bold">Certificate</fo:block>
+                  font-style="italic" font-weight="bold">Certificate of Achievement</fo:block>
       </fo:block-container>
 
-      <!-- OF ACHIEVEMENT -->
+      <!-- Gold rule top (below title) -->
       <fo:block-container position="absolute"
-          top="73mm" left="13mm" width="271mm">
-        <fo:block font-family="serif" font-size="9pt"
-                  color="#C8A84B" text-align="center"
-                  letter-spacing="8pt">OF ACHIEVEMENT</fo:block>
-      </fo:block-container>
-
-      <!-- Gold rule top -->
-      <fo:block-container position="absolute"
-          top="80mm" left="88mm" width="121mm" height="1pt"
+          top="65mm" left="60mm" width="177mm" height="1pt"
           background-color="#C8A84B">
         <fo:block/>
       </fo:block-container>
       <fo:block-container position="absolute"
-          top="81.5mm" left="88mm" width="121mm" height="0.4pt"
+          top="66.5mm" left="60mm" width="177mm" height="0.4pt"
           background-color="#E8D080">
         <fo:block/>
       </fo:block-container>
 
       <!-- THIS IS TO CERTIFY THAT -->
       <fo:block-container position="absolute"
-          top="84mm" left="13mm" width="271mm">
-        <fo:block font-family="serif" font-size="8pt"
+          top="69mm" left="13mm" width="271mm">
+        <fo:block font-family="serif" font-size="10pt"
                   color="#7A8899" text-align="center"
                   letter-spacing="4pt">THIS IS TO CERTIFY THAT</fo:block>
       </fo:block-container>
 
       <!-- ══ CANDIDATE NAME ══ -->
       <fo:block-container position="absolute"
-          top="91mm" left="13mm" width="271mm">
-        <fo:block font-family="serif" font-size="32pt"
+          top="76mm" left="13mm" width="271mm">
+        <fo:block font-family="serif" font-size="36pt"
                   color="#1C2B4A" text-align="center"
                   font-style="italic" font-weight="bold">${candidateName}</fo:block>
       </fo:block-container>
 
       <!-- Name underline thick -->
       <fo:block-container position="absolute"
-          top="107mm" left="73mm" width="151mm" height="1pt"
+          top="95mm" left="60mm" width="177mm" height="1pt"
           background-color="#C8A84B">
         <fo:block/>
       </fo:block-container>
       <!-- Name underline thin -->
       <fo:block-container position="absolute"
-          top="108.5mm" left="73mm" width="151mm" height="0.4pt"
+          top="96.5mm" left="60mm" width="177mm" height="0.4pt"
           background-color="#E8D080">
         <fo:block/>
       </fo:block-container>
 
       <!-- Body text -->
       <fo:block-container position="absolute"
-          top="111mm" left="50mm" width="197mm">
-        <fo:block font-family="serif" font-size="9.5pt"
+          top="99mm" left="50mm" width="271mm">
+        <fo:block font-family="serif" font-size="8.5pt"
                   color="#7A8899" text-align="center">
           has successfully completed the examination and demonstrated outstanding proficiency.
         </fo:block>
       </fo:block-container>
 
+      <!-- ══ EXAM NAME ══ -->
+      <!-- Label -->
+      <fo:block-container position="absolute"
+          top="108mm" left="13mm" width="271mm">
+        <fo:block font-family="serif" font-size="8.5pt"
+                  color="#7A8899" text-align="center"
+                  letter-spacing="3pt">Assessment Name</fo:block>
+      </fo:block-container>
+      <!-- Exam name value -->
+      <fo:block-container position="absolute"
+          top="112mm" left="13mm" width="271mm">
+        <fo:block font-family="serif" font-size="13pt"
+                  color="#1C2B4A" text-align="center"
+                  font-weight="bold">${examName}</fo:block>
+      </fo:block-container>
+      <!-- Exam name underline -->
+      <fo:block-container position="absolute"
+          top="119mm" left="88mm" width="121mm" height="0.8pt"
+          background-color="#C8A84B">
+        <fo:block/>
+      </fo:block-container>
+
       <!-- ══ SCORE BOX ══ -->
       <!-- Shadow -->
       <fo:block-container position="absolute"
-          top="120.5mm" left="76.5mm" width="44mm" height="20mm"
+          top="122.5mm" left="76.5mm" width="44mm" height="22mm"
           background-color="#D4C090">
         <fo:block/>
       </fo:block-container>
       <!-- Fill -->
       <fo:block-container position="absolute"
-          top="120mm" left="76mm" width="44mm" height="20mm"
+          top="122mm" left="76mm" width="44mm" height="22mm"
           background-color="#FBF5E6"
           border="1.2pt solid #C8A84B">
-        <fo:block font-family="serif" font-size="6.5pt"
+        <fo:block font-family="serif" font-size="8.5pt"
                   color="#7A8899" text-align="center"
-                  letter-spacing="2pt" padding-top="3mm">SCORE</fo:block>
-        <fo:block font-family="serif" font-size="20pt"
+                  letter-spacing="2pt" padding-top="3mm">PERCENTAGE</fo:block>
+        <fo:block font-family="serif" font-size="22pt"
                   color="#8B6A14" text-align="center"
                   font-weight="bold">${score}%</fo:block>
       </fo:block-container>
@@ -197,19 +211,19 @@
       <!-- ══ STATUS BOX ══ -->
       <!-- Shadow -->
       <fo:block-container position="absolute"
-          top="120.5mm" left="126.5mm" width="44mm" height="20mm"
+          top="122.5mm" left="126.5mm" width="44mm" height="22mm"
           background-color="#D4C090">
         <fo:block/>
       </fo:block-container>
       <!-- Fill -->
       <fo:block-container position="absolute"
-          top="120mm" left="126mm" width="44mm" height="20mm"
+          top="122mm" left="126mm" width="44mm" height="22mm"
           background-color="#FBF5E6"
           border="1.2pt solid #1E8449">
-        <fo:block font-family="serif" font-size="6.5pt"
+        <fo:block font-family="serif" font-size="8.5pt"
                   color="#7A8899" text-align="center"
                   letter-spacing="2pt" padding-top="3mm">STATUS</fo:block>
-        <fo:block font-family="serif" font-size="16pt"
+        <fo:block font-family="serif" font-size="18pt"
                   color="#1E8449" text-align="center"
                   font-weight="bold">${status}</fo:block>
       </fo:block-container>
@@ -217,75 +231,59 @@
       <!-- ══ DATE BOX ══ -->
       <!-- Shadow -->
       <fo:block-container position="absolute"
-          top="120.5mm" left="176.5mm" width="44mm" height="20mm"
+          top="122.5mm" left="176.5mm" width="44mm" height="22mm"
           background-color="#D4C090">
         <fo:block/>
       </fo:block-container>
       <!-- Fill -->
       <fo:block-container position="absolute"
-          top="120mm" left="176mm" width="44mm" height="20mm"
+          top="122mm" left="176mm" width="44mm" height="22mm"
           background-color="#FBF5E6"
           border="1.2pt solid #C8A84B">
-        <fo:block font-family="serif" font-size="6.5pt"
+        <fo:block font-family="serif" font-size="8.5pt"
                   color="#7A8899" text-align="center"
                   letter-spacing="2pt" padding-top="3mm">DATE</fo:block>
-        <fo:block font-family="serif" font-size="10pt"
-                  color="#1C2B4A" text-align="center"
-                  font-weight="bold" padding-top="1mm">${date}</fo:block>
+        <fo:block font-family="serif" font-size="18pt"
+                  color="#8B6A14" text-align="center"
+                  font-weight="bold" padding-top="1.5mm">${date}</fo:block>
       </fo:block-container>
 
       <!-- ══ SECTION DIVIDER ══ -->
       <fo:block-container position="absolute"
-          top="145mm" left="20mm" width="257mm" height="1pt"
+          top="149mm" left="20mm" width="257mm" height="1pt"
           background-color="#C8A84B">
         <fo:block/>
       </fo:block-container>
       <fo:block-container position="absolute"
-          top="146.5mm" left="20mm" width="257mm" height="0.4pt"
+          top="150.5mm" left="20mm" width="257mm" height="0.4pt"
           background-color="#E8D080">
         <fo:block/>
       </fo:block-container>
 
-      <!-- ══ SEAL ══ -->
-      <fo:block-container position="absolute"
-          top="150mm" left="108mm" width="28mm" height="28mm"
-          background-color="#1C2B4A"
-          border="2pt solid #C8A84B">
-        <fo:block font-family="serif" font-size="8pt"
-                  color="#E8D080" text-align="center"
-                  font-weight="bold" padding-top="7mm"
-                  letter-spacing="1pt">SPHINX</fo:block>
-        <fo:block font-family="serif" font-size="6pt"
-                  color="#C8A84B" text-align="center"
-                  letter-spacing="1pt">VERIFIED</fo:block>
-        <fo:block font-family="serif" font-size="12pt"
-                  color="#C8A84B" text-align="center">✦</fo:block>
-      </fo:block-container>
-
-      <!-- ══ DIRECTOR SIGNATURE ══ -->
+      <!-- ══ DIRECTOR SIGNATURE (centered) ══ -->
       <!-- Signature line -->
       <fo:block-container position="absolute"
-          top="158mm" left="185mm" width="82mm" height="0.6pt"
+          top="158mm" left="100mm" width="97mm" height="0.6pt"
           background-color="#9AAABB">
         <fo:block/>
       </fo:block-container>
 
       <!-- Director name (italic, looks like signature) -->
       <fo:block-container position="absolute"
-          top="160mm" left="185mm" width="82mm">
-        <fo:block font-family="serif" font-size="13pt"
+          top="160mm" left="100mm" width="97mm">
+        <fo:block font-family="serif" font-size="15pt"
                   color="#1C2B4A" text-align="center"
-                  font-style="italic">${directorName}</fo:block>
-        <fo:block font-family="serif" font-size="6.5pt"
+                  font-style="italic">Sphinx Admin</fo:block>
+        <fo:block font-family="serif" font-size="8pt"
                   color="#7A8899" text-align="center"
                   letter-spacing="2pt" padding-top="1.5mm">DIRECTOR OF PROGRAMS</fo:block>
-        <fo:block font-family="serif" font-size="6pt"
-                  color="#AABBCC" text-align="center"
+        <fo:block font-family="serif" font-size="7pt"
+                  color="#9AAABB" text-align="center"
                   letter-spacing="1pt" padding-top="1mm">SPHINX ASSESSMENT PLATFORM</fo:block>
       </fo:block-container>
 
       <!-- ══ BOTTOM NAVY FOOTER ══ -->
-      <fo:block-container position="absolute"
+<!--       <fo:block-container position="absolute"
           top="192mm" left="13mm" width="271mm" height="5mm"
           background-color="#1C2B4A">
         <fo:block/>
@@ -294,10 +292,10 @@
           top="192mm" left="13mm" width="271mm" height="0.8pt"
           background-color="#C8A84B">
         <fo:block/>
-      </fo:block-container>
+      </fo:block-container> -->
       <fo:block-container position="absolute"
-          top="193.5mm" left="13mm" width="271mm">
-        <fo:block font-family="serif" font-size="6.5pt"
+          top="194mm" left="13mm" width="271mm">
+        <fo:block font-family="serif" font-size="7.5pt"
                   color="#E8D080" text-align="center"
                   letter-spacing="1.5pt">This certificate is issued by Sphinx Assessment Platform   |   Date of Issue: ${date}</fo:block>
       </fo:block-container>

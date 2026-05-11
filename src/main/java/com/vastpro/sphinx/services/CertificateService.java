@@ -103,7 +103,7 @@ public class CertificateService {
         String ofbizHome = System.getProperty("ofbiz.home");
 
         String templatePath = Paths
-                .get(ofbizHome, "plugins", "sphinx", "src",
+                .get(ofbizHome, "plugins", "sphinxTeamNinjas", "src",
                         "main", "java", "certificate.fo.xml")
                 .toString();
 
@@ -126,7 +126,7 @@ public class CertificateService {
         foTemplate.close();
         
         
-        String configPath = Paths.get(ofbizHome, "plugins", "sphinx", "src",
+        String configPath = Paths.get(ofbizHome, "plugins", "sphinxTeamNinjas", "src",
                         "main", "java", "fop-config.xml").toString();
                 File fopConfigFile = new File(configPath);
 
