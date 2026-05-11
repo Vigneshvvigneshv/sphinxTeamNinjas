@@ -71,13 +71,13 @@ public class CertificateService {
                             ? person.getString("lastName") : "");
 
             String examName = exam.getString("examName");
-            String date     = new SimpleDateFormat("dd MMMM yyyy").format(new Date());
-            String score    = ((BigDecimal) examResultDetails.get("score")).toPlainString();
+            String date = new SimpleDateFormat("dd MMMM yyyy").format(new Date());
+            String percentage  = ((BigDecimal) examResultDetails.get("percentage")).toPlainString();
 
            
 
             byte[] pdfBytes = generateWithFop(
-                    candidateName.trim(), examName, date, score, status);
+                    candidateName.trim().toUpperCase(), examName, date, percentage, status);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             outputStream.write(pdfBytes);
@@ -98,7 +98,7 @@ public class CertificateService {
 
     private static byte[] generateWithFop(
             String candidateName, String examName,
-            String date, String score, String status) throws Exception {
+            String date, String percentage, String status) throws Exception {
 
         String ofbizHome = System.getProperty("ofbiz.home");
 
@@ -121,7 +121,7 @@ public class CertificateService {
                 .replace("${candidateName}", candidateName)
                 .replace("${examName}", examName)
                 .replace("${date}",date)
-                .replace("${score}",score)
+                .replace("${percentage}",percentage)
                 .replace("${status}",status);
         foTemplate.close();
         
