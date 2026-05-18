@@ -322,6 +322,7 @@
        	<alias entity-alias="PER" name="timeoutDays"/> 
        	<alias entity-alias="PER" name="allowedAttempts" />
        	<alias entity-alias="PER" name="noOfAttempts" />
+       	<alias entity-alias="PER" name="createdStamp" />
         <view-link entity-alias="PER" rel-entity-alias="EM">
             <key-map field-name="examId"/>
         </view-link>

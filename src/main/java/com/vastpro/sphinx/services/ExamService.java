@@ -1,9 +1,12 @@
 package com.vastpro.sphinx.services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
 
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilMisc;
@@ -425,6 +428,11 @@ public class ExamService {
 			List<GenericValue> filteredExamData = new ArrayList<>();
 
 			for (GenericValue exam : examData) {
+				Date createdTime=exam.getDate("createdStamp");
+				Long timeoutDays=exam.getLong("timeoutDays");
+				if(validateExamTimeout(createdTime,timeoutDays)) {
+					continue;
+				}
 				Long allowedAttempts = exam.getLong("allowedAttempts");
 				Long noOfAttempts = exam.getLong("noOfAttempts");
 				if ((allowedAttempts - noOfAttempts) > 0) {
@@ -486,4 +494,18 @@ public class ExamService {
 //		}
 //	}
 //
+	private static boolean validateExamTimeout(Date createdDate,Long timeoutDays) {
+		long timeoutMillis = timeoutDays * 24 * 60 * 60 * 1000L;
+	
+		long expiryMillis = createdDate.getTime() + timeoutMillis;
+		
+		Date expiryDate=new Date(expiryMillis);
+		Date currentDate=new Date();
+		
+		
+		return currentDate.after(expiryDate);
+	}
+	
+	
+	
 }
