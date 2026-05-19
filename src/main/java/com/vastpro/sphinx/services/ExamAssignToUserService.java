@@ -1,5 +1,6 @@
 package com.vastpro.sphinx.services;
 
+import java.security.Provider.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.transaction.GenericTransactionException;
 import org.apache.ofbiz.entity.transaction.TransactionUtil;
 import org.apache.ofbiz.entity.util.EntityQuery;
+import org.apache.ofbiz.entity.util.EntityUtil;
 import org.apache.ofbiz.service.DispatchContext;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
@@ -93,7 +95,7 @@ public class ExamAssignToUserService {
 						} 
 						try {
 							Long allowedAttempts= Long.valueOf(attempts);
-							if(allowedAttempts<0) {
+							if(allowedAttempts<=0) {
 								return ServiceUtil.returnError("Attempts should be greate than 0 in "+userName);
 							}
 							input.put("allowedAttempts",allowedAttempts );
@@ -107,7 +109,7 @@ public class ExamAssignToUserService {
 						} 
 						try {
 							Long timeoutDays= Long.valueOf(days);
-							if(timeoutDays<0) {
+							if(timeoutDays<=0) {
 								return ServiceUtil.returnError("Days should be greate than 0 in "+userName);
 							}
 							input.put("timeoutDays",timeoutDays );
@@ -190,6 +192,7 @@ public class ExamAssignToUserService {
 	// update assigned exam
 	public static Map<String, Object> updateAssignedExam(DispatchContext context, Map<String, Object> input) {
 		LocalDispatcher dispatcher = context.getDispatcher();
+		Delegator delegator=context.getDelegator();
 		try {
 			String partyId = (String) input.get("partyId");
 			String examId = (String) input.get("examId");
@@ -209,13 +212,21 @@ public class ExamAssignToUserService {
 			} 
 			try {
 				Long allowedAttempts= Long.valueOf(attempts);
-				if(allowedAttempts<0) {
+				Long alreadyAttempts=EntityQuery.use(delegator).from("PartyExamRelationship").where("examId",examId,"partyId",partyId).queryFirst().getLong("noOfAttempts");
+				if(allowedAttempts<=0) {
 					return ServiceUtil.returnError("Attempts should be greate than 0");
+				}
+				if(alreadyAttempts>allowedAttempts) {
+					return ServiceUtil.returnError("Already "+alreadyAttempts+" attempt is used. Enter more than that.");
 				}
 				input.put("allowedAttempts",allowedAttempts );
 			} catch (NumberFormatException e) {
 				rollBackTransaction();
 				return ServiceUtil.returnError("Attempts should be number");
+			} catch (GenericEntityException e) {
+				rollBackTransaction();
+				Debug.logError("while check the attempts in update method", ExamAssignToUserService.class.getName());
+				return ServiceUtil.returnError("Error, occure while update the assigned assessment contact admin");
 			}
 
 			String days=(String) input.get("timeoutDays");
@@ -224,7 +235,7 @@ public class ExamAssignToUserService {
 			} 
 			try {
 				Long timeoutDays= Long.valueOf(days);
-				if(timeoutDays<0) {
+				if(timeoutDays<=0) {
 					return ServiceUtil.returnError("Days should be greate than 0");
 				}
 				input.put("timeoutDays",timeoutDays );

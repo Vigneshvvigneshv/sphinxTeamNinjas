@@ -1,5 +1,6 @@
 package com.vastpro.sphinx.services;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -415,7 +416,24 @@ public class ExamService {
 			return ServiceUtil.returnError("Error, occur during get assessment by id" + e.getMessage());
 		}
 	}
+	
+	
+	
+	//get the exam List by the party id (all assigned exam)
+	public static Map<String,Object> getAllExamByPartyId(DispatchContext context,Map<String,Object> input){
+		Delegator delegator=context.getDelegator();
+		Map<String,Object> result=ServiceUtil.returnSuccess();
+		try {
+			List<GenericValue> examList=EntityQuery.use(delegator).from("ExamPartyRelationInfo").where("partyId",input.get("partyId")).queryList();
+			result.put("examList", examList);
+			return result;
+		}catch(GenericEntityException e) {
+			Debug.logError(e.getMessage(), ExamService.class.getName());
+			return ServiceUtil.returnError("Error, occur during get assessment");
+		}
+	}
 
+	
 	// get the exam by the user(using the partyId) incomplete exam
 	public static Map<String, Object> getExamByPartyId(DispatchContext context, Map<String, Object> input) {
 		Delegator delegator = context.getDelegator();
@@ -425,27 +443,33 @@ public class ExamService {
 			List<GenericValue> examData = EntityQuery.use(delegator).from("ExamPartyRelationInfo").where("partyId", input.get("partyId"))
 							.queryList();
 
-			List<GenericValue> filteredExamData = new ArrayList<>();
+			 List<Map<String, Object>> filteredExamData = new ArrayList<>();
 
-			for (GenericValue exam : examData) {
-				Date createdTime=exam.getDate("createdStamp");
-				Long timeoutDays=exam.getLong("timeoutDays");
-				if(validateExamTimeout(createdTime,timeoutDays)) {
-					continue;
-				}
-				Long allowedAttempts = exam.getLong("allowedAttempts");
-				Long noOfAttempts = exam.getLong("noOfAttempts");
-				if ((allowedAttempts - noOfAttempts) > 0) {
-					filteredExamData.add(exam);
-				}
-			}
+		        for (GenericValue exam : examData) {
+		            Timestamp createdTime = exam.getTimestamp("createdStamp");
+		            Long timeoutDays = exam.getLong("timeoutDays");
+		            Boolean isTimeout = validateExamTimeout(createdTime, timeoutDays);
+
+		            Long allowedAttempts = exam.getLong("allowedAttempts");
+		            Long noOfAttempts = exam.getLong("noOfAttempts");
+
+		            if ((allowedAttempts - noOfAttempts) > 0) {
+		                // Convert GenericValue to HashMap and add the extra boolean field
+		                Map<String, Object> examMap = new HashMap<>(exam);
+		                examMap.put("isTimeout", isTimeout);
+		                filteredExamData.add(examMap);
+		            }
+		        }
 			result.put("examList", filteredExamData);
 			return result;
 		} catch (GenericEntityException e) {
 			Debug.logError(e.getMessage(), ExamService.class.getName());
-			return ServiceUtil.returnError("Error, occur during get assessment" + e.getMessage());
+			return ServiceUtil.returnError("Error, occur during get assessment");
 		}
 	}
+	
+	
+	
 
 	// get the exam by the user(using the partyId) completed exam
 	public static Map<String, Object> getCompletedExamByPartyId(DispatchContext context, Map<String, Object> input) {
@@ -494,7 +518,7 @@ public class ExamService {
 //		}
 //	}
 //
-	private static boolean validateExamTimeout(Date createdDate,Long timeoutDays) {
+	private static boolean validateExamTimeout(Timestamp createdDate,Long timeoutDays) {
 		long timeoutMillis = timeoutDays * 24 * 60 * 60 * 1000L;
 	
 		long expiryMillis = createdDate.getTime() + timeoutMillis;

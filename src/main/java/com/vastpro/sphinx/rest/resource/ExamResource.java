@@ -132,6 +132,23 @@ public class ExamResource {
 	}
 	
 	@GET
+	@Path("/getallexam-by-partyId/{partyId}")
+	@Produces(MediaType.APPLICATION_JSON)
+//	@Consumes(MediaType.APPLICATION_JSON)
+	public Response getAllExamByPartyId( @PathParam("partyId") String partyId,@Context HttpServletRequest request) {
+
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		try {
+			Map<String, Object> input = new HashMap<String, Object>();
+			input.put("partyId", partyId);
+			Map<String, Object> result = dispatcher.runSync("getAllExamByPartyId", input);
+			return Response.ok(result).build();
+		} catch (Exception e) {
+			return Response.status(500).entity(Map.of("error", e.getMessage())).build();
+		}
+	}
+	
+	@GET
 	@Path("/getexam-by-partyId/{partyId}")
 	@Produces(MediaType.APPLICATION_JSON)
 //	@Consumes(MediaType.APPLICATION_JSON)
